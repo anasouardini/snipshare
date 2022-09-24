@@ -42,16 +42,19 @@ app.use(function (req, res, next) {
 	next();
 });
 
-const checkCreds = (req, res, next) => {
-	console.log('===============');
-	console.log(req.session);
-	// console.log(req.sessionID);
-
-	console.log(req.user); //ref to req.session.passport.user
+const checkAuth = (req, res, next) => {
+	if (req.params.check) {
+		return res.json({ signedIn: !!req?.session?.passport });
+	}
 
 	if (req?.session?.passport) {
 		return res.json({ msg: 'you are already signed in' });
 	}
+
+	next();
+};
+
+const checkCreds = (req, res, next) => {
 	if (!req.body?.usr || !req.body?.passwd) {
 		return res.status(400).json({ err: 'provided details are not complete' });
 	}
@@ -67,7 +70,7 @@ const checkCreds = (req, res, next) => {
 // 	res.json({ status: 'signing up', username: req.body.usr, password: req.body.passwd });
 // });
 
-app.post('/login', checkCreds, passport.authenticate('local', { failureRedirect: 'login', successRedirect: '/login' }));
+app.post('/login', checkAuth, checkCreds, passport.authenticate('local'));
 
 // app.get('/shop', (req, res) => {
 // 	res.send('this is your shitty profile ' + req.session.userSession);

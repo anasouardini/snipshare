@@ -1,7 +1,14 @@
 import React, {useRef} from 'react';
 import {create} from '../tools/bridge';
+import LocalShop from '../tools/localShop';
+import {useNavigate} from 'react-location';
 
 export default function Login() {
+    const navigate = useNavigate();
+    if (LocalShop.checkLogin()) {
+        navigate({to: './shop', replace: true});
+    }
+
     const refs = {
         username: useRef('username'),
         password: useRef('password'),
@@ -14,15 +21,6 @@ export default function Login() {
     };
 
     const getUser = async () => {
-        // const create = () =>
-        //     import('../tools/bridge')
-        //         .then((module) => module.createUser)
-        //         .catch(() => () => {
-        //             console.log('module createUser not loaded');
-        //         });
-
-        // console.log(refs.username.current.value);
-        // console.log(refs.username.current.value);
         const response = await create('login', {
             usr: refs.username.current.value,
             passwd: refs.password.current.value,
