@@ -1,4 +1,5 @@
 import React, {useRef} from 'react';
+import {create} from '../tools/bridge';
 
 export default function SignUp() {
     const refs = {
@@ -7,26 +8,20 @@ export default function SignUp() {
     };
 
     const createUser = async () => {
-        const create = () =>
-            Import('../tools/bridge')
-                .then((module) => module.createUser)
-                .catch(() => () => {
-                    console.log('module createUser not loaded');
-                });
-        const response = await create({
-            inputs: {
-                usename: refs.username.value,
-                password: refs.password.value,
-                keepSignIn: refs.keepSignIn.value,
-            },
+        const response = await create('signup', {
+            usr: refs.username.current.value,
+            passwd: refs.password.current.value,
         });
 
         if (response) {
             console.log('success');
+            console.log(response);
             return;
         }
 
         console.log('not success :)');
+        console.log(response);
+        // console.log(create);
     };
 
     const classes = {
@@ -43,6 +38,7 @@ export default function SignUp() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        createUser();
     };
 
     return (

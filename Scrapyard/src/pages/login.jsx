@@ -5,16 +5,16 @@ import {useNavigate} from 'react-location';
 
 export default function Login() {
     const navigate = useNavigate();
-    if (LocalShop.checkLogin()) {
-        navigate({to: './shop', replace: true});
-    }
+    // if (LocalShop.checkLogin()) {
+    //     navigate({to: './shop', replace: true});
+    // }
 
     const refs = {
         username: useRef('username'),
         password: useRef('password'),
         keepSignIn: useRef('keepSignIn'),
     };
-
+    1;
     const handleSubmit = (e) => {
         e.preventDefault();
         getUser(); //asyn

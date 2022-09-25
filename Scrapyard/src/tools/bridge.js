@@ -3,6 +3,7 @@ const server = {
 
     options: (method, body) => ({
         method,
+        mode: 'cors',
         headers: {
             Accept: 'application.json',
             'Content-Type': 'application/json',

@@ -1,12 +1,11 @@
+const passport = require('passport');
 const passportLocal = require('passport-local');
-
-// use bcrypt
-const checkLogin = (username, password) => ({ username, password, test: 'test' });
+const controller = require('../controller/index');
 
 const passportCB = async (username, password, done) => {
 	// fetch db for user and passwd
 	try {
-		const response = checkLogin(username, password);
+		const response = controller.signin(username, password);
 
 		if (!response) {
 			throw Error('checking login gone wrong!');
@@ -25,8 +24,16 @@ const passportCB = async (username, password, done) => {
 	}
 };
 const fieldsNames = { usernameField: 'usr', passwordField: 'passwd' };
+
 const localStrategy = new passportLocal.Strategy(fieldsNames, passportCB);
 
-module.exports = {
-	localStrategy,
-};
+passport.use(localStrategy);
+passport.serializeUser((usr, done) => {
+	done(null, usr);
+});
+passport.deserializeUser((usr, done) => {
+	// user the usr to get user data form db
+	done(null, usr);
+});
+
+module.exports = passport;
