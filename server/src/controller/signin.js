@@ -1,6 +1,8 @@
-const signin = (username, password) => {
-	//fetch db model
-	//bcrypt compare
+const User = require('../model/user');
+const bcrypt = require('bcrypt');
+
+const signin = async (req, res) => {
+	res.json({ msg: 'login is successful' });
 };
 
-module.exports = () => {};
+module.exports = signin;

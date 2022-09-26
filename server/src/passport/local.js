@@ -1,11 +1,30 @@
 const passport = require('passport');
 const passportLocal = require('passport-local');
 const controller = require('../controller/index');
+const User = require('../model/user');
+const bcrypt = require('bcrypt');
+
+const checkCreds = async (username, password) => {
+	let response = await User.userExists(username);
+	// console.log(response[0]);
+	if (!response[0].length) {
+		return {};
+	}
+
+	const validPassword = await bcrypt.compare(password, response[0][0].passwd);
+	// console.log(validPassword);
+	if (validPassword) {
+		return { username, password: response[0][0].passwd };
+	}
+
+	return {};
+};
 
 const passportCB = async (username, password, done) => {
 	// fetch db for user and passwd
 	try {
-		const response = controller.signin(username, password);
+		// check creds
+		const response = await checkCreds(username, password);
 
 		if (!response) {
 			throw Error('checking login gone wrong!');
@@ -16,7 +35,7 @@ const passportCB = async (username, password, done) => {
 			return;
 		}
 
-		// console.log(username, password);
+		// console.log(response.username, response.password);
 
 		done(null, response);
 	} catch (err) {

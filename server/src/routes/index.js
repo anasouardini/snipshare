@@ -3,7 +3,7 @@ const controller = require('../controller');
 const passport = require('../passport/local');
 
 const checkAuth = (req, res, next) => {
-	console.log('checking auth');
+	// console.log('checking auth');
 	if (req.params?.check) {
 		return res.json({ signedIn: !!req?.session?.passport });
 	}
@@ -23,8 +23,14 @@ const checkCreds = (req, res, next) => {
 	next();
 };
 
-router.post('/login', checkAuth, checkCreds, passport.authenticate('local'));
+//auth
+router.post('/signin', checkAuth, checkCreds, passport.authenticate('local'), controller.signin);
 router.post('/signup', checkAuth, checkCreds, controller.signup);
-router.post('/shop', controller.shop);
+//snippets
+router.get('/:user/snippets', checkAuth, controller.snippet.readAll);
+router.get('/:user/:snippetID', checkAuth, controller.snippet.read);
+router.post('/:user/:snippetID', checkAuth, controller.snippet.create);
+router.put('/:user/:snippetID', checkAuth, controller.snippet.edit);
+router.delete('/:user/:snippetID', checkAuth, controller.snippet.remove);
 
 module.exports = router;
