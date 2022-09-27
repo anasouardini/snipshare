@@ -1,7 +1,10 @@
 import React, {useRef} from 'react';
 import {create} from '../tools/bridge';
+import {useNavigate} from 'react-location';
 
 export default function SignUp() {
+    const navigate = useNavigate();
+
     const refs = {
         username: useRef('username'),
         password: useRef('password'),
@@ -14,8 +17,11 @@ export default function SignUp() {
         });
 
         if (response) {
-            console.log('success');
+            // console.log('success');
             console.log(response);
+            if (response.status == 200) {
+                navigate({to: '/login', replace: true});
+            }
             return;
         }
 

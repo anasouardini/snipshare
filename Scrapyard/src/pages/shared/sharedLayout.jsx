@@ -18,7 +18,7 @@ export default function SharedLayout(props) {
                     <li
                         className={classes.li}
                         onClick={() => {
-                            changeRoute('./login');
+                            changeRoute('/login');
                         }}
                     >
                         login
@@ -26,7 +26,7 @@ export default function SharedLayout(props) {
                     <li
                         className={classes.li}
                         onClick={() => {
-                            changeRoute('./signup');
+                            changeRoute('/signup');
                         }}
                     >
                         signup
@@ -34,10 +34,10 @@ export default function SharedLayout(props) {
                     <li
                         className={classes.li}
                         onClick={() => {
-                            changeRoute('./shop');
+                            changeRoute('/snippets');
                         }}
                     >
-                        shop
+                        snippets
                     </li>
                 </ul>
             </nav>

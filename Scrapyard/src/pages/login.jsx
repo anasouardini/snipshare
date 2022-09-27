@@ -21,7 +21,7 @@ export default function Login() {
     };
 
     const getUser = async () => {
-        const response = await create('login', {
+        const response = await create('signin', {
             usr: refs.username.current.value,
             passwd: refs.password.current.value,
             keepSignIn: refs.keepSignIn.value,

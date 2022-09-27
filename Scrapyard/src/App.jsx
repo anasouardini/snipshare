@@ -7,13 +7,19 @@ import SignUp from './pages/signup';
 // import Projects from './pages/projects';
 
 import './index.css';
+import Snippets from './pages/snippets';
 
 const routes = [
     {path: '/login', element: <Login />},
     {path: '/signup', element: <SignUp />},
-    // {path: '/about', element: <About/>},
-    // {path: '/projects/:id', element: ()=>import('./pages/projects').then((module)=><module.default/>)},
-    // {path: '/projects/', element: ()=>{import('./pages/projects').then((module)=><module.default/>)} }
+    {
+        path: '/:user',
+        loader: ({params: {user}}) => ({user}),
+        children: [
+            {path: '/', element: <></>},
+            {path: '/snippets', element: <Snippets />},
+        ],
+    },
 ];
 
 const location = new ReactLocation();

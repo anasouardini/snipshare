@@ -1,4 +1,4 @@
-const Snippet = require('../model/snippet');
+const Snippet = require('../model/snippet.js');
 
 const actions = {
 	read: async (snippetID, action) => {
@@ -32,8 +32,8 @@ const actions = {
 };
 
 const authAction = async (req, action) => {
-	const usr = req.query.params.user;
-	const snippetID = req.query.params.snippetID;
+	const usr = req.params.user;
+	const snippetID = req.params.snippetID;
 
 	let response = await Snippet.getSnippet(snippetID);
 	return response[0].length
@@ -46,16 +46,42 @@ const authAction = async (req, action) => {
 };
 
 const readAll = async (req, res) => {
-	const usr = req.query.params.user;
-	const snippetID = req.query.params.snippetID;
+	const snippetsOwner = req.params.user;
 
-	let response = await Snippet.getSnippets();
-	response[0].map((snippet) => (!snippet.coworkers.includes(usr) ? {} : !snippet.coworkers.actions.includes('read') ? {} : snippet));
-	res.json({ msg: 'this is still not constructed' });
+	let response = await Snippet.getSnippets(snippetsOwner);
+	// console.log(response[0][0].coworkers);
+
+	// if empty
+	if (!response[0].length) {
+		return res.json({ msg: [] });
+	}
+
+	// if the owner is the reader
+	if (snippetsOwner == req.user.username) res.json({ msg: response[0] });
+
+	const httpResponse = [];
+	response[0].forEach((snippet) => {
+		if (snippet.isPrivate) {
+			if (
+				snippet.coworkers.some((coworker) => {
+					if (coworker.user == req.user.username) {
+						return coworker.actions.some((action) => action == 'read');
+					}
+					return false;
+				})
+			) {
+				httpResponse.push(snippet);
+			}
+		} else {
+			httpResponse.push(snippet);
+		}
+	});
+
+	res.json({ msg: httpResponse });
 };
 
 const create = async (req, res) => {
-	if (req.user.username == req.query.params.user) {
+	if (req.user.username == req.params.user) {
 		let response = await Snippet.createSnippet({ title: '', descr: '', img: '', isPrivate: true, coworkers: [] });
 		return res.json({ msg: 'this is still not constructed' });
 	}

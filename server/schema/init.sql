@@ -15,15 +15,15 @@ CREATE TABLE users (
     passwd varchar(100) NOT NULL
 );
 
-CREATE TABLE items (
-    id varchar(100) PRIMARY KEY,
+CREATE TABLE snippets (
+    id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
     user varchar(100) NOT NULL,
     isPrivate tinyint NOT NULL,
     coworkers json NOT NULL,
     img varchar(50) NOT NULL,
     title varchar(200) NOT NULL,
     descr varchar(1000) NOT NULL,
-    snippet varchar(5000 NOT NULL)
+    snippet varchar(5000) NOT NULL
 );
 
 -- DATA
@@ -52,7 +52,7 @@ VALUES
     );
 
 INSERT INTO
-    items (
+    snippets (
         user,
         isPrivate,
         coworkers,
@@ -65,9 +65,9 @@ VALUES
     (
         'venego',
         1,
-        '[{user: admin, actions:[read, edit, delete]},
-        {user: *, actions:[read]},
-        {user: m9ila, actions:[read]}]',
+        '[{"user": "admin", "actions":["read", "edit", "delete"]},
+        {"user": "*", "actions":["read"]},
+        {"user": "m9ila", "actions":["read"]}]',
         '',
         'my cool api routes',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
@@ -78,9 +78,9 @@ VALUES
     (
         'venego',
         1,
-        '[{user: admin, actions:[read, edit, delete]},
-        {user: *, actions:[read]},
-        {user: 3sila, actions:[read, edit]}]',
+        '[{"user": "admin", "actions":["read", "edit", "delete"]},
+        {"user": "*", "actions":["read"]},
+        {"user": "3sila", "actions":["read", "edit"]}]',
         '',
         'my cool api routes 2',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
@@ -91,8 +91,8 @@ VALUES
     (
         'venego',
         0,
-        '[{user: admin, actions:[read, edit, delete]},
-        {user: *, actions:[read]}]',
+        '[{"user": "admin", "actions":["read", "edit", "delete"]},
+        {"user": "*", "actions":["read"]}]',
         '',
         'my cool api routes 3',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.

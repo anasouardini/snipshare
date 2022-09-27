@@ -8,8 +8,20 @@ const checkAuth = (req, res, next) => {
 		return res.json({ signedIn: !!req?.session?.passport });
 	}
 
+	next();
+};
+
+const loginMiddleware = (req, res, next) => {
 	if (req?.session?.passport) {
 		return res.json({ msg: 'you are already signed in' });
+	}
+
+	next();
+};
+
+const afterLoginMiddleware = (req, res, next) => {
+	if (!req?.session?.passport) {
+		return res.status(401).json({ msg: 'you have to sign in first' });
 	}
 
 	next();
@@ -24,13 +36,13 @@ const checkCreds = (req, res, next) => {
 };
 
 //auth
-router.post('/signin', checkAuth, checkCreds, passport.authenticate('local'), controller.signin);
-router.post('/signup', checkAuth, checkCreds, controller.signup);
+router.post('/signin', checkAuth, loginMiddleware, checkCreds, passport.authenticate('local'), controller.signin);
+router.post('/signup', checkAuth, loginMiddleware, checkCreds, controller.signup);
 //snippets
-router.get('/:user/snippets', checkAuth, controller.snippet.readAll);
-router.get('/:user/:snippetID', checkAuth, controller.snippet.read);
-router.post('/:user/:snippetID', checkAuth, controller.snippet.create);
-router.put('/:user/:snippetID', checkAuth, controller.snippet.edit);
-router.delete('/:user/:snippetID', checkAuth, controller.snippet.remove);
+router.get('/:user/snippets', checkAuth, afterLoginMiddleware, controller.snippet.readAll);
+router.get('/:user/:snippetID', checkAuth, afterLoginMiddleware, controller.snippet.read);
+router.post('/:user/:snippetID', checkAuth, afterLoginMiddleware, controller.snippet.create);
+router.put('/:user/:snippetID', checkAuth, afterLoginMiddleware, controller.snippet.edit);
+router.delete('/:user/:snippetID', checkAuth, afterLoginMiddleware, controller.snippet.remove);
 
 module.exports = router;
