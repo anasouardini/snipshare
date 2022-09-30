@@ -57,23 +57,27 @@ const readAll = async (req, res) => {
 	}
 
 	// if the owner is the reader
-	if (snippetsOwner == req.user.username) res.json({ msg: response[0] });
+	if (snippetsOwner == req.user.username) return res.json({ msg: response[0] });
 
 	const httpResponse = [];
-	response[0].forEach((snippet) => {
-		if (snippet.isPrivate) {
-			if (
-				snippet.coworkers.some((coworker) => {
-					if (coworker.user == req.user.username) {
-						return coworker.actions.some((action) => action == 'read');
-					}
-					return false;
-				})
-			) {
-				httpResponse.push(snippet);
+	response[0].forEach((snippetObj) => {
+		// console.log(snippetObj);
+		const coworker = snippetObj.coworkers?.[req.user.username];
+		if (snippetObj.isPrivate) {
+			if (coworker && coworker.actions.includes('read')) {
+				console.log(coworker.actions);
+				// private but you can access it
+				const { title, descr, img, snippet, isPrivate } = snippetObj;
+				httpResponse.push({ title, descr, img, snippet, isPrivate, allowedActions: coworker.actions });
+			} else {
+				// private and no access
+				const { title, descr, img, isPrivate } = snippetObj;
+				httpResponse.push({ title: title, img, isPrivate, allowedActions: ['none'] });
 			}
 		} else {
-			httpResponse.push(snippet);
+			// public
+			const { title, descr, img, snippet, isPrivate } = snippetObj;
+			httpResponse.push({ title, descr, img, snippet, isPrivate, allowedActions: snippetObj.coworkers['*'].actions });
 		}
 	});
 

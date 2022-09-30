@@ -12,7 +12,7 @@ export default function SharedLayout(props) {
     };
 
     return (
-        <div>
+        <div className="font-roboto">
             <nav>
                 <ul className="flex">
                     <li
@@ -34,10 +34,26 @@ export default function SharedLayout(props) {
                     <li
                         className={classes.li}
                         onClick={() => {
-                            changeRoute('/snippets');
+                            changeRoute('venego/snippets');
                         }}
                     >
-                        snippets
+                        venego snippets
+                    </li>
+                    <li
+                        className={classes.li}
+                        onClick={() => {
+                            changeRoute('3sila/snippets');
+                        }}
+                    >
+                        3sila snippets
+                    </li>
+                    <li
+                        className={classes.li}
+                        onClick={() => {
+                            changeRoute('m9ila/snippets');
+                        }}
+                    >
+                        m9ila snippets
                     </li>
                 </ul>
             </nav>

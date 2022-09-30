@@ -28,11 +28,11 @@ CREATE TABLE snippets (
 
 -- DATA
 INSERT INTO
-    admin (user, passwd)
+    users (user, passwd) -- should be admin table
 VALUES
     (
         'admin',
-        '$2a$10$SAP3XbtuVJY8BpOpp.JR3OtiWtAJRNK2A8DOshVn2/sH1DnylE4ke'
+        '$2a$10$EIWgPiqrTVaY7h02cqy1kO4y.lnoN8HgngdIdAK/v3FrXcPbLLBZm'
     );
 
 INSERT INTO
@@ -65,38 +65,42 @@ VALUES
     (
         'venego',
         1,
-        '[{"user": "admin", "actions":["read", "edit", "delete"]},
-        {"user": "*", "actions":["read"]},
-        {"user": "m9ila", "actions":["read"]}]',
+        '{
+            "admin":{"user": "admin", "actions":["read", "edit", "delete"]},
+            "m9ila" : {"user": "m9ila", "actions":["read"]}
+        }',
         '',
         'my cool api routes',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
-        however the admin may need to check the snippet you have posted, and has the ability to delete or make a snippet private depending on the content of it.',
+        ',
         ''
     ),
     (
         'venego',
         1,
-        '[{"user": "admin", "actions":["read", "edit", "delete"]},
-        {"user": "*", "actions":["read"]},
-        {"user": "3sila", "actions":["read", "edit"]}]',
+        '{
+            "admin":{"user": "admin", "actions":["read", "edit", "delete"]},
+            "3sila":{"user": "3sila", "actions":["read", "edit"]}
+        }',
         '',
         'my cool api routes 2',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
-        however the admin may need to check the snippet you have posted, and has the ability to delete or make a snippet private depending on the content of it.',
+        ',
         ''
     ),
     (
         'venego',
         0,
-        '[{"user": "admin", "actions":["read", "edit", "delete"]},
-        {"user": "*", "actions":["read"]}]',
+        '{
+            "admin" : {"user": "admin", "actions":["read", "edit", "delete"]},
+            "*" : {"user": "*", "actions":["read"]}
+        }',
         '',
         'my cool api routes 3',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
-        however the admin may need to check the snippet you have posted, and has the ability to delete or make a snippet private depending on the content of it.',
+        ',
         ''
     );
