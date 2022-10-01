@@ -1,10 +1,9 @@
 const express = require('express');
-const session = require('express-session');
-const passport = require('./passport/local');
 const router = require('./routes');
 const cors = require('cors');
-
-const store = new session.MemoryStore();
+const cookieParser = require('cookie-parser');
+const fs = require('fs/promises');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
@@ -15,21 +14,25 @@ const PORT = process.env.PORT || 2000;
 
 app.use(cors({ origin: ['http://127.0.0.1:3000'], credentials: true }));
 
-app.use(
-	session({
-		secret: process.env.SECRET,
-		saveUninitialized: true,
-		resave: true,
-		cookie: { maxAge: 1000 * 60 * 60 * 24, path: '/', secure: false, httpOnly: false },
-		store,
-	})
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+//check auth
+app.use(async (req, res, next) => {
+	// console.log('res.cookie', res?.cookie);
+	const token = req?.cookies?.[process.env.COOKIENAME];
+	if (token) {
+		try {
+			const usr = jwt.verify(token, await fs.readFile(process.cwd() + '/rsa/pub.pem'));
+			req.user = usr;
+		} catch (e) {
+			// console.log(e);
+		}
+	}
+
+	next();
+});
 
 // router
 app.use('/', router);

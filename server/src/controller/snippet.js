@@ -71,7 +71,7 @@ const readAll = async (req, res) => {
 				httpResponse.push({ title, descr, img, snippet, isPrivate, allowedActions: coworker.actions });
 			} else {
 				// private and no access
-				const { title, descr, img, isPrivate } = snippetObj;
+				const { title, img, isPrivate } = snippetObj;
 				httpResponse.push({ title: title, img, isPrivate, allowedActions: ['none'] });
 			}
 		} else {

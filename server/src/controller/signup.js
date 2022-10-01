@@ -2,9 +2,15 @@ const User = require('../model/user');
 const bcrypt = require('bcrypt');
 
 const signup = async (req, res) => {
-	User.deleteUsers();
+	// check inputs
+	if (!req.body?.usr || !req.body?.passwd) {
+		return res.status(400).json({ err: 'provided details are not complete' });
+	}
 
 	let response = await User.userExists(req.body.usr);
+	if (!response) {
+		return res.sedStatus(500);
+	}
 	// console.log(response[0]);
 	if (response[0].length) {
 		return res.status(400).json({ msg: 'this username already exists' });

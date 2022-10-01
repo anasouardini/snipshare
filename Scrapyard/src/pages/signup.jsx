@@ -31,7 +31,7 @@ export default function SignUp() {
     };
 
     const classes = {
-        parent: 'border-3 w-[500px] mx-auto mt-40',
+        parent: `border-3 w-[500px] mx-auto mt-40`,
         title: `text-center text-3xl mb-[50px] relative
                 before:content-[""] before:absolute before:top-[105%] before:w-10 before:h-1 before:bg-lime-600`,
         form: 'flex flex-col w-lg',

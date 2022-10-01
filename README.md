@@ -18,6 +18,6 @@ the main Benifit obviously is to learn how to do Auth. but I also changed a few 
 
 - Vite (comming from webpack)
 - Tailwind (comming from Sass)
-- Passportjs (comming from no Auth :upside_down_face: )
+- Passportjs, JWT (comming from no Auth :upside_down_face: )
 - React-Location (comming from React-Router)
 - Mysql2 (comming from Prisma)

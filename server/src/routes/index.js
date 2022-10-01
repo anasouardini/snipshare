@@ -1,48 +1,34 @@
 const router = require('express').Router();
 const controller = require('../controller');
-const passport = require('../passport/local');
+// const passport = require('../passport/local');
 
-const checkAuth = (req, res, next) => {
-	// console.log('checking auth');
-	if (req.params?.check) {
-		return res.json({ signedIn: !!req?.session?.passport });
+const gotoLogin = (req, res, next) => {
+	// if not logged in
+	if (!req?.user) {
+		return res.json({ redirect: '/login' });
 	}
 
 	next();
 };
 
-const loginMiddleware = (req, res, next) => {
-	if (req?.session?.passport) {
-		return res.json({ msg: 'you are already signed in' });
-	}
-
-	next();
-};
-
-const afterLoginMiddleware = (req, res, next) => {
-	if (!req?.session?.passport) {
-		return res.status(401).json({ msg: 'you have to sign in first' });
-	}
-
-	next();
-};
-
-const checkCreds = (req, res, next) => {
-	if (!req.body?.usr || !req.body?.passwd) {
-		return res.status(400).json({ err: 'provided details are not complete' });
+const gotoHome = (req, res, next) => {
+	//if already logged in
+	// console.log(req.user);
+	if (req?.user) {
+		return res.json({ redirect: '/' });
 	}
 
 	next();
 };
 
 //auth
-router.post('/signin', checkAuth, loginMiddleware, checkCreds, passport.authenticate('local'), controller.signin);
-router.post('/signup', checkAuth, loginMiddleware, checkCreds, controller.signup);
+router.post('/signin', gotoHome, controller.signin);
+router.post('/signup', gotoHome, controller.signup);
 //snippets
-router.get('/:user/snippets', checkAuth, afterLoginMiddleware, controller.snippet.readAll);
-router.get('/:user/:snippetID', checkAuth, afterLoginMiddleware, controller.snippet.read);
-router.post('/:user/:snippetID', checkAuth, afterLoginMiddleware, controller.snippet.create);
-router.put('/:user/:snippetID', checkAuth, afterLoginMiddleware, controller.snippet.edit);
-router.delete('/:user/:snippetID', checkAuth, afterLoginMiddleware, controller.snippet.remove);
+router.get('/:user/snippets', gotoLogin, controller.snippet.readAll);
+router.get('/:user/:snippetID', gotoLogin, controller.snippet.read);
+router.post('/:user/:snippetID', gotoLogin, controller.snippet.create);
+router.put('/:user/:snippetID', gotoLogin, controller.snippet.edit);
+router.delete('/:user/:snippetID', gotoLogin, controller.snippet.remove);
 
 module.exports = router;
