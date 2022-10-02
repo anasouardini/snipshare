@@ -27,7 +27,7 @@ router.post('/signup', gotoHome, controller.signup);
 //snippets
 router.get('/:user/snippets', gotoLogin, controller.snippet.readAll);
 router.get('/:user/:snippetID', gotoLogin, controller.snippet.read);
-router.post('/:user/:snippetID', gotoLogin, controller.snippet.create);
+router.post('/:user/', gotoLogin, controller.snippet.create);
 router.put('/:user/:snippetID', gotoLogin, controller.snippet.edit);
 router.delete('/:user/:snippetID', gotoLogin, controller.snippet.remove);
 

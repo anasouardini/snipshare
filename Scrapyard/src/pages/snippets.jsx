@@ -2,7 +2,7 @@ import React from 'react';
 import {useState} from 'react';
 import {useEffect} from 'react';
 import {read} from '../tools/bridge';
-import Snippet from './snippet';
+import Snippet from '../components/snippet';
 import {useMatch} from 'react-location';
 
 export default function Snippets() {
@@ -10,26 +10,30 @@ export default function Snippets() {
         data: {user},
     } = useMatch();
 
-    const listSnippets = () =>
-        state.children.map((snippet) => <Snippet key={snippet.title} snippet={snippet} />);
-
     const [state, setState] = useState({});
 
-    useEffect(() => {
-        (async () => {
-            const response = await read(`${user}/snippets`);
+    const updateItems = async () => {
+        const response = await read(`${user}/snippets`);
 
-            if (response) {
-                // console.log('success');
-                console.log(response);
-                if (response.status == 200) {
-                    setState({children: response.msg});
-                }
-                return;
-            }
-
+        if (response) {
+            // console.log('success');
             console.log(response);
-        })();
+            if (response.status == 200) {
+                setState({children: response.msg});
+            }
+            return;
+        }
+
+        console.log(response);
+    };
+
+    const listSnippets = () =>
+        state.children.map((snippet) => (
+            <Snippet key={snippet.id} snippet={snippet} updateItems={updateItems} user={user} />
+        ));
+
+    useEffect(() => {
+        updateItems();
     }, [user]);
 
     return (

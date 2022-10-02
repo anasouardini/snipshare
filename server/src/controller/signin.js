@@ -24,7 +24,7 @@ const signin = async (req, res) => {
 	}
 
 	//gen jwt token
-	const options = { algorithm: 'RS256', expiresIn: 5 };
+	const options = { algorithm: 'RS256', expiresIn: '24h' };
 	const privateKey = await fs.readFile(process.cwd() + '/rsa/priv.pem');
 	const body = { username: req.body.usr };
 	const token = jwt.sign(body, privateKey, options);

@@ -1,16 +1,18 @@
 const Snippet = require('../model/snippet.js');
 
 const actions = {
-	read: async (snippetID, action) => {
-		let response = await Snippet.getSnippet(snippetID);
-		return response[0][0].coworkers.actions.includes(action)
+	read: async (owner, usr, snippetID, action) => {
+		let response = await Snippet.getSnippet(owner, snippetID);
+		return response[0][0].coworkers[usr].actions.includes(action)
 			? response[0][0]
-			: { status: 401, msg: `you can not authorized to ${action} this snippet` };
+			: { status: 401, msg: `you are not authorized to ${action} this snippet` };
 	},
-	edit: async (snippetID, action, props) => {
-		let response = await Snippet.getSnippet(snippetID);
-		if (response[0][0].coworkers.actions.includes(action)) {
-			response = await Snippet.editSnippet(snippetID, props);
+	edit: async (owner, usr, snippetID, action, props) => {
+		let response = await Snippet.getSnippet(owner, snippetID);
+		// console.log(response[0][0]);
+		if (response[0][0].coworkers[usr].actions.includes(action)) {
+			response = await Snippet.editSnippet(owner, props);
+			console.log(response);
 			return response[0]?.affectedRows
 				? { status: 200, msg: `snippet has been ${action}ed` }
 				: { status: 500, msg: `something happend while ${action}ing the snippet` };
@@ -18,10 +20,10 @@ const actions = {
 
 		return { status: 401, msg: `you are not authorized to ${action} this snippet` };
 	},
-	delete: async (snippetID, action) => {
-		let response = await Snippet.getSnippet(snippetID);
-		if (response[0][0].coworkers.actions.includes(action)) {
-			response = await Snippet.deleteSnippet(snippetID);
+	delete: async (owner, usr, snippetID, action) => {
+		let response = await Snippet.getSnippet(owner, snippetID);
+		if (response[0][0].coworkers[usr].actions.includes(action)) {
+			response = await Snippet.deleteSnippet(owner, snippetID);
 			return response[0]?.affectedRows
 				? { status: 200, msg: `snippet has been ${action}ed` }
 				: { status: 500, msg: `something happend while ${action}ing the snippet` };
@@ -32,24 +34,28 @@ const actions = {
 };
 
 const authAction = async (req, action) => {
-	const usr = req.params.user;
+	const owner = req.params.user;
+	const usr = req.user.username;
 	const snippetID = req.params.snippetID;
 
-	let response = await Snippet.getSnippet(snippetID);
-	return response[0].length
-		? response[0][0].coworkers.includes(usr)
+	// console.log(req.body.props);
+	let response = await Snippet.getSnippet(owner, snippetID);
+	const rr = response[0].length
+		? response[0][0].coworkers?.[usr]
 			? action == 'edit'
-				? actions[action](snippetID, action, req.body.props)
-				: actions[action](snippetID, action)
-			: { status: 401, msg: `you can not authorized to interact this snippet` }
+				? actions[action](owner, usr, snippetID, action, req.body.props)
+				: actions[action](owner, usr, snippetID, action, req.body.props)
+			: { status: 401, msg: `you are not authorized to interact with this snippet` }
 		: { status: 404, msg: `this snippet doen't exist` };
+
+	return rr;
 };
 
 const readAll = async (req, res) => {
 	const snippetsOwner = req.params.user;
 
 	let response = await Snippet.getSnippets(snippetsOwner);
-	// console.log(response[0][0].coworkers);
+	console.log(response[0]);
 
 	// if empty
 	if (!response[0].length) {
@@ -67,17 +73,17 @@ const readAll = async (req, res) => {
 			if (coworker && coworker.actions.includes('read')) {
 				console.log(coworker.actions);
 				// private but you can access it
-				const { title, descr, img, snippet, isPrivate } = snippetObj;
-				httpResponse.push({ title, descr, img, snippet, isPrivate, allowedActions: coworker.actions });
+				const { id, title, descr, img, snippet, isPrivate } = snippetObj;
+				httpResponse.push({ id, title, descr, img, snippet, isPrivate, allowedActions: coworker.actions });
 			} else {
 				// private and no access
-				const { title, img, isPrivate } = snippetObj;
-				httpResponse.push({ title: title, img, isPrivate, allowedActions: ['none'] });
+				const { id, title, img, isPrivate } = snippetObj;
+				httpResponse.push({ id, title: title, img, isPrivate, allowedActions: ['none'] });
 			}
 		} else {
 			// public
-			const { title, descr, img, snippet, isPrivate } = snippetObj;
-			httpResponse.push({ title, descr, img, snippet, isPrivate, allowedActions: snippetObj.coworkers['*'].actions });
+			const { id, title, descr, img, snippet, isPrivate } = snippetObj;
+			httpResponse.push({ id, title, descr, img, snippet, isPrivate, allowedActions: snippetObj.coworkers['*'].actions });
 		}
 	});
 
@@ -94,17 +100,18 @@ const create = async (req, res) => {
 };
 
 const read = async (req, res) => {
-	const result = authAction(req, 'read');
+	const result = await authAction(req, 'read');
 	res.status(result.status).json({ msg: result.msg });
 };
 
-const edit = (req, res) => {
-	const result = authAction(req, 'edit');
+const edit = async (req, res) => {
+	const result = await authAction(req, 'edit');
+	console.log(result);
 	res.status(result.status).json({ msg: result.msg });
 };
 
-const remove = (req, res) => {
-	const result = authAction(req, 'remove');
+const remove = async (req, res) => {
+	const result = await authAction(req, 'remove');
 	res.status(result.status).json({ msg: result.msg });
 };
 

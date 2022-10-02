@@ -16,11 +16,10 @@ CREATE TABLE users (
 );
 
 CREATE TABLE snippets (
-    id BINARY(16) PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
+    id varchar(100) PRIMARY KEY,
     user varchar(100) NOT NULL,
     isPrivate tinyint NOT NULL,
     coworkers json NOT NULL,
-    img varchar(50) NOT NULL,
     title varchar(200) NOT NULL,
     descr varchar(1000) NOT NULL,
     snippet varchar(5000) NOT NULL
@@ -53,23 +52,23 @@ VALUES
 
 INSERT INTO
     snippets (
+        id,
         user,
         isPrivate,
         coworkers,
-        img,
         title,
         descr,
         snippet
     )
 VALUES
     (
+        'etwpoitjkmnvvvierovndf;v',
         'venego',
         1,
         '{
             "admin":{"user": "admin", "actions":["read", "edit", "delete"]},
             "m9ila" : {"user": "m9ila", "actions":["read"]}
         }',
-        '',
         'my cool api routes',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
@@ -77,13 +76,13 @@ VALUES
         ''
     ),
     (
+        'etwpoitjkmnvvviersfovfdndf;v',
         'venego',
         1,
         '{
             "admin":{"user": "admin", "actions":["read", "edit", "delete"]},
             "3sila":{"user": "3sila", "actions":["read", "edit"]}
         }',
-        '',
         'my cool api routes 2',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
@@ -91,13 +90,13 @@ VALUES
         ''
     ),
     (
+        'etwpoitjdfgkmgfdnvviervnf;v',
         'venego',
         0,
         '{
             "admin" : {"user": "admin", "actions":["read", "edit", "delete"]},
             "*" : {"user": "*", "actions":["read"]}
         }',
-        '',
         'my cool api routes 3',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.

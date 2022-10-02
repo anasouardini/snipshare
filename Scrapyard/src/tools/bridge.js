@@ -44,3 +44,16 @@ export const read = (route) =>
             };
         })
         .catch((err) => err);
+
+export const update = (route, body) =>
+    fetch(server.url + route, server.options('put', body))
+        .then(async (res) => {
+            return {
+                ...(await res
+                    .json()
+                    .then((res) => res)
+                    .catch(() => false)),
+                status: res.status,
+            };
+        })
+        .catch((err) => false);

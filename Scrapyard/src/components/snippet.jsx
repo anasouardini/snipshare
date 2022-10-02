@@ -1,15 +1,27 @@
-import React from 'react';
+import React, {useState} from 'react';
+import Form from './form';
 
 export default function Snippet(props) {
     // console.log('hell');
 
+    const [state, setState] = useState({showForm: false});
+
+    const handleEdit = () => {
+        setState({showForm: true});
+    };
+
     const lorem =
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley";
 
+    const classes = {
+        buttons: 'flex justify-between mt-[20px]',
+        button: 'w-[100px] bg-lime-600 leading-8 rounded-md text-white',
+    };
+
     return (
         <>
-            <style>{`.private:{}`}</style>
             <div
+                data-key={props.snippet.id}
                 draggable="false"
                 className={`shadow-lg shadow-lime-100 ${
                     props.snippet?.descr
@@ -43,8 +55,35 @@ export default function Snippet(props) {
                             </span>
                         </p>
                     </div>
+                    <div className={classes.buttons}>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+
+                                handleEdit();
+                            }}
+                            className={classes.button}
+                        >
+                            Edit
+                        </button>
+                        <button className={`${classes.button} bg-red-500`}>Delete</button>
+                    </div>
                 </div>
             </div>
+            {state.showForm ? (
+                <Form
+                    user={props.user}
+                    snippetID={props.snippet.id}
+                    inputs={{
+                        title: props.snippet.title,
+                        descr: props.snippet.descr,
+                        snippet: props.snippet.snippet,
+                    }}
+                    updateItems={props.updateItems}
+                />
+            ) : (
+                <></>
+            )}
         </>
     );
 }
