@@ -6,8 +6,22 @@ export default function Snippet(props) {
 
     const [state, setState] = useState({showForm: false});
 
-    const handleEdit = () => {
-        setState({showForm: true});
+    const handleDelete = (e) => {
+        e.stopPropagation();
+        if (props.snippet.allowedActions.includes('delete')) {
+            //handle deletion
+        }
+    };
+
+    const handleEdit = (e) => {
+        e.stopPropagation();
+        if (props.snippet.allowedActions.includes('edit')) {
+            setState({showForm: true});
+        }
+    };
+
+    const closeForm = () => {
+        setState({showForm: false});
     };
 
     const lorem =
@@ -15,7 +29,9 @@ export default function Snippet(props) {
 
     const classes = {
         buttons: 'flex justify-between mt-[20px]',
-        button: 'w-[100px] bg-lime-600 leading-8 rounded-md text-white',
+        button: 'w-[100px] leading-8 rounded-md text-white',
+        private:
+            'pointer-events-none select-none relative after:absolute after:content-["PRIVATE"] after:top-[40%] after:left-[34%] after:font-extrabold after:text-red-600 after:text-2xl after:border-y-[5px] after:border-red-600',
     };
 
     return (
@@ -23,22 +39,14 @@ export default function Snippet(props) {
             <div
                 data-key={props.snippet.id}
                 draggable="false"
-                className={`shadow-lg shadow-lime-100 ${
-                    props.snippet?.descr
-                        ? ''
-                        : 'pointer-events-none select-none relative after:absolute after:content-["PRIVATE"] after:top-[40%] after:left-[34%] after:font-extrabold after:text-red-600 after:text-2xl after:border-y-[5px] after:border-red-600'
-                }`}
+                className={`shadow-lg shadow-lime-100`}
             >
-                <div
-                    className={`snippet flex flex-col max-w-[380px] p-8  ${
-                        props.snippet?.descr ? '' : 'blur-[2px]'
-                    }`}
-                >
+                <div className={`snippet flex flex-col min-w-[300px] max-w-[380px] p-8`}>
                     <h3 className="text-xl text-gray-700 mb-3">{props.snippet.title}</h3>
-                    <p className="text-[1.1rem] text-gray-500">
+                    {/* <p className="text-[1.1rem] text-gray-500">
                         {props.snippet?.descr ? props.snippet.descr : lorem}
-                    </p>
-                    <hr className="border-none h-[1px] bg-gray-400 my-5 mx-auto w-[100px]" />
+                    </p> */}
+                    {/* <hr className="border-none h-[1px] bg-gray-400 my-5 mx-auto w-[100px]" /> */}
                     <div className=" text-gray-700">
                         <p>
                             status:&nbsp;
@@ -57,16 +65,25 @@ export default function Snippet(props) {
                     </div>
                     <div className={classes.buttons}>
                         <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-
-                                handleEdit();
-                            }}
-                            className={classes.button}
+                            onClick={handleEdit}
+                            className={`${classes.button} ${
+                                props.snippet.allowedActions.includes('edit')
+                                    ? 'bg-lime-600'
+                                    : 'bg-gray-400 cursor-not-allowed'
+                            }`}
                         >
                             Edit
                         </button>
-                        <button className={`${classes.button} bg-red-500`}>Delete</button>
+                        <button
+                            onClick={handleDelete}
+                            className={`${classes.button} ${
+                                props.snippet.allowedActions.includes('delete')
+                                    ? 'bg-red-500'
+                                    : 'bg-gray-400 cursor-not-allowed'
+                            } `}
+                        >
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
@@ -80,6 +97,7 @@ export default function Snippet(props) {
                         snippet: props.snippet.snippet,
                     }}
                     updateItems={props.updateItems}
+                    closeForm={closeForm}
                 />
             ) : (
                 <></>

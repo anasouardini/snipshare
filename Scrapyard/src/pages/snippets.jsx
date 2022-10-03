@@ -16,8 +16,8 @@ export default function Snippets() {
         const response = await read(`${user}/snippets`);
 
         if (response) {
-            // console.log('success');
-            console.log(response);
+            console.log('fetching');
+            // console.log(response);
             if (response.status == 200) {
                 setState({children: response.msg});
             }

@@ -12,7 +12,7 @@ const actions = {
 		// console.log(response[0][0]);
 		if (response[0][0].coworkers[usr].actions.includes(action)) {
 			response = await Snippet.editSnippet(owner, props);
-			console.log(response);
+			// console.log(response);
 			return response[0]?.affectedRows
 				? { status: 200, msg: `snippet has been ${action}ed` }
 				: { status: 500, msg: `something happend while ${action}ing the snippet` };

@@ -10,7 +10,7 @@ Reading isn't the only option, you can also give others permission to edit your 
 
 ## The Goal Behind It
 
-the reason behind this little project is to practice Auth, so I though it would be fun to make it programming related.
+the reason behind this little project is to practice using Authentication and athorization tools and best practices, I though that a project a about sharing code snippets would be ideal for that.
 
 ## The Added Benifit
 
@@ -18,6 +18,6 @@ the main Benifit obviously is to learn how to do Auth. but I also changed a few 
 
 - Vite (comming from webpack)
 - Tailwind (comming from Sass)
-- Passportjs, JWT (comming from no Auth :upside_down_face: )
+- Passportjs & JWT (comming from no Auth :upside_down_face: )
 - React-Location (comming from React-Router)
 - Mysql2 (comming from Prisma)

@@ -9,7 +9,14 @@ export default function Form(props) {
         snippet: useRef('snippet'),
     };
 
-    const handleEdit = async () => {
+    const handleClose = (e) => {
+        e.stopPropagation();
+        props.closeForm();
+    };
+
+    const handleEdit = async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         const body = {
             props: {
                 id: props.snippetID,
@@ -18,8 +25,14 @@ export default function Form(props) {
                 snippet: refs.snippet.current.value,
             },
         };
-        await update(props.user + '/' + props.snippetID, body);
-        props.updateItems();
+        const response = await update(props.user + '/' + props.snippetID, body);
+        console.log(response.msg);
+
+        if (response.status == 200) {
+            props.updateItems();
+        }
+
+        props.closeForm();
     };
 
     const classes = {
@@ -27,12 +40,19 @@ export default function Form(props) {
     };
 
     return (
-        <div
-            className={`z-10 fixed top-0 left-0 w-full h-full flex items-center justify-center
-                        before:fixed before:content-[""] before:top-0 before:left-0
-                        before:w-full before:h-full before:bg-lime-600 before:opacity-20`}
-        >
-            <form className="flex flex-col w-[600px] gap-6 p-6 pt-8 bg-white z-30 drop-shadow-2xl relative before:fixed before:content-['X'] before:top-2 before:right-2 before:text-xl before:cursor-pointer">
+        <div className={`z-10 fixed top-0 left-0 w-full h-full flex items-center justify-center`}>
+            <div
+                onClick={handleClose}
+                className={`fixed content-[""] top-0 left-0
+                        w-full h-full bg-lime-600 opacity-20`}
+            ></div>
+            <form className="flex flex-col w-[600px] gap-6 p-6 pt-8 bg-white z-30 drop-shadow-2xl relative">
+                <span
+                    onClick={handleClose}
+                    className='absolute content-["X"] top-2 right-2 text-xl cursor-pointer'
+                >
+                    X
+                </span>
                 <input
                     ref={refs.title}
                     placeholder="title"
@@ -60,11 +80,7 @@ export default function Form(props) {
 
                 <button
                     className="w-[100px] bg-lime-600 leading-8 rounded-md text-white mx-auto"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        handleEdit();
-                    }}
+                    onClick={handleEdit}
                 >
                     Edit
                 </button>
