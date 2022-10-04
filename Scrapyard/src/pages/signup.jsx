@@ -39,7 +39,7 @@ export default function SignUp() {
         textInput: 'border-0 border-b-2 border-b-lime-600 outline-0',
         checkbox: 'w-xl mr-3',
         label: 'max-w-[300px] mx-auto',
-        submit: 'w-full border-2 border-lime-600 px-[20px]',
+        submit: 'w-full border-b-2 border-b-lime-600 mt-4 pb-2',
     };
 
     const handleSubmit = (e) => {

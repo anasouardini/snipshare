@@ -1,5 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-location';
+import {create} from '../../tools/bridge';
 
 export default function SharedLayout(props) {
     const navigate = useNavigate();
@@ -8,7 +9,7 @@ export default function SharedLayout(props) {
     };
 
     const classes = {
-        li: 'm-2 cursor-pointer border-b-[4px] border-b-transparent hover:border-b-[4px] hover:border-b-lime-600',
+        li: 'm-2 cursor-pointer border-b-[4px] border-b-transparent hover:border-b-[4px] hover:border-b-lime-600 text-gray-200',
     };
 
     return (
@@ -18,18 +19,10 @@ export default function SharedLayout(props) {
                     <li
                         className={classes.li}
                         onClick={() => {
-                            changeRoute('/login');
+                            changeRoute('/');
                         }}
                     >
-                        login
-                    </li>
-                    <li
-                        className={classes.li}
-                        onClick={() => {
-                            changeRoute('/signup');
-                        }}
-                    >
-                        signup
+                        Home
                     </li>
                     <li
                         className={classes.li}
@@ -37,23 +30,42 @@ export default function SharedLayout(props) {
                             changeRoute('venego/snippets');
                         }}
                     >
-                        venego snippets
+                        my snippets
+                    </li>
+                    <li
+                        className={`${classes.li} ml-auto`}
+                        onClick={() => {
+                            changeRoute('/login');
+                        }}
+                    >
+                        SignIn
                     </li>
                     <li
                         className={classes.li}
                         onClick={() => {
-                            changeRoute('3sila/snippets');
+                            changeRoute('/signup');
                         }}
                     >
-                        3sila snippets
+                        SignUp
                     </li>
                     <li
                         className={classes.li}
-                        onClick={() => {
-                            changeRoute('m9ila/snippets');
+                        onClick={async () => {
+                            changeRoute('/login');
+                            const response = await create('logout');
+                            console.log(response);
                         }}
                     >
-                        m9ila snippets
+                        Logout
+                    </li>
+                    <li
+                        className={classes.li}
+                        onClick={async () => {
+                            const response = await create('restart');
+                            console.log(response);
+                        }}
+                    >
+                        restart
                     </li>
                 </ul>
             </nav>

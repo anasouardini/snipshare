@@ -11,7 +11,7 @@ export default function Form(props) {
 
     const handleClose = (e) => {
         e.stopPropagation();
-        props.closeForm();
+        props.closePopUp();
     };
 
     const handleEdit = async (e) => {
@@ -32,7 +32,7 @@ export default function Form(props) {
             props.updateItems();
         }
 
-        props.closeForm();
+        props.closePopUp();
     };
 
     const classes = {

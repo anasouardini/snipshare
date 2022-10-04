@@ -57,3 +57,16 @@ export const update = (route, body) =>
             };
         })
         .catch((err) => false);
+
+export const remove = (route) =>
+    fetch(server.url + route, server.options('delete'))
+        .then(async (res) => {
+            return {
+                ...(await res
+                    .json()
+                    .then((res) => res)
+                    .catch(() => false)),
+                status: res.status,
+            };
+        })
+        .catch((err) => false);

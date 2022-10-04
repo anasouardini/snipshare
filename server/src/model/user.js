@@ -1,31 +1,23 @@
-const pool = require('./db');
+const poolPromise = require('./db');
 
 const userExists = (usr) => {
-	const query = `select * from users where user = '${usr}'`;
-	return pool
-		.execute(query)
-		.then((res) => res)
-		.catch((err) => err);
+    const query = `select * from users where user = '${usr}'`;
+    return poolPromise(query);
 };
 
-const createUser = (usr, pass) => {
-	const query = `insert into users (user, passwd) values ('${usr}', '${pass}')`;
-	return pool
-		.execute(query)
-		.then((res) => res)
-		.catch((err) => err);
-};
+const readUser = (usr) => {};
 
-const deleteUsers = () => {
-	const query = `delete from users where 1=1`;
-	return pool
-		.execute(query)
-		.then((res) => res)
-		.catch((err) => err);
-};
+const readAll = () => poolPromise(`select user from users;`);
+
+const createUser = (usr, pass) =>
+    poolPromise(`insert into users (user, passwd) values (?, ?)`, [usr, pass]);
+
+const deleteUsers = () => poolPromise(`delete from users where 1=1`);
 
 module.exports = {
-	userExists,
-	createUser,
-	deleteUsers,
+    userExists,
+    readUser,
+    readAll,
+    createUser,
+    deleteUsers,
 };

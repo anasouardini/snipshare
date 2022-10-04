@@ -5,9 +5,9 @@ import {useNavigate} from 'react-location';
 
 export default function Login() {
     const navigate = useNavigate();
-    // if (LocalShop.checkLogin()) {
-    //     navigate({to: './shop', replace: true});
-    // }
+    const changeRoute = (to) => {
+        navigate({to, replace: true});
+    };
 
     const refs = {
         username: useRef('username'),
@@ -28,12 +28,11 @@ export default function Login() {
         });
 
         if (response) {
-            if (response.authenticated) {
-                console.log('render shop route');
+            if (response.status == 200) {
+                return changeRoute('/');
             }
-            console.log('success');
-            console.log(response);
-            return;
+            // console.log('success');
+            // console.log(response);
         }
 
         console.log('not success :)');
@@ -50,7 +49,7 @@ export default function Login() {
         textInput: 'border-0 border-b-2 border-b-lime-600 outline-0',
         checkbox: 'w-xl mr-3',
         label: 'max-w-[300px] mx-auto',
-        submit: 'w-full border-2 border-lime-600 px-[20px]',
+        submit: 'w-full border-b-2 border-b-lime-600 mt-4 pb-2',
     };
 
     return (

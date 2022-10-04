@@ -8,8 +8,10 @@ import SignUp from './pages/signup';
 
 import './index.css';
 import Snippets from './pages/snippets';
+import Home from './pages/home';
 
 const routes = [
+    {path: '/', element: <Home />},
     {path: '/login', element: <Login />},
     {path: '/signup', element: <SignUp />},
     {

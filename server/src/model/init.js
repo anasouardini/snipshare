@@ -1,20 +1,14 @@
-DROP DATABASE scrapeyard;
+const poolPromise = require('./db');
 
-CREATE DATABASE scrapeyard;
+const queries = {
+    cleardb: 'DROP TABLE IF EXISTS admin, users, snippets;',
 
-USE scrapeyard;
-
--- SCHEMA
--- CREATE TABLE admin (
---     user varchar(100) PRIMARY KEY,
---     passwd varchar(100) NOT NULL
--- );
-CREATE TABLE users (
+    createUsers: `CREATE TABLE users (
     user varchar(100) PRIMARY KEY,
     passwd varchar(100) NOT NULL
-);
+);`,
 
-CREATE TABLE snippets (
+    createSnippets: `CREATE TABLE snippets (
     id varchar(100) PRIMARY KEY,
     user varchar(100) NOT NULL,
     isPrivate tinyint NOT NULL,
@@ -22,20 +16,16 @@ CREATE TABLE snippets (
     title varchar(200) NOT NULL,
     descr varchar(1000) NOT NULL,
     snippet varchar(5000) NOT NULL
-);
+);`,
 
--- DATA
-INSERT INTO
-    users (user, passwd) -- should be admin table
-VALUES
-    (
-        'admin',
-        '$2a$10$EIWgPiqrTVaY7h02cqy1kO4y.lnoN8HgngdIdAK/v3FrXcPbLLBZm'
-    );
-
+    insertUsers: `
 INSERT INTO
     users (user, passwd)
 VALUES
+    (
+        'admin',
+        '$KohUd$ZwjdliPff5ExeFs.CIQ.s.MV0ap50GN9vUmTojQuwKJT5oPpkorFg'
+    ),    
     (
         'venego',
         '$2b$10$ZwjIliPoQ5Exets.CIQbs.MV0ap50GN9vUmTojQuwKJT5oPpkIDVi'
@@ -47,9 +37,9 @@ VALUES
     (
         '3sila',
         '$2a$10$o4Gk9LHIOzuTlNdK2lYQi.yTXHMhXZXbXuLkzVPnhL4Tqf.A6v81m'
-    );
+    );`,
 
-INSERT INTO
+    insertSnippets: `INSERT INTO
     snippets (
         id,
         user,
@@ -72,7 +62,7 @@ VALUES
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
         ',
-        ''
+        'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
     ),
     (
         'etwpoitjkmnvvviersfovfdndf;v',
@@ -86,7 +76,7 @@ VALUES
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
         ',
-        ''
+        'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
     ),
     (
         'etwpoitjdfgkmgfdnvviervnf;v',
@@ -100,7 +90,7 @@ VALUES
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
         ',
-        ''
+        'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
     ),
     (
         'etwpoitjdfgkmgfdffnvviervnf;v',
@@ -114,5 +104,25 @@ VALUES
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
         ',
-        ''
+        'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
     );
+`,
+};
+
+const restart = async () => {
+    const response =
+        (await poolPromise(queries.cleardb)) &&
+        (await poolPromise(queries.createUsers)) &&
+        (await poolPromise(queries.insertUsers)) &&
+        (await poolPromise(queries.createSnippets)) &&
+        (await poolPromise(queries.insertSnippets)) &&
+        true;
+
+    // const response = poolPromise(queries.insertUsers);
+
+    return response;
+};
+
+module.exports = {
+    restart,
+};
