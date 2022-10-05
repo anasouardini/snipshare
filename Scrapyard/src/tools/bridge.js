@@ -2,6 +2,7 @@ const server = {
     url: 'http://127.0.0.1:2000/',
 
     options: (method, body) => {
+        // console.log(body);
         const options = {
             method,
             mode: 'cors',

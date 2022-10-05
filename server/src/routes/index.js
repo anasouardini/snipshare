@@ -27,6 +27,7 @@ router.post('/restart', gotoLogin, controller.init.restart);
 router.post('/signin', gotoHome, controller.signin);
 router.post('/signup', gotoHome, controller.signup);
 router.post('/logout', controller.logout);
+router.get('/whoami', controller.whoami);
 // snippets
 router.get('/users', gotoLogin, controller.user.readAll);
 router.get('/:user/snippets', gotoLogin, controller.snippet.readAll);

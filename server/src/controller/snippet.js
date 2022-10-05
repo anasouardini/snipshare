@@ -38,14 +38,21 @@ const authAction = async (req, action) => {
     const usr = req.user.username;
     const snippetID = req.params.snippetID;
 
+    // if the user is the owner
+    if (owner == usr) {
+        const response = await Snippet.deleteSnippet(owner, snippetID);
+        console.log(response);
+        return response[0]?.affectedRows
+            ? {status: 200, msg: `snippet has been ${action}ed`}
+            : {status: 500, msg: `something happend while ${action}ing the snippet`};
+    }
+
     // console.log(req.body.props);
     let response = await Snippet.getSnippet(owner, snippetID);
     // console.log(snippetID);
     const rr = response[0].length
         ? response[0][0].coworkers?.[usr]
-            ? action == 'edit'
-                ? actions[action](owner, usr, snippetID, action, req.body.props)
-                : actions[action](owner, usr, snippetID, action, req.body.props)
+            ? actions[action](owner, usr, snippetID, action, req.body.props)
             : {status: 401, msg: `you are not authorized to interact with this snippet`}
         : {status: 404, msg: `this snippet doen't exist`};
 
@@ -63,14 +70,23 @@ const readAll = async (req, res) => {
         return res.json({msg: []});
     }
 
-    // if the owner is the reader
-    if (snippetsOwner == req.user.username) return res.json({msg: response[0]});
-
     const httpResponse = [];
     response[0].forEach((snippetObj) => {
         // console.log(snippetObj);
-        const coworker = snippetObj.coworkers?.[req.user.username];
-        if (snippetObj.isPrivate) {
+        if (snippetsOwner == req.user.username) {
+            // the readrer is the owner
+            const {id, title, descr, snippet, img, isPrivate} = snippetObj;
+            httpResponse.push({
+                id,
+                title,
+                descr,
+                snippet,
+                img,
+                isPrivate,
+                allowedActions: ['read', 'edit', 'delete'],
+            });
+        } else if (snippetObj.isPrivate) {
+            const coworker = snippetObj.coworkers?.[req.user.username];
             if (coworker && coworker.actions.includes('read')) {
                 console.log(coworker.actions);
                 // private but you can access it
@@ -87,7 +103,7 @@ const readAll = async (req, res) => {
             } else {
                 // private and no access
                 const {id, title, img, isPrivate} = snippetObj;
-                httpResponse.push({id, title: title, img, isPrivate, allowedActions: ['none']});
+                httpResponse.push({id, title, img, isPrivate, allowedActions: ['none']});
             }
         } else {
             // public
@@ -108,18 +124,20 @@ const readAll = async (req, res) => {
 };
 
 const create = async (req, res) => {
+    // console.log(req.body.props);
     if (req.user.username == req.params.user) {
-        let response = await Snippet.createSnippet({
-            title: '',
-            descr: '',
-            img: '',
-            isPrivate: true,
-            coworkers: [],
+        const response = await Snippet.createSnippet({...req.body.props});
+        // console.log(response);
+        if (response && response[0]?.affectedRows) {
+            return res.json({msg: 'snippet created successfully'});
+        }
+
+        return res.status(500).json({
+            msg: 'something bad happend',
         });
-        return res.json({msg: 'this is still not constructed'});
     }
-    // in theory... this line would never get executed
-    res.json({msg: "you can not make snippets on other user's account"});
+
+    res.status(401).json({msg: 'guess what? you can not create a repository on others accounts'});
 };
 
 const read = async (req, res) => {

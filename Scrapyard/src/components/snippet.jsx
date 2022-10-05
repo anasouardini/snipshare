@@ -40,9 +40,6 @@ export default function Snippet(props) {
         setState({showForm: false, showPreview: false});
     };
 
-    const lorem =
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley";
-
     const classes = {
         buttons: 'flex justify-between mt-[20px]',
         button: 'w-[100px] leading-8 rounded-md text-white',
@@ -72,7 +69,7 @@ export default function Snippet(props) {
                 draggable="false"
                 className={`border-[1px] border-lime-300`}
             >
-                <div className={`snippet flex flex-col min-w-[300px] max-w-[380px] p-8`}>
+                <div className={`snippet flex flex-col w-[360px] p-8`}>
                     <h3 className="text-xl text-gray-300 mb-3">{props.snippet.title}</h3>
                     <div>
                         <p>
@@ -115,6 +112,7 @@ export default function Snippet(props) {
             </div>
             {state.showForm ? (
                 <Form
+                    action="edit"
                     user={props.user}
                     snippetID={props.snippet.id}
                     inputs={{

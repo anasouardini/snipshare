@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-location';
-import {create} from '../../tools/bridge';
+import {create, read} from '../../tools/bridge';
 
 export default function SharedLayout(props) {
     const navigate = useNavigate();
@@ -26,8 +26,12 @@ export default function SharedLayout(props) {
                     </li>
                     <li
                         className={classes.li}
-                        onClick={() => {
-                            changeRoute('venego/snippets');
+                        onClick={async () => {
+                            const response = await read('whoami');
+                            if (response && response.status == 200) {
+                                return changeRoute(response.msg + '/snippets');
+                            }
+                            console.log(response);
                         }}
                     >
                         my snippets

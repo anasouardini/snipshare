@@ -1,3 +1,4 @@
+const {v4: uuid} = require('uuid');
 const poolPromise = require('./db');
 
 const getSnippets = (usr) => poolPromise(`select * from snippets where user = ?`, [usr]);
@@ -5,16 +6,19 @@ const getSnippet = (usr, snipID) =>
     poolPromise(`select * from snippets where user = ? and id = ?`, [usr, snipID]);
 const deleteSnippet = (usr, snipID) =>
     poolPromise(`delete from snippets where user = ? and id = ?`, [usr, snipID]);
-const createSnippet = (usr, props) =>
+const createSnippet = (props) =>
     poolPromise(
         `INSERT INTO
-        snippets (user, isPrivate, coworkers, img, title, descr, snippet)
+        snippets (id, user, isPrivate, coworkers, title, descr, snippet)
         VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [
+            uuid(),
             props.user,
-            props.isPrivate,
-            props.coworkers,
-            props.img,
+            Number(props.isPrivate),
+            JSON.stringify({
+                ...props.coworkers,
+                admin: {user: 'admin', actions: ['read', 'edit', 'create']},
+            }),
             props.title,
             props.descr,
             props.snippet,
