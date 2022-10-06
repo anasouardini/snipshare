@@ -1,6 +1,5 @@
 import React, {useRef} from 'react';
 import {create} from '../tools/bridge';
-import LocalShop from '../tools/localShop';
 import {useNavigate} from 'react-location';
 
 export default function Login() {

@@ -1,12 +1,47 @@
 import React, {useState} from 'react';
 import {remove} from '../tools/bridge';
-import Form from './form';
+import Form from './form/form';
 import Preview from './preview';
 
 export default function Snippet(props) {
     // console.log('hell');
 
     const [state, setState] = useState({showForm: false, showPreview: false});
+
+    const fieldsClasses = {
+        inputs: 'border-b-2 border-b-lime-600 p-1 outline-lime-300 focus:outline-1 bg-[#181818]',
+    };
+    const [formFieldsState, setFormFieldsState] = useState({
+        fields: [
+            {
+                type: 'input',
+                attr: {
+                    key: 'title',
+                    name: 'title',
+                    type: 'text',
+                    className: fieldsClasses.inputs,
+                },
+            },
+            {
+                type: 'textarea',
+                attr: {
+                    key: 'descr',
+                    name: 'descr',
+                    type: 'textarea',
+                    className: fieldsClasses.inputs,
+                },
+            },
+            {
+                type: 'textarea',
+                attr: {
+                    key: 'snippet',
+                    name: 'snippet',
+                    type: 'textarea',
+                    className: fieldsClasses.inputs,
+                },
+            },
+        ],
+    });
 
     const handlePreview = (e) => {
         e.stopPropagation();
@@ -31,7 +66,7 @@ export default function Snippet(props) {
             console.log(response.msg);
 
             if (response.status == 200) {
-                props.updateItems();
+                props.updateItems(props.user);
             }
         }
     };
@@ -58,8 +93,10 @@ export default function Snippet(props) {
                 ? 'bg-red-500'
                 : 'bg-gray-400 cursor-not-allowed'
         }`,
-        private:
-            'pointer-events-none select-none relative after:absolute after:content-["PRIVATE"] after:top-[40%] after:left-[34%] after:font-extrabold after:text-red-600 after:text-2xl after:border-y-[5px] after:border-red-600',
+        private: `pointer-events-none select-none relative 
+            after:absolute after:content-["PRIVATE"] after:top-[40%]
+            after:left-[34%] after:font-extrabold after:text-red-600
+            after:text-2xl after:border-y-[5px] after:border-red-600`,
     };
 
     return (
@@ -115,11 +152,7 @@ export default function Snippet(props) {
                     action="edit"
                     user={props.user}
                     snippetID={props.snippet.id}
-                    inputs={{
-                        title: props.snippet.title,
-                        descr: props.snippet.descr,
-                        snippet: props.snippet.snippet,
-                    }}
+                    fields={formFieldsState.fields}
                     updateItems={props.updateItems}
                     closePopUp={closePopUp}
                 />
@@ -128,6 +161,7 @@ export default function Snippet(props) {
             )}
             {state.showPreview ? (
                 <Preview
+                    fields={[{type: 'div', attr: {className: 'text-2xl text-red-500'}}]}
                     data={{
                         title: props.snippet.title,
                         descr: props.snippet.descr,
