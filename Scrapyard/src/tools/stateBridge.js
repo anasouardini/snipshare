@@ -10,21 +10,23 @@ const setState = (componentID, stateName, newState) => {
 const getState = (componentID, stateName) => {
     if (stateName == '*') {
         return Object.keys(Bridges[componentID]).reduce((acc, stateName) => {
-            acc[stateName] = Bridges[componentID][stateName];
+            acc[stateName] = Bridges[componentID][stateName].state;
             return acc;
         }, {});
     }
+    // console.log(Bridges[componentID][stateName]);
     return Bridges[componentID][stateName].state;
 };
 
 const initBridge = (componentID, bridgesObj) => {
-    if (!bridgesObj?.render) {
-        bridgesObj.render = () => {
-            console.error('render function is not set');
-        };
-    }
+    // console.log(componentID);
+    // if (!bridgesObj?.render) {
+    //     bridgesObj.render = () => {
+    //         console.error('render function is not set');
+    //     };
+    // }
 
-    Bridges[componentID] = {...bridgesObj};
+    Bridges[componentID] = bridgesObj;
 };
 
 export const Bridge = {initBridge, getState, setState};

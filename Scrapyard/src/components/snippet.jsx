@@ -1,12 +1,17 @@
 import React, {useState} from 'react';
 import {remove} from '../tools/bridge';
+import {getSnippet} from '../tools/snipStore';
 import Form from './form/form';
 import Preview from './preview';
 
 export default function Snippet(props) {
     // console.log('hell');
 
-    const [state, setState] = useState({showForm: false, showPreview: false});
+    const [snipInfoState, setSnipInfoState] = useState({
+        snipUser: props.user,
+        snippet: props.snippet,
+    });
+    const [popUpState, setPopUpState] = useState({showForm: false, showPreview: false});
 
     const fieldsClasses = {
         inputs: 'border-b-2 border-b-lime-600 p-1 outline-lime-300 focus:outline-1 bg-[#181818]',
@@ -17,6 +22,7 @@ export default function Snippet(props) {
                 type: 'input',
                 attr: {
                     key: 'title',
+                    defaultValue: snipInfoState.snippet.title,
                     name: 'title',
                     type: 'text',
                     className: fieldsClasses.inputs,
@@ -26,6 +32,7 @@ export default function Snippet(props) {
                 type: 'textarea',
                 attr: {
                     key: 'descr',
+                    defaultValue: snipInfoState.snippet.descr,
                     name: 'descr',
                     type: 'textarea',
                     className: fieldsClasses.inputs,
@@ -35,6 +42,7 @@ export default function Snippet(props) {
                 type: 'textarea',
                 attr: {
                     key: 'snippet',
+                    defaultValue: snipInfoState.snippet.snippet,
                     name: 'snippet',
                     type: 'textarea',
                     className: fieldsClasses.inputs,
@@ -45,51 +53,47 @@ export default function Snippet(props) {
 
     const handlePreview = (e) => {
         e.stopPropagation();
-        if (props.snippet.allowedActions.includes('read')) {
-            setState({showPreview: true});
+        if (snipInfoState.snippet.allowedActions.includes('read')) {
+            setPopUpState({showPreview: true, showForm: false});
         }
     };
 
     const handleEdit = (e) => {
         e.stopPropagation();
-        if (props.snippet.allowedActions.includes('edit')) {
-            setState({showForm: true});
+        if (snipInfoState.snippet.allowedActions.includes('edit')) {
+            setPopUpState({showForm: true, showPreview: false});
         }
     };
 
     const handleDelete = async (e) => {
         e.stopPropagation();
 
-        if (props.snippet.allowedActions.includes('delete')) {
-            // console.log(props.snippet);
-            const response = await remove(props.user + '/' + props.snippet.id);
+        if (snipInfoState.snippet.allowedActions.includes('delete')) {
+            // console.log(snipInfoState.snippet);
+            const response = await remove(snipInfoState.snipUser + '/' + snipInfoState.snippet.id);
             console.log(response.msg);
 
             if (response.status == 200) {
-                props.updateItems(props.user);
+                props.updateSnippetsCB();
             }
         }
-    };
-
-    const closePopUp = () => {
-        setState({showForm: false, showPreview: false});
     };
 
     const classes = {
         buttons: 'flex justify-between mt-[20px]',
         button: 'w-[100px] leading-8 rounded-md text-white',
         btnPreview: `${
-            props.snippet.allowedActions.includes('read')
+            snipInfoState.snippet.allowedActions.includes('read')
                 ? 'bg-cyan-600'
                 : 'bg-gray-400 cursor-not-allowed'
         }`,
         btnEdit: `${
-            props.snippet.allowedActions.includes('edit')
+            snipInfoState.snippet.allowedActions.includes('edit')
                 ? 'bg-lime-600'
                 : 'bg-gray-400 cursor-not-allowed'
         }`,
         btnDelete: `${
-            props.snippet.allowedActions.includes('delete')
+            snipInfoState.snippet.allowedActions.includes('delete')
                 ? 'bg-red-500'
                 : 'bg-gray-400 cursor-not-allowed'
         }`,
@@ -99,26 +103,40 @@ export default function Snippet(props) {
             after:text-2xl after:border-y-[5px] after:border-red-600`,
     };
 
+    const update = () => {
+        setSnipInfoState({...snipInfoState, snippet: getSnippet(snipInfoState.snippet.id)});
+    };
+    const hidePopUp = (popUp) => {
+        let newState = {...popUpState};
+        if (popUp == 'form') {
+            newState.showForm = false;
+        } else {
+            newState.showPreview = false;
+        }
+
+        setPopUpState(newState);
+    };
+
     return (
         <>
             <div
-                data-key={props.snippet.id}
+                data-key={snipInfoState.snippet.id}
                 draggable="false"
                 className={`border-[1px] border-lime-300`}
             >
                 <div className={`snippet flex flex-col w-[360px] p-8`}>
-                    <h3 className="text-xl text-gray-300 mb-3">{props.snippet.title}</h3>
+                    <h3 className="text-xl text-gray-300 mb-3">{snipInfoState.snippet.title}</h3>
                     <div>
                         <p>
                             status:&nbsp;
                             <span className="text-gray-500">
-                                {props.snippet.isPrivate ? 'private' : 'public'}
+                                {snipInfoState.snippet.isPrivate ? 'private' : 'public'}
                             </span>
                         </p>
                         <p>
                             allowed actions:&nbsp;
                             <span className="text-gray-500">
-                                {props.snippet.allowedActions.reduce(
+                                {snipInfoState.snippet.allowedActions.reduce(
                                     (acc, action) => acc + ' | ' + action
                                 )}
                             </span>
@@ -147,27 +165,25 @@ export default function Snippet(props) {
                     </div>
                 </div>
             </div>
-            {state.showForm ? (
+            {popUpState.showForm ? (
                 <Form
                     action="edit"
-                    user={props.user}
-                    snippetID={props.snippet.id}
+                    updateSnippetCB={update}
+                    hidePopUp={hidePopUp}
+                    id={snipInfoState.snippet.id}
                     fields={formFieldsState.fields}
-                    updateItems={props.updateItems}
-                    closePopUp={closePopUp}
                 />
             ) : (
                 <></>
             )}
-            {state.showPreview ? (
+            {popUpState.showPreview ? (
                 <Preview
-                    fields={[{type: 'div', attr: {className: 'text-2xl text-red-500'}}]}
+                    hidePopUp={hidePopUp}
                     data={{
-                        title: props.snippet.title,
-                        descr: props.snippet.descr,
-                        snippet: props.snippet.snippet,
+                        title: snipInfoState.snippet.title,
+                        descr: snipInfoState.snippet.descr,
+                        snippet: snipInfoState.snippet.snippet,
                     }}
-                    closePopUp={closePopUp}
                 />
             ) : (
                 <></>

@@ -1,12 +1,23 @@
 import React from 'react';
+import {useEffect} from 'react';
 import {useNavigate} from 'react-location';
 import {create, read} from '../../tools/bridge';
+import {updateWhoami} from '../../tools/snipStore';
 
 export default function SharedLayout(props) {
     const navigate = useNavigate();
     const changeRoute = (to) => {
         navigate({to, replace: true});
     };
+
+    useEffect(() => {
+        (async () => {
+            const whoamiUsr = await updateWhoami();
+            if (whoamiUsr.err == 'fetchError') {
+                return;
+            }
+        })();
+    }, []);
 
     const classes = {
         li: 'm-2 cursor-pointer border-b-[4px] border-b-transparent hover:border-b-[4px] hover:border-b-lime-600 text-gray-200',

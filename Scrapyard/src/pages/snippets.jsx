@@ -1,14 +1,10 @@
-import React from 'react';
-import {useState} from 'react';
-import {useEffect} from 'react';
-import {read} from '../tools/bridge';
+import React, {useState, useEffect, createContext} from 'react';
 import Snippet from '../components/snippet';
 import {useMatch} from 'react-location';
 import {useNavigate} from 'react-location';
 import Form from '../components/form/form';
 import {deepClone} from '../tools/deepClone';
-import {updateItems, whoami} from '../tools/asyncOps';
-import {Bridge} from '../tools/stateBridge';
+import {getSnippets, getWhoami, updateSnippets} from '../tools/snipStore';
 
 export default function Snippets() {
     const navigate = useNavigate();
@@ -16,10 +12,10 @@ export default function Snippets() {
         navigate({to, replace: true});
     };
     const {
-        data: {user},
+        data: {user: userParam},
     } = useMatch();
 
-    const [popUpState, setpopUpState] = useState({
+    const [popUpState, setPopUpState] = useState({
         showForm: false,
         showPreview: false,
     });
@@ -37,6 +33,7 @@ export default function Snippets() {
                 type: 'input',
                 attr: {
                     key: 'title',
+                    placeholder: 'title',
                     name: 'title',
                     type: 'text',
                     className: fieldsClasses.inputs,
@@ -46,6 +43,7 @@ export default function Snippets() {
                 type: 'textarea',
                 attr: {
                     key: 'descr',
+                    placeholder: 'description',
                     name: 'descr',
                     type: 'textarea',
                     className: fieldsClasses.inputs,
@@ -55,6 +53,7 @@ export default function Snippets() {
                 type: 'textarea',
                 attr: {
                     key: 'snippet',
+                    placeholder: 'snippet',
                     name: 'snippet',
                     type: 'textarea',
                     className: fieldsClasses.inputs,
@@ -77,72 +76,51 @@ export default function Snippets() {
         ],
     });
 
+    // console.log(snipInfoState);
+    const update = async () => {
+        const children = await updateSnippets();
+        if (children.err == 'unauthorised') {
+            return changeRoute('/login');
+        }
+
+        if (children.err == 'fetchError') {
+            return;
+        }
+
+        const stateCpy = deepClone(snipInfoState);
+        stateCpy.whoami = getWhoami();
+        stateCpy.children = children;
+        setSnipInfoState(stateCpy);
+    };
     useEffect(() => {
-        const bridges = {
-            popUpState: {
-                state: popUpState,
-                render: (newState = undefined) => {
-                    let newStateCpy = newState ?? state;
-                    // console.log(newStateCpy);
-                    setpopUpState(newStateCpy);
-                },
-            },
-            snipInfoState: {
-                state: snipInfoState,
-                render: (newState = undefined) => {
-                    let newStateCpy = newState ?? state;
-                    // console.log(newStateCpy);
-                    setSnipInfoState(newStateCpy);
-                },
-            },
-            formFieldsState: {
-                state: formFieldsState,
-                render: (newState = undefined) => {
-                    let newStateCpy = newState ?? state;
-                    // console.log(newStateCpy);
-                    setFormFieldsState(newStateCpy);
-                },
-            },
-        };
-        Bridge.initBridge('snippets', bridges);
-
-        (async () => {
-            const children = await updateItems(snipInfoState.user);
-            if (children.err == 'unauthorised') {
-                return changeRoute('/login');
-            }
-
-            if (children.err == 'fetchError') {
-                return;
-            }
-
-            const whoamiUsr = await whoami();
-            if (whoamiUsr.err == 'fetchError') {
-                return;
-            }
-            setSnipInfoState({whoami: whoamiUsr, children});
-        })();
-    }, [user]);
+        update();
+    }, [userParam]);
 
     const handleCreate = (e) => {
         e.stopPropagation();
+        e.preventDefault();
         //mount form
-        setpopUpState({showForm: true, showPreview: popUpState.showPreview});
+        setPopUpState({...popUpState, showForm: true});
     };
 
     const listSnippets = () =>
         snipInfoState.children.map((snippet) => (
-            <Snippet key={snippet.id} snippet={snippet} updateItems={updateItems} user={user} />
+            <Snippet
+                updateSnippetsCB={update}
+                key={snippet.id}
+                snippet={snippet}
+                user={userParam}
+            />
         ));
 
     return (
         <div>
-            <h1 className="text-2xl font-bold my-11 text-center">{user}'s Snippets</h1>
+            <h1 className="text-2xl font-bold my-11 text-center">{userParam}'s Snippets</h1>
             <div className="flex flex-wrap mx-auto items-stretch justify-center gap-7">
                 {snipInfoState?.children ? listSnippets() : <></>}
 
                 {/* add a snippet button */}
-                {snipInfoState.whoami == user ? (
+                {snipInfoState.whoami == userParam ? (
                     <button
                         onClick={handleCreate}
                         className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}
@@ -152,9 +130,12 @@ export default function Snippets() {
                 ) : (
                     <></>
                 )}
-
                 {popUpState.showForm ? (
-                    <Form id="snippets" action="create" fields={formFieldsState.fields} />
+                    <Form
+                        action="create"
+                        fields={formFieldsState.fields}
+                        updateSnippetsCB={update}
+                    />
                 ) : (
                     <></>
                 )}

@@ -1,9 +1,11 @@
-import React from 'react';
-import {Bridge} from '../../../tools/stateBridge';
+import React, {useState, useRef, useEffect} from 'react';
+import {read} from '../../../tools/bridge';
+import {deepClone} from '../../../tools/deepClone';
+import {setCoworkers} from '../../../tools/snipStore';
 
 export default function Coworkers(props) {
-    const [coworkerState, setCoworkerState] = useState(Bridge.getState('form', 'coworkerState'));
-    const [usresState, setUsersState] = useState([]);
+    const [coworkerState, setCoworkerState] = useState({coworkers: {}});
+    const [usersState, setUsersState] = useState([]);
 
     const refs = {
         coworker: useRef('noUser'),
@@ -23,13 +25,15 @@ export default function Coworkers(props) {
         const coworker = {user: refs.coworker.current.value, actions: coworkerActions};
 
         // add new coworkers to form state
+
         const stateClone = deepClone(coworkerState);
         stateClone.coworkers[refs.coworker.current.value] = coworker;
         setCoworkerState(stateClone);
+        setCoworkers(coworkerState.coworkers);
     };
 
     const loadUsers = () => {
-        return usresState.map((usr) => (
+        return usersState.map((usr) => (
             <option key={usr} name={usr}>
                 {usr}
             </option>
@@ -104,7 +108,7 @@ export default function Coworkers(props) {
                     <ul>
                         {Object.keys(coworkerState.coworkers).map((coworker) => {
                             return (
-                                <li>
+                                <li key={coworker}>
                                     <span>{coworker}: &nbsp;</span>
                                     {coworkerState.coworkers[coworker].actions.map((act) => (
                                         <span className="text-gray-600">{act} &nbsp;</span>

@@ -63,7 +63,8 @@ const readAll = async (req, res) => {
     const snippetsOwner = req.params.user;
 
     let response = await Snippet.getSnippets(snippetsOwner);
-    // console.log(response);
+    // console.log('read all', response);
+    // console.log(snippetsOwner);
 
     // if empty
     if (!response[0].length) {
@@ -127,7 +128,7 @@ const create = async (req, res) => {
     // console.log(req.body.props);
     if (req.user.username == req.params.user) {
         const response = await Snippet.createSnippet({...req.body.props});
-        // console.log(response);
+        console.log(response);
         if (response && response[0]?.affectedRows) {
             return res.json({msg: 'snippet created successfully'});
         }
