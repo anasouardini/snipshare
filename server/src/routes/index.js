@@ -30,6 +30,7 @@ router.post('/logout', controller.logout);
 router.get('/whoami', controller.whoami);
 // snippets
 router.get('/users', gotoLogin, controller.user.readAll);
+router.get('/snippets', gotoLogin, controller.snippet.readAll);
 router.get('/:user/snippets', gotoLogin, controller.snippet.readAll);
 router.get('/:user/:snippetID', gotoLogin, controller.snippet.read);
 router.post('/:user/snippet', gotoLogin, controller.snippet.create);

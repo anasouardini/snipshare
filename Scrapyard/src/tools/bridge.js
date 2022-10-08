@@ -24,10 +24,7 @@ export const create = (route, body) =>
     fetch(server.url + route, server.options('post', body))
         .then(async (res) => {
             return {
-                ...(await res
-                    .json()
-                    .then((res) => res)
-                    .catch(() => false)),
+                ...(await res.json().then((res) => res)),
                 status: res.status,
             };
         })

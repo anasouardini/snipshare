@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
+import {useEffect} from 'react';
 import {remove} from '../tools/bridge';
-import {getSnippet} from '../tools/snipStore';
+import {deepClone} from '../tools/deepClone';
+import {getSnippet, getWhoami} from '../tools/snipStore';
 import Form from './form/form';
 import Preview from './preview';
 
@@ -8,7 +10,6 @@ export default function Snippet(props) {
     // console.log('hell');
 
     const [snipInfoState, setSnipInfoState] = useState({
-        snipUser: props.user,
         snippet: props.snippet,
     });
     const [popUpState, setPopUpState] = useState({showForm: false, showPreview: false});
@@ -39,17 +40,35 @@ export default function Snippet(props) {
                 },
             },
             {
-                type: 'textarea',
+                type: 'Snippet',
                 attr: {
-                    key: 'snippet',
-                    defaultValue: snipInfoState.snippet.snippet,
-                    name: 'snippet',
-                    type: 'textarea',
-                    className: fieldsClasses.inputs,
+                    key: 'Snippet',
+                    value: snipInfoState.snippet.snippet,
                 },
             },
         ],
     });
+
+    useEffect(() => {
+        if (props.user == getWhoami()) {
+            const stateCpy = deepClone(formFieldsState);
+            stateCpy.fields.push({
+                type: 'Coworkers',
+                attr: {
+                    key: 'coworkers',
+                    name: 'coworkers',
+                },
+            });
+            stateCpy.fields.push({
+                type: 'IsPrivate',
+                attr: {
+                    key: 'isPrivate',
+                    name: 'isPrivate',
+                },
+            });
+            setFormFieldsState(stateCpy);
+        }
+    }, []);
 
     const handlePreview = (e) => {
         e.stopPropagation();
@@ -70,7 +89,9 @@ export default function Snippet(props) {
 
         if (snipInfoState.snippet.allowedActions.includes('delete')) {
             // console.log(snipInfoState.snippet);
-            const response = await remove(snipInfoState.snipUser + '/' + snipInfoState.snippet.id);
+            const response = await remove(
+                snipInfoState.snippet.user + '/' + snipInfoState.snippet.id
+            );
             console.log(response.msg);
 
             if (response.status == 200) {
@@ -104,7 +125,18 @@ export default function Snippet(props) {
     };
 
     const update = () => {
-        setSnipInfoState({...snipInfoState, snippet: getSnippet(snipInfoState.snippet.id)});
+        (async () => {
+            const response = await updateSnippet(
+                snipInfoState.snippet.user,
+                snipInfoState.snippet.id
+            );
+            if (response) {
+                if (response == 'unauthorized') {
+                    return changeRoute('/login');
+                }
+                setSnipInfoState({...snipInfoState, snippet: response});
+            }
+        })();
     };
     const hidePopUp = (popUp) => {
         let newState = {...popUpState};
@@ -168,10 +200,11 @@ export default function Snippet(props) {
             {popUpState.showForm ? (
                 <Form
                     action="edit"
+                    fields={formFieldsState.fields}
                     updateSnippetCB={update}
                     hidePopUp={hidePopUp}
-                    id={snipInfoState.snippet.id}
-                    fields={formFieldsState.fields}
+                    snipId={snipInfoState.snippet.id}
+                    snipUser={snipInfoState.snippet.user}
                 />
             ) : (
                 <></>

@@ -4,7 +4,7 @@ import {useMatch} from 'react-location';
 import {useNavigate} from 'react-location';
 import Form from '../components/form/form';
 import {deepClone} from '../tools/deepClone';
-import {getSnippets, getWhoami, updateSnippets} from '../tools/snipStore';
+import {getWhoami, updateSnippets, updateWhoami} from '../tools/snipStore';
 
 export default function Snippets() {
     const navigate = useNavigate();
@@ -50,27 +50,22 @@ export default function Snippets() {
                 },
             },
             {
-                type: 'textarea',
+                type: 'Snippet',
                 attr: {
                     key: 'snippet',
-                    placeholder: 'snippet',
-                    name: 'snippet',
-                    type: 'textarea',
-                    className: fieldsClasses.inputs,
+                    value: '',
                 },
             },
             {
                 type: 'IsPrivate',
                 attr: {
-                    key: 'IsPrivate',
-                    name: 'IsPrivate',
+                    key: 'isPrivate',
                 },
             },
             {
                 type: 'Coworkers',
                 attr: {
-                    key: 'Coworkers',
-                    name: 'Coworkers',
+                    key: 'coworkers',
                 },
             },
         ],
@@ -78,17 +73,19 @@ export default function Snippets() {
 
     // console.log(snipInfoState);
     const update = async () => {
-        const children = await updateSnippets();
-        if (children.err == 'unauthorised') {
-            return changeRoute('/login');
-        }
+        const whoami = await updateWhoami();
+        const children = await updateSnippets(userParam);
 
-        if (children.err == 'fetchError') {
+        if (children.err) {
+            if (children.err == 'unauthorized') {
+                return changeRoute('/login');
+            }
+
             return;
         }
 
         const stateCpy = deepClone(snipInfoState);
-        stateCpy.whoami = getWhoami();
+        stateCpy.whoami = whoami;
         stateCpy.children = children;
         setSnipInfoState(stateCpy);
     };
@@ -103,21 +100,30 @@ export default function Snippets() {
         setPopUpState({...popUpState, showForm: true});
     };
 
-    const listSnippets = () =>
-        snipInfoState.children.map((snippet) => (
-            <Snippet
-                updateSnippetsCB={update}
-                key={snippet.id}
-                snippet={snippet}
-                user={userParam}
-            />
-        ));
+    const listSnippets = (snippets) => {
+        // console.log(snipInfoState);
+        return snippets.map((snippet) => {
+            // console.log(snippet);
+            return <Snippet updateSnippetsCB={update} key={snippet.id} snippet={snippet} />;
+        });
+    };
+
+    const hidePopUp = (popUp) => {
+        let newState = {...popUpState};
+        if (popUp == 'form') {
+            newState.showForm = false;
+        } else {
+            newState.showPreview = false;
+        }
+
+        setPopUpState(newState);
+    };
 
     return (
         <div>
             <h1 className="text-2xl font-bold my-11 text-center">{userParam}'s Snippets</h1>
             <div className="flex flex-wrap mx-auto items-stretch justify-center gap-7">
-                {snipInfoState?.children ? listSnippets() : <></>}
+                {listSnippets(snipInfoState.children)}
 
                 {/* add a snippet button */}
                 {snipInfoState.whoami == userParam ? (
@@ -135,6 +141,7 @@ export default function Snippets() {
                         action="create"
                         fields={formFieldsState.fields}
                         updateSnippetsCB={update}
+                        hidePopUp={hidePopUp}
                     />
                 ) : (
                     <></>

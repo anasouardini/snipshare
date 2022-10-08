@@ -1,13 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {create, read, update} from '../../tools/bridge';
-import {getCoworkers, getIsPrivate, getWhoami} from '../../tools/snipStore';
+import {getCoworkers, getIsPrivate, getSnipCode, getWhoami} from '../../tools/snipStore';
 import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
     const refs = {
         title: useRef('title'),
         descr: useRef('descr'),
-        snippet: useRef('snippet'),
     };
 
     const handleClose = (e) => {
@@ -16,69 +15,70 @@ export default function Form(props) {
         props.hidePopUp('form');
     };
 
+    const createRequestBody = () => {
+        // create and edit request
+        const snipProps = {
+            title: refs.title.current.value,
+            descr: refs.descr.current.value,
+            snippet: getSnipCode(),
+            coworkers: getCoworkers(),
+            isPrivate: getIsPrivate(),
+        };
+        const body = {props: {}};
+
+        console.log(snipProps);
+        props.fields.forEach((field) => {
+            console.log(snipProps[field.attr.key]);
+
+            // keept the != undefined, because js is stupid
+            if (snipProps?.[field.attr.key] != undefined) {
+                body.props[field.attr.key] = snipProps[field.attr.key];
+            }
+        });
+        console.log(body);
+        return body;
+    };
+
+    const handleEdit = async () => {
+        const response = await update(props.snipUser + '/' + props.snipId, {
+            user: props.snipUser,
+            ...createRequestBody(),
+        });
+        console.log(response);
+
+        props.hidePopUp('form');
+
+        if (response.status == 200) {
+            props.updateSnippetsCB();
+        }
+    };
+
+    const handleCreate = async () => {
+        const response = await create(`${getWhoami()}/snippet`, createRequestBody());
+        console.log(response);
+
+        props.hidePopUp('form');
+
+        if (response.status == 200) {
+            props.updateSnippetsCB();
+        }
+    };
+
     const handleSubmit = (e) => {
         e.stopPropagation();
         e.preventDefault();
+
         if (props.action == 'edit') {
             return handleEdit();
         }
         handleCreate();
     };
 
-    const handleEdit = async () => {
-        const body = {
-            props: {
-                id: props.id,
-                title: refs.title.current.value,
-                descr: refs.descr.current.value,
-                snippet: refs.snippet.current.value,
-            },
-        };
-        const response = await update(getWhoami() + '/' + props.id, body);
-        console.log(response.msg);
-
-        if (response.status == 200) {
-            const newSnippet = await updateSnippet(props.id);
-            if (newSnippet.err == 'unauthorised') {
-                return changeRoute('/login');
-            }
-
-            if (newSnippet.err == 'fetchError') {
-                return;
-            }
-
-            props.updateSnippetCB();
-        }
-
-        // unmount form
-        props.hidePopUp('form');
-    };
-
-    const handleCreate = async () => {
-        const body = {
-            props: {
-                user: getWhoami(),
-                title: refs.title.current.value,
-                descr: refs.descr.current.value,
-                snippet: refs.snippet.current.value,
-                coworkers: getCoworkers(),
-                isPrivate: getIsPrivate(),
-            },
-        };
-
-        const response = await create(`${getWhoami()}/snippet`, body);
-
-        console.log(response);
-
-        // unmount form
-        props.hidePopUp('form');
-        props.updateSnippetsCB();
-    };
-
-    const listInputs = (inputsArr = []) => {
-        return inputsArr.map((input) => {
+    // listing form fields
+    const listInputs = (fields = []) => {
+        return fields.map((input) => {
             const Component = fieldsMap(input.type);
-            return <Component ref={refs[input.attr.key]} {...input.attr} />;
+            return <Component ref={refs[input?.attr?.key]} {...input.attr} />;
         });
     };
 

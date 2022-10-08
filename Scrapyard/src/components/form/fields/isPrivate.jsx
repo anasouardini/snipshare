@@ -1,10 +1,10 @@
 import React from 'react';
-import {setAlteredSnippet} from '../../../tools/snipStore';
+import {setIsPrivate} from '../../../tools/snipStore';
 
 export default function IsPrivate(props) {
     const handleCheckBox = (e) => {
         e.stopPropagation();
-        setAlteredSnippet({IsPrivate: e.target.checked});
+        setIsPrivate(e.target.checked);
     };
 
     return (

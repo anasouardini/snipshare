@@ -1,7 +1,12 @@
 const {v4: uuid} = require('uuid');
 const poolPromise = require('./db');
 
-const getSnippets = (usr) => poolPromise(`select * from snippets where user = ?`, [usr]);
+const getSnippets = (usr) => {
+    if (!usr) {
+        return poolPromise(`select * from snippets;`);
+    }
+    return poolPromise(`select * from snippets where user = ?`, [usr]);
+};
 const getSnippet = (usr, snipID) =>
     poolPromise(`select * from snippets where user = ? and id = ?`, [usr, snipID]);
 const deleteSnippet = (usr, snipID) =>
@@ -14,7 +19,7 @@ const createSnippet = (props) =>
         [
             uuid(),
             props.user,
-            Number(props.isPrivate),
+            props.isPrivate ? Number(props.isPrivate) : 0,
             JSON.stringify({
                 ...props.coworkers,
                 admin: {user: 'admin', actions: ['read', 'edit', 'create']},
@@ -27,9 +32,21 @@ const createSnippet = (props) =>
 const editSnippet = (owner, props) =>
     poolPromise(
         `UPDATE
-            snippets SET title=?, descr=?, snippet=?
+            snippets SET title=?, descr=?, snippet=?, isPrivate=?, coworkers=?
             WHERE user=? AND id=?;`,
-        [props.title, props.descr, props.snippet, owner, props.id]
+        [
+            props.title,
+            props.descr,
+            props.snippet,
+            Number(props.isPrivate),
+            JSON.stringify({
+                ...props.coworkers,
+                admin: {user: 'admin', actions: ['read', 'edit', 'create']},
+            }),
+            ,
+            owner,
+            props.id,
+        ]
     );
 
 module.exports = {

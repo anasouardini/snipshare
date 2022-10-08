@@ -1,7 +1,9 @@
 const whoami = (req, res) => {
     if (req.user) {
-        res.json({msg: req.user.username});
+        return res.json({msg: req.user.username});
     }
+
+    res.status(401).json({msg: 'unauthorized'});
 };
 
 module.exports = whoami;

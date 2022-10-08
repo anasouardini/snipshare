@@ -1,10 +1,10 @@
 import {read} from './bridge';
-import objMerge from './objMerge';
 
-let snippets = [];
+let snippets = {};
 let whoami = '';
+let users = [];
 
-let alteredSnippet = {isPrivate: false, coworkers: {}};
+let alteredSnippet = {isPrivate: false, coworkers: {}, code: ''};
 
 // SNIPPET TEMP STATE
 
@@ -20,13 +20,22 @@ const setCoworkers = (data) => {
 
 const getCoworkers = () => alteredSnippet.coworkers;
 
+const setSnipCode = (value) => (alteredSnippet.code = value);
+const getSnipCode = () => alteredSnippet.code;
+
 // GLOBALS
 
 const updateWhoami = async () => {
     const response = await read('whoami');
+
+    // console.log(response);
     if (response && response.status == 200) {
         whoami = response.msg;
         return whoami;
+    }
+
+    if (response.status == 401) {
+        return {err: 'unauthorized'};
     }
 
     console.log('network error, try again');
@@ -34,28 +43,59 @@ const updateWhoami = async () => {
 };
 const getWhoami = () => whoami;
 
-const updateSnippets = async () => {
-    if (whoami == '') return {err: 'you need to check who is logged int first'};
+const updateSnippets = async (user) => {
+    if (whoami == '') {
+        const response = await updateWhoami();
+        if (!response) {
+            return {err: 'fetchError'};
+        }
 
-    const response = await read(`${whoami}/snippets`);
+        if (response.status == 401) {
+            return {err: 'unauthorized'};
+        }
+    }
+
+    const response = await read(`${user ? `${user}/` : ''}snippets`);
+    console.log(response);
 
     if (response) {
-        console.log('fetching');
-        console.log(response);
+        // console.log('fetching');
+        // console.log(response);
         if (response.status == 200 && !response.redirect) {
-            snippets = response.msg;
-            return snippets;
+            if (user) {
+                snippets[user] = response.msg;
+            } else {
+                snippets = response.msg;
+            }
+            return response.msg;
         }
-        return {err: 'unauthorised'};
+        return {err: 'unauthorized'};
     }
 
     console.log('network error, try again');
     return {err: 'fetchError'};
 };
-const getSnippets = () => snippets;
+const getSnippets = (user) => snippets[user];
 
 const updateSnippet = () => {};
 const getSnippet = () => {};
+
+const updateUsers = async () => {
+    const response = await read(`users`);
+    if (response) {
+        if (response?.redirect) {
+            return 'unauthorized';
+        }
+        // console.log('fetching');
+        console.log(response);
+        if (response.status == 200) {
+            users = response.msg;
+            return response.msg;
+        }
+        return;
+    }
+};
+const getUsers = () => users;
 
 export {
     updateWhoami,
@@ -68,4 +108,8 @@ export {
     getCoworkers,
     setIsPrivate,
     getIsPrivate,
+    setSnipCode,
+    getSnipCode,
+    updateUsers,
+    getUsers,
 };
