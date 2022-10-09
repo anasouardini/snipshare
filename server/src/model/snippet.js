@@ -1,10 +1,10 @@
 const {v4: uuid} = require('uuid');
 const poolPromise = require('./db');
 
-const getSnippets = (usr) => {
-    if (!usr) {
-        return poolPromise(`select * from snippets;`);
-    }
+const getAllSnippets = (usr) => {
+    return poolPromise(`select * from snippets;`);
+};
+const getUserSnippets = (usr) => {
     return poolPromise(`select * from snippets where user = ?`, [usr]);
 };
 const getSnippet = (usr, snipID) =>
@@ -14,16 +14,12 @@ const deleteSnippet = (usr, snipID) =>
 const createSnippet = (props) =>
     poolPromise(
         `INSERT INTO
-        snippets (id, user, isPrivate, coworkers, title, descr, snippet)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        snippets (id, user, isPrivate, title, descr, snippet)
+        VALUES (?, ?, ?, ?, ?, ?)`,
         [
             uuid(),
             props.user,
             props.isPrivate ? Number(props.isPrivate) : 0,
-            JSON.stringify({
-                ...props.coworkers,
-                admin: {user: 'admin', actions: ['read', 'edit', 'create']},
-            }),
             props.title,
             props.descr,
             props.snippet,
@@ -32,25 +28,14 @@ const createSnippet = (props) =>
 const editSnippet = (owner, props) =>
     poolPromise(
         `UPDATE
-            snippets SET title=?, descr=?, snippet=?, isPrivate=?, coworkers=?
+            snippets SET title=?, descr=?, snippet=?, isPrivate=?
             WHERE user=? AND id=?;`,
-        [
-            props.title,
-            props.descr,
-            props.snippet,
-            Number(props.isPrivate),
-            JSON.stringify({
-                ...props.coworkers,
-                admin: {user: 'admin', actions: ['read', 'edit', 'create']},
-            }),
-            ,
-            owner,
-            props.id,
-        ]
+        [props.title, props.descr, props.snippet, Number(props.isPrivate), owner, props.id]
     );
 
 module.exports = {
-    getSnippets,
+    getAllSnippets,
+    getUserSnippets,
     getSnippet,
     createSnippet,
     deleteSnippet,

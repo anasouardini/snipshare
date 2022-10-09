@@ -1,11 +1,15 @@
 import React, {useState, useEffect} from 'react';
+import {useContext} from 'react';
 import {useNavigate} from 'react-location';
 import Form from '../components/form/form';
 import Snippet from '../components/snippet';
-import {read} from '../tools/bridge';
 import {updateSnippets, updateUsers} from '../tools/snipStore';
+import {GlobalContext} from './shared/sharedLayout';
 
 export default function Home() {
+    const whoami = useContext(GlobalContext);
+    // console.log(whoami);
+
     const [usersState, setUsersState] = useState({users: []});
     const [snippetsState, setSnippetsState] = useState({snippets: []});
     const [popUpState, setPopUpState] = useState({
@@ -50,12 +54,12 @@ export default function Home() {
                     key: 'isPrivate',
                 },
             },
-            {
-                type: 'Coworkers',
-                attr: {
-                    key: 'coworkers',
-                },
-            },
+            // {
+            //     type: 'Coworkers',
+            //     attr: {
+            //         key: 'coworkers',
+            //     },
+            // },
         ],
     });
 

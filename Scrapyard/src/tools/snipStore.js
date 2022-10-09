@@ -1,7 +1,6 @@
 import {read} from './bridge';
 
 let snippets = {};
-let whoami = '';
 let users = [];
 
 let alteredSnippet = {isPrivate: false, coworkers: {}, code: ''};
@@ -25,36 +24,7 @@ const getSnipCode = () => alteredSnippet.code;
 
 // GLOBALS
 
-const updateWhoami = async () => {
-    const response = await read('whoami');
-
-    // console.log(response);
-    if (response && response.status == 200) {
-        whoami = response.msg;
-        return whoami;
-    }
-
-    if (response.status == 401) {
-        return {err: 'unauthorized'};
-    }
-
-    console.log('network error, try again');
-    return {err: 'fetchError'};
-};
-const getWhoami = () => whoami;
-
 const updateSnippets = async (user) => {
-    if (whoami == '') {
-        const response = await updateWhoami();
-        if (!response) {
-            return {err: 'fetchError'};
-        }
-
-        if (response.status == 401) {
-            return {err: 'unauthorized'};
-        }
-    }
-
     const response = await read(`${user ? `${user}/` : ''}snippets`);
     console.log(response);
 
@@ -98,8 +68,6 @@ const updateUsers = async () => {
 const getUsers = () => users;
 
 export {
-    updateWhoami,
-    getWhoami,
     updateSnippets,
     getSnippets,
     updateSnippet,

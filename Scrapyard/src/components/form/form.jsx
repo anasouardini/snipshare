@@ -1,9 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
+import {useContext} from 'react';
+import {GlobalContext} from '../../pages/shared/sharedLayout';
 import {create, read, update} from '../../tools/bridge';
-import {getCoworkers, getIsPrivate, getSnipCode, getWhoami} from '../../tools/snipStore';
+import {getCoworkers, getIsPrivate, getSnipCode} from '../../tools/snipStore';
 import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
+    const whoami = useContext(GlobalContext);
     const refs = {
         title: useRef('title'),
         descr: useRef('descr'),
@@ -54,7 +57,7 @@ export default function Form(props) {
     };
 
     const handleCreate = async () => {
-        const response = await create(`${getWhoami()}/snippet`, createRequestBody());
+        const response = await create(`${whoami}/snippet`, createRequestBody());
         console.log(response);
 
         props.hidePopUp('form');

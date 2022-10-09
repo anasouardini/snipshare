@@ -4,9 +4,14 @@ import {useMatch} from 'react-location';
 import {useNavigate} from 'react-location';
 import Form from '../components/form/form';
 import {deepClone} from '../tools/deepClone';
-import {getWhoami, updateSnippets, updateWhoami} from '../tools/snipStore';
+import {updateSnippets} from '../tools/snipStore';
+import {useContext} from 'react';
+
+import {GlobalContext} from '../pages/shared/sharedLayout';
 
 export default function Snippets() {
+    const whoami = useContext(GlobalContext);
+
     const navigate = useNavigate();
     const changeRoute = (to) => {
         navigate({to, replace: true});
@@ -20,7 +25,6 @@ export default function Snippets() {
         showPreview: false,
     });
     const [snipInfoState, setSnipInfoState] = useState({
-        whoami: '',
         children: [],
     });
 
@@ -62,18 +66,17 @@ export default function Snippets() {
                     key: 'isPrivate',
                 },
             },
-            {
-                type: 'Coworkers',
-                attr: {
-                    key: 'coworkers',
-                },
-            },
+            // {
+            //     type: 'Coworkers',
+            //     attr: {
+            //         key: 'coworkers',
+            //     },
+            // },
         ],
     });
 
     // console.log(snipInfoState);
     const update = async () => {
-        const whoami = await updateWhoami();
         const children = await updateSnippets(userParam);
 
         if (children.err) {
@@ -85,7 +88,6 @@ export default function Snippets() {
         }
 
         const stateCpy = deepClone(snipInfoState);
-        stateCpy.whoami = whoami;
         stateCpy.children = children;
         setSnipInfoState(stateCpy);
     };
@@ -126,7 +128,7 @@ export default function Snippets() {
                 {listSnippets(snipInfoState.children)}
 
                 {/* add a snippet button */}
-                {snipInfoState.whoami == userParam ? (
+                {whoami == userParam ? (
                     <button
                         onClick={handleCreate}
                         className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}

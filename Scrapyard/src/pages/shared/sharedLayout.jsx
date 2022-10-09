@@ -1,10 +1,15 @@
 import React from 'react';
+import {createContext} from 'react';
+import {useState} from 'react';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-location';
 import {create, read} from '../../tools/bridge';
-import {updateWhoami} from '../../tools/snipStore';
+
+export const GlobalContext = createContext('');
 
 export default function SharedLayout(props) {
+    const [whoamiState, setWhoamiState] = useState('');
+
     const navigate = useNavigate();
     const changeRoute = (to) => {
         navigate({to, replace: true});
@@ -12,17 +17,21 @@ export default function SharedLayout(props) {
 
     useEffect(() => {
         (async () => {
-            const whoamiUsr = await updateWhoami();
-            if (whoamiUsr.err == 'fetchError') {
+            const whoamiUsr = await read('whoami');
+            if (whoamiUsr.redirect) {
+                return navigate('./login');
+            }
+            if (whoamiUsr.status != 200) {
                 return;
             }
+            setWhoamiState(whoamiUsr.msg);
         })();
     }, []);
 
     const classes = {
         li: 'm-2 cursor-pointer border-b-[4px] border-b-transparent hover:border-b-[4px] hover:border-b-lime-600 text-gray-200',
     };
-
+    // console.log(props.children.props);
     return (
         <div className="font-roboto">
             <nav>
@@ -37,12 +46,8 @@ export default function SharedLayout(props) {
                     </li>
                     <li
                         className={classes.li}
-                        onClick={async () => {
-                            const response = await read('whoami');
-                            if (response && response.status == 200) {
-                                return changeRoute(response.msg + '/snippets');
-                            }
-                            console.log(response);
+                        onClick={() => {
+                            changeRoute(whoamiState + '/snippets');
                         }}
                     >
                         my snippets
@@ -84,7 +89,8 @@ export default function SharedLayout(props) {
                     </li>
                 </ul>
             </nav>
-            {props.children}
+            {/* {props.children} */}
+            <GlobalContext.Provider value={whoamiState}>{props.children}</GlobalContext.Provider>
         </div>
     );
 }

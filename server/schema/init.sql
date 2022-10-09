@@ -61,6 +61,20 @@ INSERT INTO
     )
 VALUES
     (
+        'etwpoitjdfgkmgfdnvviervnf;v',
+        'venego',
+        0,
+        '{
+            "admin" : {"user": "admin", "actions":["read", "edit", "delete"]},
+            "*" : {"user": "*", "actions":["read"]}
+        }',
+        'my cool api routes 3',
+        'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
+        or keep it private which is the default value.
+        ',
+        ''
+    ),
+    (
         'etwpoitjkmnvvvierovndf;v',
         'venego',
         1,
@@ -83,20 +97,6 @@ VALUES
             "3sila":{"user": "3sila", "actions":["read", "edit"]}
         }',
         'my cool api routes 2',
-        'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-        or keep it private which is the default value.
-        ',
-        ''
-    ),
-    (
-        'etwpoitjdfgkmgfdnvviervnf;v',
-        'venego',
-        0,
-        '{
-            "admin" : {"user": "admin", "actions":["read", "edit", "delete"]},
-            "*" : {"user": "*", "actions":["read"]}
-        }',
-        'my cool api routes 3',
         'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
         or keep it private which is the default value.
         ',

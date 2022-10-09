@@ -1,4 +1,5 @@
 const Snippet = require('../model/snippet.js');
+const CoworkerRules = require('../model/coworkersRules.js');
 
 const actions = {
     read: async (owner, usr, snippetID, action) => {
@@ -69,73 +70,133 @@ const authAction = async (req, action) => {
     return rr;
 };
 
-const readAll = async (req, res) => {
-    const snippetsOwner = req.params.user;
+const readMiddleware = async (req, res) => {
+    const snippetsOwner = req.params.user; // if  this is not specified, the user is requesting all of the snippets
     const user = req.user.username;
 
-    let response = await Snippet.getSnippets(snippetsOwner);
-    // console.log('read all', response);
-    // console.log(snippetsOwner);
-
+    const snippetsResponse = snippetsOwner
+        ? await Snippet.getUserSnippets(snippetsOwner)
+        : await Snippet.getAllSnippets();
     // if empty
-    if (!response[0].length) {
+    if (!snippetsResponse[0].length) {
         return res.json({msg: []});
     }
 
-    const httpResponse = [];
-    response[0].forEach((snippetObj) => {
-        // console.log(snippetObj);
-        if (snippetObj.user == user) {
-            // the readrer is the owner
-            const {id, user, title, descr, snippet, img, isPrivate} = snippetObj;
-            httpResponse.push({
-                id,
-                user,
-                title,
-                descr,
-                snippet,
-                img,
-                isPrivate,
-                allowedActions: ['read', 'edit', 'delete'],
-            });
-        } else if (snippetObj.isPrivate) {
-            const coworker = snippetObj.coworkers?.[user];
-            if (coworker && coworker.actions.includes('read')) {
-                console.log(coworker.actions);
-                // private but you can access it
-                const {id, user, title, descr, img, snippet, isPrivate} = snippetObj;
-                httpResponse.push({
+    // the owner has access without exceptions
+    if (snippetsOwner && user == snippetsOwner) {
+        return res.json({msg: snippetsResponse[0]});
+    }
+
+    req.snippets = snippetsResponse[0];
+
+    // get coworkers rules
+    let rulesResponse = {};
+    if (snippetsOwner) {
+        rulesResponse = CoworkerRules.readUserRules(snippetsOwner, user);
+        // if the use is not a coworker
+        if (!rulesResponse[0].length) {
+            return res.json({msg: []});
+        }
+
+        // get owner specific rules
+        req.rules = {
+            generic: rulesResponse[0][0].generic,
+            exceptions: rulesResponse[0][0].exceptions,
+        };
+    } else {
+        rulesResponse = CoworkerRules.readAllRules(user);
+        // if the use is not a coworker
+        if (!rulesResponse[0].length) {
+            return res.json({msg: []});
+        }
+
+        // get all the rules
+        req.rules = rulesResponse[0];
+    }
+
+    next();
+};
+
+const readUserAll = async (req, res) => {
+    // filter snippets according to rules
+    const filteredSnippets = [];
+    req.snippets.forEach((snippet) => {
+        // if there is an exception for the snippet, apply the exception rule
+        if (req.rules.exceptions?.[snippet.id]) {
+            if (req.rules.generic.includes('r')) {
+                const {id, user, title, descr, snippet, isPrivate} = snippet;
+                filteredSnippets.push({
                     id,
                     user,
                     title,
                     descr,
-                    img,
                     snippet,
                     isPrivate,
-                    allowedActions: coworker.actions,
+                    access: req.rules.exceptions[snippet.id],
                 });
-            } else {
-                // private and no access
-                // const {id, user, title, img, isPrivate} = snippetObj;
-                // httpResponse.push({id, user, title, img, isPrivate, allowedActions: ['none']});
             }
         } else {
-            // public
-            const {id, user, title, descr, img, snippet, isPrivate} = snippetObj;
-            httpResponse.push({
-                id,
-                user,
-                title,
-                descr,
-                img,
-                snippet,
-                isPrivate,
-                allowedActions: snippetObj.coworkers['*'].actions,
-            });
+            // if there is no exception, then apply the generic acess rule
+            if (req.rules.generic.includes('r')) {
+                const {id, user, title, descr, snippet, isPrivate} = snippet;
+                filteredSnippets.push({
+                    id,
+                    user,
+                    title,
+                    descr,
+                    snippet,
+                    isPrivate,
+                    access: req.rules.generic,
+                });
+            }
         }
     });
 
-    res.json({msg: httpResponse});
+    res.json({msg: filteredSnippets});
+};
+
+const readAll = async (req, res) => {
+    // filter snippets according to rules
+    const filteredSnippets = [];
+    req.snippets.forEach((snippet) => {
+        for (let rule of req.rules) {
+            if ((rule.user = snippet.user)) {
+                // if there is an exception for the snippet, apply the exception rule
+                if (rule.exceptions?.[snippet.id]) {
+                    if (rule.generic.includes('r')) {
+                        const {id, user, title, descr, snippet, isPrivate} = snippet;
+                        filteredSnippets.push({
+                            id,
+                            user,
+                            title,
+                            descr,
+                            snippet,
+                            isPrivate,
+                            access: rule.exceptions[snippet.id],
+                        });
+                    }
+                } else {
+                    // if there is no exception, then apply the generic acess rule
+                    if (rule.generic.includes('r')) {
+                        const {id, user, title, descr, snippet, isPrivate} = snippet;
+                        filteredSnippets.push({
+                            id,
+                            user,
+                            title,
+                            descr,
+                            snippet,
+                            isPrivate,
+                            access: rule.generic,
+                        });
+                    }
+                }
+
+                break;
+            }
+        }
+    });
+
+    res.json({msg: filteredSnippets});
 };
 
 const create = async (req, res) => {
@@ -173,4 +234,4 @@ const remove = async (req, res) => {
     res.status(result.status).json({msg: result.msg});
 };
 
-module.exports = {readAll, read, create, edit, remove};
+module.exports = {readMiddleware, readAll, readUserAll, read, create, edit, remove};

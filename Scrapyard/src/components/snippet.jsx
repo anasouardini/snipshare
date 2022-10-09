@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
+import {useContext} from 'react';
 import {useEffect} from 'react';
+import {GlobalContext} from '../pages/shared/sharedLayout';
 import {remove} from '../tools/bridge';
 import {deepClone} from '../tools/deepClone';
-import {getSnippet, getWhoami} from '../tools/snipStore';
 import Form from './form/form';
 import Preview from './preview';
 
 export default function Snippet(props) {
-    // console.log('hell');
+    const whoami = useContext(GlobalContext);
 
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,
@@ -50,7 +51,7 @@ export default function Snippet(props) {
     });
 
     useEffect(() => {
-        if (props.user == getWhoami()) {
+        if (props.user == whoami) {
             const stateCpy = deepClone(formFieldsState);
             stateCpy.fields.push({
                 type: 'Coworkers',

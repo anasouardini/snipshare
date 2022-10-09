@@ -31,7 +31,7 @@ function App() {
         <Router routes={routes} location={location}>
             <div className="stupidDiv h-[100vh]">
                 <SharedLayout>
-                    <Outlet />
+                    <Outlet component={routes} />
                 </SharedLayout>
             </div>
         </Router>
