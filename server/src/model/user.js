@@ -1,11 +1,8 @@
 const poolPromise = require('./db');
 
-const userExists = (usr) => {
-    const query = `select * from users where user = '${usr}'`;
-    return poolPromise(query);
-};
+const getUser = (usr) => poolPromise(`select * from users where user = ?`, [usr]);
 
-const readUser = (usr) => {};
+const getMod = (usr) => poolPromise(`select * from mods where user = ?`, [usr]);
 
 const readAll = () => poolPromise(`select user from users;`);
 
@@ -15,9 +12,7 @@ const createUser = (usr, pass) =>
 const deleteUsers = () => poolPromise(`delete from users where 1=1`);
 
 module.exports = {
-    userExists,
-    readUser,
     readAll,
-    createUser,
-    deleteUsers,
+    getUser,
+    getMod,
 };

@@ -7,20 +7,33 @@ const signup = async (req, res) => {
         return res.status(400).json({err: 'provided details are not complete'});
     }
 
-    let response = await User.userExists(req.body.usr);
-    if (!response) {
+    // chekc if the username exists in the mods table
+    const modResponse = await User.getMod(req.body.usr);
+
+    if (!modResponse) {
         return res.sedStatus(500);
     }
-    // console.log(response[0]);
-    if (response[0].length) {
+
+    if (modResponse[0].length) {
+        return res.status(400).json({msg: 'this username already exists'});
+    }
+
+    // chekc if the username exists in the users table
+    const userResponse = await User.getMod(req.body.usr);
+
+    if (!userResponse) {
+        return res.sedStatus(500);
+    }
+
+    if (userResponse[0].length) {
         return res.status(400).json({msg: 'this username already exists'});
     }
 
     const hash = await bcrypt.hash(req.body.passwd, 10);
     // console.log('hash', hash);
-    response = await User.createUser(req.body.usr, hash);
-    // console.log(response[0].affectedRows);
-    if (!response[0]?.affectedRows) {
+    const createUserResponse = await User.createUser(req.body.usr, hash);
+    // console.log(createUserResponse[0].affectedRows);
+    if (!createUserResponse[0]?.affectedRows) {
         return res.status(500).json({msg: 'something went bad while signing up'});
     }
 

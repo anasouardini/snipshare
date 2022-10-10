@@ -73,14 +73,14 @@ export default function Snippet(props) {
 
     const handlePreview = (e) => {
         e.stopPropagation();
-        if (snipInfoState.snippet.allowedActions.includes('read')) {
+        if (snipInfoState.snippet.access.includes('r')) {
             setPopUpState({showPreview: true, showForm: false});
         }
     };
 
     const handleEdit = (e) => {
         e.stopPropagation();
-        if (snipInfoState.snippet.allowedActions.includes('edit')) {
+        if (snipInfoState.snippet.access.includes('u')) {
             setPopUpState({showForm: true, showPreview: false});
         }
     };
@@ -88,7 +88,7 @@ export default function Snippet(props) {
     const handleDelete = async (e) => {
         e.stopPropagation();
 
-        if (snipInfoState.snippet.allowedActions.includes('delete')) {
+        if (snipInfoState.snippet.access.includes('d')) {
             // console.log(snipInfoState.snippet);
             const response = await remove(
                 snipInfoState.snippet.user + '/' + snipInfoState.snippet.id
@@ -105,17 +105,17 @@ export default function Snippet(props) {
         buttons: 'flex justify-between mt-[20px]',
         button: 'w-[100px] leading-8 rounded-md text-white',
         btnPreview: `${
-            snipInfoState.snippet.allowedActions.includes('read')
+            snipInfoState.snippet.access.includes('r')
                 ? 'bg-cyan-600'
                 : 'bg-gray-400 cursor-not-allowed'
         }`,
         btnEdit: `${
-            snipInfoState.snippet.allowedActions.includes('edit')
+            snipInfoState.snippet.access.includes('u')
                 ? 'bg-lime-600'
                 : 'bg-gray-400 cursor-not-allowed'
         }`,
         btnDelete: `${
-            snipInfoState.snippet.allowedActions.includes('delete')
+            snipInfoState.snippet.access.includes('d')
                 ? 'bg-red-500'
                 : 'bg-gray-400 cursor-not-allowed'
         }`,
@@ -168,11 +168,7 @@ export default function Snippet(props) {
                         </p>
                         <p>
                             allowed actions:&nbsp;
-                            <span className="text-gray-500">
-                                {snipInfoState.snippet.allowedActions.reduce(
-                                    (acc, action) => acc + ' | ' + action
-                                )}
-                            </span>
+                            <span className="text-gray-500">{snipInfoState.snippet.access}</span>
                         </p>
                     </div>
                     <div className={classes.buttons}>

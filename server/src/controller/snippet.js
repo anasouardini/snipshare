@@ -1,5 +1,6 @@
 const Snippet = require('../model/snippet.js');
 const CoworkerRules = require('../model/coworkersRules.js');
+const User = require('../model/user.js');
 
 const actions = {
     read: async (owner, usr, snippetID, action) => {
@@ -70,7 +71,7 @@ const authAction = async (req, action) => {
     return rr;
 };
 
-const readMiddleware = async (req, res) => {
+const readMiddleware = async (req, res, next) => {
     const snippetsOwner = req.params.user; // if  this is not specified, the user is requesting all of the snippets
     const user = req.user.username;
 
@@ -92,7 +93,7 @@ const readMiddleware = async (req, res) => {
     // get coworkers rules
     let rulesResponse = {};
     if (snippetsOwner) {
-        rulesResponse = CoworkerRules.readUserRules(snippetsOwner, user);
+        rulesResponse = await CoworkerRules.readUserRules(snippetsOwner, user);
         // if the use is not a coworker
         if (!rulesResponse[0].length) {
             return res.json({msg: []});
@@ -104,50 +105,59 @@ const readMiddleware = async (req, res) => {
             exceptions: rulesResponse[0][0].exceptions,
         };
     } else {
-        rulesResponse = CoworkerRules.readAllRules(user);
-        // if the use is not a coworker
-        if (!rulesResponse[0].length) {
-            return res.json({msg: []});
+        rulesResponse = await CoworkerRules.readAllRules(user);
+        // console.log(rulesResponse);
+
+        if (!rulesResponse) {
+            res.status(500).json({msg: 'something happned while getting the data'});
         }
 
         // get all the rules
-        req.rules = rulesResponse[0];
+        req.rules = rulesResponse[0].reduce((acc, rule) => {
+            acc[rule.user] = rule;
+            return acc;
+        }, {});
     }
 
     next();
 };
 
+const appendSnippet = (filteredSnippets, snippetObj, access) => {
+    if (access.includes('r')) {
+        const {id, user, title, descr, snippet, isPrivate} = snippetObj;
+        filteredSnippets.push({
+            id,
+            user,
+            title,
+            descr,
+            snippet,
+            isPrivate,
+            access,
+        });
+    }
+};
+
 const readUserAll = async (req, res) => {
     // filter snippets according to rules
     const filteredSnippets = [];
-    req.snippets.forEach((snippet) => {
-        // if there is an exception for the snippet, apply the exception rule
-        if (req.rules.exceptions?.[snippet.id]) {
-            if (req.rules.generic.includes('r')) {
-                const {id, user, title, descr, snippet, isPrivate} = snippet;
-                filteredSnippets.push({
-                    id,
-                    user,
-                    title,
-                    descr,
-                    snippet,
-                    isPrivate,
-                    access: req.rules.exceptions[snippet.id],
-                });
-            }
+    req.snippets.forEach((snippetObj) => {
+        if (snippetObj.user == req.user.username) {
+            appendSnippet(filteredSnippets, snippetObj, 'rud');
         } else {
-            // if there is no exception, then apply the generic acess rule
-            if (req.rules.generic.includes('r')) {
-                const {id, user, title, descr, snippet, isPrivate} = snippet;
-                filteredSnippets.push({
-                    id,
-                    user,
-                    title,
-                    descr,
-                    snippet,
-                    isPrivate,
-                    access: req.rules.generic,
-                });
+            if (!snippetObj.isPrivate && !Object.keys(req.rules).length) {
+                // if no rule, and snippet is public: access is read-only
+                appendSnippet(filteredSnippets, snippetObj, 'r');
+            } else {
+                if (Object.keys(req.rules).length) {
+                    // if there is an exception for the snippet, apply the exception rule
+                    const exceptionRule = req.rules.exceptions[snippetObj.id];
+                    if (req.rules.exceptions?.[snippetObj.id]) {
+                        appendSnippet(filteredSnippets, snippetObj, exceptionRule);
+                    } else {
+                        // if there is no exception, then apply the generic acess rule
+                        appendSnippet(filteredSnippets, snippetObj, req.rules.generic);
+                    }
+                }
             }
         }
     });
@@ -156,42 +166,30 @@ const readUserAll = async (req, res) => {
 };
 
 const readAll = async (req, res) => {
+    const user = req.user.username;
+    const isUserMod = Boolean((await User.getMod(user))[0].length);
+
     // filter snippets according to rules
     const filteredSnippets = [];
-    req.snippets.forEach((snippet) => {
-        for (let rule of req.rules) {
-            if ((rule.user = snippet.user)) {
-                // if there is an exception for the snippet, apply the exception rule
-                if (rule.exceptions?.[snippet.id]) {
-                    if (rule.generic.includes('r')) {
-                        const {id, user, title, descr, snippet, isPrivate} = snippet;
-                        filteredSnippets.push({
-                            id,
-                            user,
-                            title,
-                            descr,
-                            snippet,
-                            isPrivate,
-                            access: rule.exceptions[snippet.id],
-                        });
-                    }
-                } else {
-                    // if there is no exception, then apply the generic acess rule
-                    if (rule.generic.includes('r')) {
-                        const {id, user, title, descr, snippet, isPrivate} = snippet;
-                        filteredSnippets.push({
-                            id,
-                            user,
-                            title,
-                            descr,
-                            snippet,
-                            isPrivate,
-                            access: rule.generic,
-                        });
+    req.snippets.forEach((snippetObj) => {
+        if (user == snippetObj.user || isUserMod) {
+            appendSnippet(filteredSnippets, snippetObj, 'rud');
+        } else {
+            if (!snippetObj.isPrivate && !req.rule?.[snippetObj.user]) {
+                // if no rule, and snippet is public: access is read-only
+                appendSnippet(filteredSnippets, snippetObj, 'r');
+            } else {
+                if (req.rule?.[snippetObj.user]) {
+                    // if there is an exception for the snippet, apply the exception rule
+                    if (req.rule[snippetObj.user].exceptions?.[snippetObj.id]) {
+                        const exceptionRule = req.rule[snippetObj.user].exceptions?.[snippetObj.id];
+                        appendSnippet(filteredSnippets, snippetObj, exceptionRule);
+                    } else {
+                        // if there is no exception, then apply the generic acess rule
+                        const genericRule = req.rule[snippetObj.user].generic;
+                        appendSnippet(filteredSnippets, snippetObj, genericRule);
                     }
                 }
-
-                break;
             }
         }
     });

@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {useContext} from 'react';
 import {GlobalContext} from '../../pages/shared/sharedLayout';
 import {create, read, update} from '../../tools/bridge';
-import {getCoworkers, getIsPrivate, getSnipCode} from '../../tools/snipStore';
+import {getIsPrivate, getSnipCode} from '../../tools/snipStore';
 import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
@@ -24,7 +24,6 @@ export default function Form(props) {
             title: refs.title.current.value,
             descr: refs.descr.current.value,
             snippet: getSnipCode(),
-            coworkers: getCoworkers(),
             isPrivate: getIsPrivate(),
         };
         const body = {props: {}};
