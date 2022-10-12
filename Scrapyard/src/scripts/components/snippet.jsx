@@ -100,7 +100,7 @@ export default function Snippet(props) {
             }
         }
     };
-
+    // console.log(snipInfoState.snippet);
     const classes = {
         buttons: 'flex justify-between mt-[20px]',
         button: 'w-[100px] leading-8 rounded-md text-white',
@@ -119,10 +119,6 @@ export default function Snippet(props) {
                 ? 'bg-red-500'
                 : 'bg-gray-400 cursor-not-allowed'
         }`,
-        private: `pointer-events-none select-none relative 
-            after:absolute after:content-["PRIVATE"] after:top-[40%]
-            after:left-[34%] after:font-extrabold after:text-red-600
-            after:text-2xl after:border-y-[5px] after:border-red-600`,
     };
 
     const update = () => {
@@ -171,7 +167,12 @@ export default function Snippet(props) {
                             <span className="text-gray-500">{snipInfoState.snippet.access}</span>
                         </p>
                     </div>
-                    <div className={classes.buttons}>
+                    <div className={`${classes.buttons}`}>
+                        <style>{`
+                            button + button {
+                                margin-left: 10px;
+                            }
+                        `}</style>
                         <button
                             onClick={handlePreview}
                             className={`${classes.button} ${classes.btnPreview}`}

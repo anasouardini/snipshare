@@ -78,14 +78,10 @@ const readMiddleware = async (req, res, next) => {
     const snippetsResponse = snippetsOwner
         ? await Snippet.getUserSnippets(snippetsOwner)
         : await Snippet.getAllSnippets();
+
     // if empty
     if (!snippetsResponse[0].length) {
         return res.json({msg: []});
-    }
-
-    // the owner has access without exceptions
-    if (snippetsOwner && user == snippetsOwner) {
-        return res.json({msg: snippetsResponse[0]});
     }
 
     req.snippets = snippetsResponse[0];
@@ -96,7 +92,8 @@ const readMiddleware = async (req, res, next) => {
         rulesResponse = await CoworkerRules.readUserRules(snippetsOwner, user);
         // if the use is not a coworker
         if (!rulesResponse[0].length) {
-            return res.json({msg: []});
+            req.rules = [];
+            return next();
         }
 
         // get owner specific rules
@@ -109,7 +106,7 @@ const readMiddleware = async (req, res, next) => {
         // console.log(rulesResponse);
 
         if (!rulesResponse) {
-            res.status(500).json({msg: 'something happned while getting the data'});
+            return res.status(500).json({msg: 'something happned while getting the data'});
         }
 
         // get all the rules
@@ -138,6 +135,7 @@ const appendSnippet = (filteredSnippets, snippetObj, access) => {
 };
 
 const readUserAll = async (req, res) => {
+    // console.log(req.snippets);
     // filter snippets according to rules
     const filteredSnippets = [];
     req.snippets.forEach((snippetObj) => {
@@ -161,6 +159,7 @@ const readUserAll = async (req, res) => {
             }
         }
     });
+    // console.log(filteredSnippets);
 
     res.json({msg: filteredSnippets});
 };

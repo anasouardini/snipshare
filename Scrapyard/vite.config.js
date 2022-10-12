@@ -1,10 +1,21 @@
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
-import {Server} from 'tls';
+import path from 'path';
 
-// https://vitejs.dev/config/
-export default defineConfig(({command, mode, ssrBuild}) => {
-    // if (command == 'dev') {
-    return {plugins: [react()], server: {port: 3000, host: '127.0.0.1', hmr: {retry: false}}};
-    // }
-});
+export default {
+    plugins: [react()],
+    server: {port: 3000, host: '127.0.0.1', hmr: {retry: false}},
+};
+
+// export default defineConfig(({command, mode, ssrBuild}) => {
+//     // if (command == 'dev') {
+//     return {
+//         root: path.join(__dirname, 'src/scripts'),
+//         build: {
+//             outDir: '../dist',
+//         },
+//         plugins: [react()],
+//         server: {port: 3000, host: '127.0.0.1', hmr: {retry: false}},
+//     };
+//     // }
+// });

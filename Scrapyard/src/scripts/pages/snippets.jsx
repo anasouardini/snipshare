@@ -75,10 +75,9 @@ export default function Snippets() {
         ],
     });
 
-    // console.log(snipInfoState);
     const update = async () => {
         const children = await updateSnippets(userParam);
-
+        console.log(children);
         if (children.err) {
             if (children.err == 'unauthorized') {
                 return changeRoute('/login');

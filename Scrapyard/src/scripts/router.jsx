@@ -6,7 +6,6 @@ import SignUp from './pages/signup';
 // import About from './pages/about';
 // import Projects from './pages/projects';
 
-import './index.css';
 import Snippets from './pages/snippets';
 import Home from './pages/home';
 

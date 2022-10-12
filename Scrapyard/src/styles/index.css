@@ -10,3 +10,9 @@ body{
 input{
     background: transparent;
 }
+
+.pen{
+    background-image: url('../assets/pen.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
