@@ -19,7 +19,7 @@ export default function SharedLayout(props) {
         (async () => {
             const whoamiUsr = await read('whoami');
             if (whoamiUsr.redirect) {
-                return navigate('./login');
+                return navigate('./signin');
             }
             if (whoamiUsr.status != 200) {
                 return;
@@ -52,10 +52,19 @@ export default function SharedLayout(props) {
                     >
                         my snippets
                     </li>
+
                     <li
                         className={`${classes.li} ml-auto`}
                         onClick={() => {
-                            changeRoute('/login');
+                            changeRoute('/addRules');
+                        }}
+                    >
+                        Add Rules
+                    </li>
+                    <li
+                        className={`${classes.li}`}
+                        onClick={() => {
+                            changeRoute('/signin');
                         }}
                     >
                         SignIn
@@ -71,7 +80,7 @@ export default function SharedLayout(props) {
                     <li
                         className={classes.li}
                         onClick={async () => {
-                            changeRoute('/login');
+                            changeRoute('/signin');
                             const response = await create('logout');
                             console.log(response);
                         }}

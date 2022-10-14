@@ -1,6 +1,6 @@
 import {Router, Outlet, ReactLocation} from 'react-location';
 import SharedLayout from './pages/shared/sharedLayout';
-import Login from './pages/login';
+import Login from './pages/signin';
 import SignUp from './pages/signup';
 // import Home from './pages/home';
 // import About from './pages/about';

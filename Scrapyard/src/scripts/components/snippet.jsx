@@ -174,7 +174,6 @@ export default function Snippet(props) {
                             }
                         `}</style>
                         <button
-                            style=""
                             onClick={handlePreview}
                             className={`${classes.button} ${classes.btnPreview}`}
                         >
