@@ -1,50 +1,38 @@
 import React from 'react';
-import {useContext} from 'react';
+import {useState} from 'react';
 import {useRef} from 'react';
-import {forwardRef} from 'react';
-import {coworkersContext} from './shared/sharedLayout';
-
-const accessControl = forwardRef((props, ref) => {
-    return (
-        <div>
-            <input
-                type="checkbox"
-                ref={(el) => {
-                    ref.read = el;
-                }}
-                name="read"
-                checked={props?.coworkerAccess?.read ?? false}
-            />
-            <input
-                type="checkbox"
-                ref={(el) => {
-                    ref.update = el;
-                }}
-                name="update"
-                checked={props?.coworkerAccess?.update ?? false}
-            />
-            <input
-                type="checkbox"
-                ref={(el) => {
-                    ref.delete = el;
-                }}
-                name="delete"
-                checked={props?.coworkerAccess?.delete ?? false}
-            />
-        </div>
-    );
-});
+import ExceptionsPopUp from '../components/exceptionsPopUp';
+import AccessControl from '../components/accessControl';
+import {useEffect} from 'react';
 
 export default function AddRules() {
-    const coworkers = useContext(coworkersContext);
+    const [coworkersState, setCoworkersState] = useState({});
+    const [popUpState, setPopUpState] = useState({showExceptions: false});
+    const newCoworkerInput = useRef('');
 
     // list of checkboxes
-    const genericAaccessRefs = useRef({
+    const genericAccessRefs = useRef({
         new: {read: '', update: '', delete: ''},
         old: {},
     });
 
-    const exceptionAaccessRefs = useRef({
+    useEffect(() => {
+        (async () => {
+            // get coworkers
+            setCoworkersState({
+                generic: {
+                    venego: {read: true, update: false, delete: false},
+                    '3disa': {read: true, update: false, delete: false},
+                },
+                exception: {
+                    venego: {snip1: {read: true, update: false, delete: false}},
+                    '3disa': {snip2: {read: true, update: false, delete: false}},
+                },
+            });
+        })();
+    }, []);
+
+    const exceptionAccessRefs = useRef({
         new: {},
         old: {},
     });
@@ -53,54 +41,107 @@ export default function AddRules() {
         const access = {};
 
         // this spagetty needs some clean up
-        const userExceptions = genericAaccessRefs.old[username];
+        const userExceptions = exceptionAccessRefs.current.old[username];
         access.exception = Object.keys(userExceptions).reduce((acc, excObjKey) => {
             acc[excObjKey] = Object.keys(userExceptions[excObjKey]).reduce((acc, accessObjKey) => {
-                acc += userExceptions[excObjKey][accessObjKey] ? accessObjKey.split[0] : '';
+                acc[accessObjKey] = userExceptions[excObjKey][accessObjKey].defaultChecked;
                 return acc;
-            }, '');
+            }, {});
             return acc;
         }, {});
 
-        access.generic = Object.keys(exceptionAaccessRefs.old[username]).reduce((acc, objKey) => {
-            acc += genericAaccessRefs.old[username][objKey] ? objKey.split[0] : '';
+        access.generic = Object.keys(genericAccessRefs.old[username]).reduce((acc, objKey) => {
+            acc[objKey] = genericAccessRefs.current.old[username][objKey].defaultChecked;
             return acc;
-        }, '');
+        }, {});
 
         return access;
     };
 
-    const listCoworkers = () =>
-        coworkers.map((coworker) => {
-            genericAaccessRefs.old[coworker.username] = {read: '', update: '', delete: ''};
-            return (
-                <li>
-                    <div>
-                        <div>
-                            <img src="" alt="" />
-                            <span>{coworker.username}</span>
-                        </div>
-                        <accessControl ref={genericAaccessRefs[coworker.username]} />
+    const addNewCoworker = (e) => {
+        e.preventDefault();
+        // parse refs
+        // send user changes
+    };
 
-                        <button>Update</button>
-                        <button>delete</button>
-                        <button>exceptions</button>
-                    </div>
-                </li>
-            );
-        });
+    const showExceptionsPopUp = (coworker) => {
+        setPopUpState({...popUpState, showExceptions: true, coworker});
+    };
+
+    const hidePopUp = () => {
+        setPopUpState({...popUpState, showExceptions: false});
+    };
+    // console.log(coworkersState.generic);
+    const listCoworkers = () =>
+        coworkersState.generic ? (
+            Object.keys(coworkersState.generic).map((username) => {
+                genericAccessRefs.current.old[username] = coworkersState.generic[username];
+                return (
+                    <li key={username}>
+                        <div className="flex gap-2">
+                            <div>
+                                <img src="" alt="" />
+                                <span>{username}</span>
+                            </div>
+                            <AccessControl ref={genericAccessRefs.current.old[username]} />
+
+                            <button>Update</button>
+                            <button>delete</button>
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    showExceptionsPopUp({
+                                        [username]: coworkersState.exceptions[username],
+                                    });
+                                }}
+                            >
+                                exceptions
+                            </button>
+                        </div>
+                    </li>
+                );
+            })
+        ) : (
+            <></>
+        );
+
+    const updateCoworkerExceptionCB = (coworkerExceptions) => {
+        exceptionAccessRefs.current.old[Object.keys(popUpState.coworker)[0]] = coworkerExceptions;
+    };
 
     return (
         <div>
-            <div>
-                <input type="text" placeholder="user" />
-                <accessControl ref={genericAaccessRefs.new} />
-                <button>exceptions</button>
-                <button className="border-1-lime border-radius-[50%] text-xl">+</button>
+            <div className="flex gap-4">
+                <input type="text" placeholder="user" ref={newCoworkerInput} />
+                <AccessControl ref={genericAccessRefs.current.new} />
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        showExceptionsPopUp({['new']: {}});
+                    }}
+                >
+                    exceptions
+                </button>
+                <button
+                    className="border-1-lime border-radius-[50%] text-xl"
+                    onClick={addNewCoworker}
+                >
+                    add Rule
+                </button>
             </div>
-            <div>
+            <div className="mt-4">
                 <ul>{listCoworkers()}</ul>
             </div>
+            {popUpState.showExceptions ? (
+                <ExceptionsPopUp
+                    updateCoworkerExceptionCB={updateCoworkerExceptionCB}
+                    hidePopUp={hidePopUp}
+                    ref={exceptionAccessRefs}
+                    coworker={popUpState.coworker}
+                />
+            ) : (
+                <></>
+            )}
         </div>
     );
 }

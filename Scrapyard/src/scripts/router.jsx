@@ -2,17 +2,15 @@ import {Router, Outlet, ReactLocation} from 'react-location';
 import SharedLayout from './pages/shared/sharedLayout';
 import Login from './pages/signin';
 import SignUp from './pages/signup';
-// import Home from './pages/home';
-// import About from './pages/about';
-// import Projects from './pages/projects';
-
 import Snippets from './pages/snippets';
 import Home from './pages/home';
+import AddRules from './pages/addCoworkers';
 
 const routes = [
     {path: '/', element: <Home />},
     {path: '/login', element: <Login />},
     {path: '/signup', element: <SignUp />},
+    {path: '/addRules', element: <AddRules />},
     {
         path: '/:user',
         loader: ({params: {user}}) => ({user}),
@@ -28,7 +26,7 @@ const location = new ReactLocation();
 function App() {
     return (
         <Router routes={routes} location={location}>
-            <div className="stupidDiv h-[100vh]">
+            <div className=" h-[100vh]">
                 <SharedLayout>
                     <Outlet component={routes} />
                 </SharedLayout>

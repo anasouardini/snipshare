@@ -32,7 +32,7 @@ export default function Form(props) {
         props.fields.forEach((field) => {
             console.log(snipProps[field.attr.key]);
 
-            // keept the != undefined, because js is stupid
+            // keept the != undefined, because js is weird
             if (snipProps?.[field.attr.key] != undefined) {
                 body.props[field.attr.key] = snipProps[field.attr.key];
             }
