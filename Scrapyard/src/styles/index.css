@@ -9,6 +9,11 @@ body{
 
 input{
     background: transparent;
+    @apply border-b-2 border-b-lime-600 p-1 outline-lime-300 focus:outline-1 bg-[#181818];
+}
+
+.container{
+    @apply max-w-[85%] mx-auto
 }
 
 .pen{

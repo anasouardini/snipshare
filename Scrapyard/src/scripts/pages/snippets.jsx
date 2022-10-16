@@ -28,9 +28,6 @@ export default function Snippets() {
         children: [],
     });
 
-    const fieldsClasses = {
-        inputs: 'border-b-2 border-b-lime-600 p-1 outline-lime-300 focus:outline-1 bg-[#181818]',
-    };
     const [formFieldsState, setFormFieldsState] = useState({
         fields: [
             {
@@ -40,7 +37,6 @@ export default function Snippets() {
                     placeholder: 'title',
                     name: 'title',
                     type: 'text',
-                    className: fieldsClasses.inputs,
                 },
             },
             {
@@ -50,7 +46,6 @@ export default function Snippets() {
                     placeholder: 'description',
                     name: 'descr',
                     type: 'textarea',
-                    className: fieldsClasses.inputs,
                 },
             },
             {
