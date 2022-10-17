@@ -4,7 +4,7 @@ import Login from './pages/signin';
 import SignUp from './pages/signup';
 import Snippets from './pages/snippets';
 import Home from './pages/home';
-import AddRules from './pages/addCoworkers';
+import AddRules from './pages/coworkerRules';
 
 const routes = [
     {path: '/', element: <Home />},

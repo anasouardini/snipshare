@@ -89,7 +89,7 @@ const readMiddleware = async (req, res, next) => {
     // get coworkers rules
     let rulesResponse = {};
     if (snippetsOwner) {
-        rulesResponse = await CoworkerRules.readUserRules(snippetsOwner, user);
+        rulesResponse = await CoworkerRules.readCoworkerRules(snippetsOwner, user);
         // if the use is not a coworker
         if (!rulesResponse[0].length) {
             req.rules = [];
@@ -102,7 +102,7 @@ const readMiddleware = async (req, res, next) => {
             exceptions: rulesResponse[0][0].exceptions,
         };
     } else {
-        rulesResponse = await CoworkerRules.readAllRules(user);
+        rulesResponse = await CoworkerRules.readAllRules({coworker: user});
         // console.log(rulesResponse);
 
         if (!rulesResponse) {

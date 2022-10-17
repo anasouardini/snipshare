@@ -4,8 +4,15 @@ import {useRef} from 'react';
 import ExceptionsPopUp from '../components/exceptionsPopUp';
 import AccessControl from '../components/accessControl';
 import {useEffect} from 'react';
+import {createCoworkerRules, readCoworkerRules} from '../tools/snipStore';
+import {useNavigate} from 'react-location';
 
 export default function AddRules() {
+    const navigate = useNavigate();
+    const changeRoute = (to) => {
+        navigate({to, replace: true});
+    };
+
     const [coworkersState, setCoworkersState] = useState({});
     const [popUpState, setPopUpState] = useState({showExceptions: false});
 
@@ -20,20 +27,19 @@ export default function AddRules() {
         old: {},
     });
 
-    console.log(exceptionAccessRefs.current.old);
+    console.log(exceptionAccessRefs.current.new);
 
     const getCoworkers = async () => {
         // get coworkers
-        setCoworkersState({
-            generic: {
-                venego: {read: true, update: false, delete: false},
-                '3disa': {read: true, update: false, delete: false},
-            },
-            exceptions: {
-                venego: {snip1: {read: true, update: false, delete: false}},
-                '3disa': {snip2: {read: true, update: false, delete: false}},
-            },
-        });
+        const response = await readCoworkerRules();
+        if (response) {
+            if (response == 'unauthorized') {
+                return changeRoute('/login');
+            }
+        }
+
+        console.log(response);
+        setCoworkersState(response);
     };
 
     useEffect(() => {
@@ -67,8 +73,30 @@ export default function AddRules() {
 
     const addNewCoworker = (e) => {
         e.preventDefault();
-        genericAccessRefs.current.new;
-        // send user changes
+        const generic = Object.keys(genericAccessRefs.current.new).reduce((acc, accessKey) => {
+            acc[accessKey] = genericAccessRefs.current.new[accessKey].checked;
+            return acc;
+        }, {});
+        const coworker = exceptionAccessRefs.current.new.coworkerUsername.value;
+
+        //-I- check if the coworker exists, better to add coworkers by id and usernames like in discord
+        if (coworkersState.generic[coworker]) {
+            return console.log('this coworker already exists');
+        }
+
+        console.log(Object.values(exceptionAccessRefs.current.new?.old)[0]);
+        const props = {
+            coworker,
+            generic,
+            exceptions: Object.values(exceptionAccessRefs.current.new?.old)[0] ?? {},
+        };
+        createCoworkerRules({props});
+
+        // clear the new coworker so there will be only one new coworker object
+        exceptionAccessRefs.current.new.old = {};
+        exceptionAccessRefs.current.new.new = {};
+
+        //re-render
     };
 
     const showExceptionsPopUp = (coworker, oldOrNew, coworkerUsername) => {
@@ -78,11 +106,11 @@ export default function AddRules() {
     const hidePopUp = () => {
         setPopUpState({...popUpState, showExceptions: false});
     };
-    // console.log(coworkersState.generic);
     const listCoworkers = () =>
         coworkersState.generic ? (
             Object.keys(coworkersState.generic).map((coworkerUsername) => {
                 //* a copy of the state keeps the doctor away
+                // console.log(coworkersState.generic[coworkerUsername]);
                 genericAccessRefs.current.old[coworkerUsername] = {
                     ...coworkersState.generic[coworkerUsername],
                 };
@@ -93,7 +121,10 @@ export default function AddRules() {
                                 <img src="" alt="" />
                                 <span>{coworkerUsername}</span>
                             </div>
-                            <AccessControl ref={genericAccessRefs.current.old[coworkerUsername]} />
+                            <AccessControl
+                                ref={genericAccessRefs.current.old[coworkerUsername]}
+                                coworkerAccess={coworkersState.generic[coworkerUsername]}
+                            />
 
                             <button>Update</button>
                             <button>delete</button>
@@ -134,10 +165,8 @@ export default function AddRules() {
                 <button
                     onClick={(e) => {
                         e.preventDefault();
-                        const coworkerUsername = exceptionAccessRefs.current.new.coworkerUsername
-                            .value
-                            ? exceptionAccessRefs.current.new.coworkerUsername.value
-                            : 'new user';
+                        const coworkerUsername =
+                            exceptionAccessRefs.current.new.coworkerUsername.value ?? 'new user';
                         showExceptionsPopUp(
                             {
                                 [coworkerUsername]: {},

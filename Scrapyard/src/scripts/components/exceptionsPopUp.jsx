@@ -1,5 +1,6 @@
 import React from 'react';
 import {useEffect} from 'react';
+import {useRef} from 'react';
 import {forwardRef} from 'react';
 import {useState} from 'react';
 import AccessControl from '../components/accessControl';
@@ -35,7 +36,15 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
         const exceptions = parentRef.old[props.coworkerUsername];
 
         const exceptionID = parentRef.new.exceptionID.value;
-        exceptions[exceptionID] = parentRef.new.exceptionAccess;
+
+        // this passes the access values to <accessControl/> then it's used as references the dom checkboxes
+        exceptions[exceptionID] = Object.keys(parentRef.new.exceptionAccess).reduce(
+            (acc, accessKey) => {
+                acc[accessKey] = parentRef.new.exceptionAccess[accessKey].checked;
+                return acc;
+            },
+            {}
+        );
 
         console.log(ref.current[props.oldOrNew]);
 
@@ -71,6 +80,11 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                                 <div>{exceptionID}</div>
                                 <AccessControl
                                     ref={
+                                        ref.current[props.oldOrNew].old[props.coworkerUsername][
+                                            exceptionID
+                                        ]
+                                    }
+                                    coworkerAccess={
                                         ref.current[props.oldOrNew].old[props.coworkerUsername][
                                             exceptionID
                                         ]

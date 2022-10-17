@@ -19,7 +19,7 @@ const signup = async (req, res) => {
     }
 
     // chekc if the username exists in the users table
-    const userResponse = await User.getMod(req.body.usr);
+    const userResponse = await User.getUser(req.body.usr);
 
     if (!userResponse) {
         return res.sedStatus(500);

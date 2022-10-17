@@ -17,8 +17,9 @@ const queries = {
     createCoworkers: `CREATE TABLE coworkersRules (
         user varchar(100) NOT NULL,
         coworker varchar(100) NOT NULL,
-        generic varchar(4) NOT NULL,
-        exceptions json NOT NULL
+        generic json NOT NULL,
+        exceptions json NOT NULL,
+        PRIMARY KEY(user, coworker)
     );`,
 
     createSnippets: `CREATE TABLE snippets (

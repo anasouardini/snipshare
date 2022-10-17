@@ -1,4 +1,4 @@
-import {read} from './bridge';
+import {create, read} from './bridge';
 
 let snippets = {};
 let users = [];
@@ -67,6 +67,37 @@ const updateUsers = async () => {
 };
 const getUsers = () => users;
 
+const readCoworkerRules = async () => {
+    const response = await read(`coworkerRules`);
+    if (response) {
+        if (response?.redirect) {
+            return 'unauthorized';
+        }
+        // console.log('fetching');
+        // console.log(response);
+        if (response.status == 200) {
+            return response.msg;
+        }
+        return;
+    }
+};
+
+const createCoworkerRules = async (body) => {
+    const response = await create(`coworkerRules`, body);
+
+    if (response) {
+        if (response?.redirect) {
+            return 'unauthorized';
+        }
+        // console.log('fetching');
+        console.log(response);
+        if (response.status == 200) {
+            return response.msg;
+        }
+        return;
+    }
+};
+
 export {
     updateSnippets,
     getSnippets,
@@ -80,4 +111,6 @@ export {
     getSnipCode,
     updateUsers,
     getUsers,
+    readCoworkerRules,
+    createCoworkerRules,
 };
