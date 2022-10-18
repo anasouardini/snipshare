@@ -31,7 +31,7 @@ const create = (owner, rulesObj) => {
 
 const update = (owner, rulesObj) => {
     return poolPromise(
-        `update coworkersRules set generic=?, exceptions=? where coworker = ? and user = ?`,
+        `update coworkersRules set generic=?, exceptions=? where coworker=? and user=?`,
         [
             JSON.stringify(rulesObj.generic),
             JSON.stringify(rulesObj.exceptions),

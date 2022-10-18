@@ -20,7 +20,7 @@ export default function SignUp() {
             // console.log('success');
             console.log(response);
             if (response.status == 200) {
-                navigate({to: '/login', replace: true});
+                navigate({to: '/signin', replace: true});
             }
             return;
         }

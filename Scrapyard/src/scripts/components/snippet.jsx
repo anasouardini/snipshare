@@ -73,14 +73,14 @@ export default function Snippet(props) {
 
     const handlePreview = (e) => {
         e.stopPropagation();
-        if (snipInfoState.snippet.access.includes('r')) {
+        if (snipInfoState.snippet.access?.read) {
             setPopUpState({showPreview: true, showForm: false});
         }
     };
 
     const handleEdit = (e) => {
         e.stopPropagation();
-        if (snipInfoState.snippet.access.includes('u')) {
+        if (snipInfoState.snippet.access?.update) {
             setPopUpState({showForm: true, showPreview: false});
         }
     };
@@ -88,7 +88,7 @@ export default function Snippet(props) {
     const handleDelete = async (e) => {
         e.stopPropagation();
 
-        if (snipInfoState.snippet.access.includes('d')) {
+        if (snipInfoState.snippet.access?.delete) {
             // console.log(snipInfoState.snippet);
             const response = await remove(
                 snipInfoState.snippet.user + '/' + snipInfoState.snippet.id
@@ -105,19 +105,13 @@ export default function Snippet(props) {
         buttons: 'flex justify-between mt-[20px]',
         button: 'w-[100px] leading-8 rounded-md text-white',
         btnPreview: `${
-            snipInfoState.snippet.access.includes('r')
-                ? 'bg-cyan-600'
-                : 'bg-gray-400 cursor-not-allowed'
+            snipInfoState.snippet.access?.read ? 'bg-cyan-600' : 'bg-gray-400 cursor-not-allowed'
         }`,
         btnEdit: `${
-            snipInfoState.snippet.access.includes('u')
-                ? 'bg-lime-600'
-                : 'bg-gray-400 cursor-not-allowed'
+            snipInfoState.snippet.access?.update ? 'bg-lime-600' : 'bg-gray-400 cursor-not-allowed'
         }`,
         btnDelete: `${
-            snipInfoState.snippet.access.includes('d')
-                ? 'bg-red-500'
-                : 'bg-gray-400 cursor-not-allowed'
+            snipInfoState.snippet.access?.delete ? 'bg-red-500' : 'bg-gray-400 cursor-not-allowed'
         }`,
     };
 
@@ -129,7 +123,7 @@ export default function Snippet(props) {
             );
             if (response) {
                 if (response == 'unauthorized') {
-                    return changeRoute('/login');
+                    return changeRoute('/signin');
                 }
                 setSnipInfoState({...snipInfoState, snippet: response});
             }
@@ -164,7 +158,14 @@ export default function Snippet(props) {
                         </p>
                         <p>
                             allowed actions:&nbsp;
-                            <span className="text-gray-500">{snipInfoState.snippet.access}</span>
+                            <span className="text-gray-500">
+                                {Object.keys(snipInfoState.snippet.access).reduce((acc, access) => {
+                                    acc += snipInfoState.snippet.access[access]
+                                        ? access + ' | '
+                                        : '';
+                                    return acc;
+                                }, '')}
+                            </span>
                         </p>
                     </div>
                     <div className={`${classes.buttons}`}>

@@ -4,16 +4,28 @@ import {useRef} from 'react';
 import ExceptionsPopUp from '../components/exceptionsPopUp';
 import AccessControl from '../components/accessControl';
 import {useEffect} from 'react';
-import {createCoworkerRules, readCoworkerRules} from '../tools/snipStore';
+import {
+    createCoworkerRules,
+    deleteCoworkerRules,
+    readCoworkerRules,
+    updateCoworkerRules,
+    updateSnippets,
+} from '../tools/snipStore';
 import {useNavigate} from 'react-location';
+import {useContext} from 'react';
+
+import {GlobalContext} from '../pages/shared/sharedLayout';
 
 export default function AddRules() {
+    const whoami = useContext(GlobalContext);
+    // console.log('whoami', whoami);
     const navigate = useNavigate();
     const changeRoute = (to) => {
         navigate({to, replace: true});
     };
 
     const [coworkersState, setCoworkersState] = useState({});
+    const [snippetsState, setSnippetsState] = useState({});
     const [popUpState, setPopUpState] = useState({showExceptions: false});
 
     // list of checkboxes
@@ -27,52 +39,47 @@ export default function AddRules() {
         old: {},
     });
 
-    console.log(exceptionAccessRefs.current.new);
+    console.log(exceptionAccessRefs.current);
 
-    const getCoworkers = async () => {
+    const getData = async () => {
         // get coworkers
-        const response = await readCoworkerRules();
-        if (response) {
-            if (response == 'unauthorized') {
-                return changeRoute('/login');
+        const coworkersResponse = await readCoworkerRules();
+        if (coworkersResponse) {
+            if (coworkersResponse == 'unauthorized') {
+                return changeRoute('/signin');
             }
         }
 
-        console.log(response);
-        setCoworkersState(response);
+        console.log(coworkersResponse);
+        setCoworkersState(coworkersResponse);
+
+        // get snippets list
+        const snippetsResponse = await updateSnippets(whoami, 'meta');
+        if (!snippetsResponse.err) {
+            console.log('snippets', snippetsResponse);
+            return setSnippetsState(snippetsResponse);
+        }
+
+        if (snippetsResponse.err == 'unauthorized') {
+            return changeRoute('/signin');
+        }
     };
 
     useEffect(() => {
-        getCoworkers();
+        getData();
     }, []);
 
-    const getCoworkerAccess = (coworkerUsername) => {
-        const access = {};
+    const eventDefaults = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+    };
 
-        // this spagetty needs some clean up
-        const userExceptions = exceptionAccessRefs.current.old[coworkerUsername];
-        access.exception = Object.keys(userExceptions).reduce((acc, excObjKey) => {
-            acc[excObjKey] = Object.keys(userExceptions[excObjKey]).reduce((acc, accessObjKey) => {
-                acc[accessObjKey] = userExceptions[excObjKey][accessObjKey].defaultChecked;
-                return acc;
-            }, {});
-            return acc;
-        }, {});
-
-        access.generic = Object.keys(genericAccessRefs.old[coworkerUsername]).reduce(
-            (acc, objKey) => {
-                acc[objKey] =
-                    genericAccessRefs.current.old[coworkerUsername][objKey].defaultChecked;
-                return acc;
-            },
-            {}
-        );
-
-        return access;
+    const deleteCoworker = (coworkerUsername) => {
+        deleteCoworkerRules({props: {coworker: coworkerUsername}});
     };
 
     const addNewCoworker = (e) => {
-        e.preventDefault();
+        eventDefaults(e);
         const generic = Object.keys(genericAccessRefs.current.new).reduce((acc, accessKey) => {
             acc[accessKey] = genericAccessRefs.current.new[accessKey].checked;
             return acc;
@@ -84,17 +91,39 @@ export default function AddRules() {
             return console.log('this coworker already exists');
         }
 
-        console.log(Object.values(exceptionAccessRefs.current.new?.old)[0]);
+        // console.log(Object.values(exceptionAccessRefs.current.new?.old)[0]);
         const props = {
             coworker,
             generic,
-            exceptions: Object.values(exceptionAccessRefs.current.new?.old)[0] ?? {},
+            exceptions: Object.values(exceptionAccessRefs.current.new?.old ?? {key: {}})[0] ?? {},
         };
         createCoworkerRules({props});
 
         // clear the new coworker so there will be only one new coworker object
         exceptionAccessRefs.current.new.old = {};
         exceptionAccessRefs.current.new.new = {};
+
+        //re-render
+    };
+
+    const updateCoworker = (coworkerUsername) => {
+        const generic = Object.keys(genericAccessRefs.current.old[coworkerUsername]).reduce(
+            (acc, accessKey) => {
+                acc[accessKey] = genericAccessRefs.current.old[coworkerUsername][accessKey].checked;
+                return acc;
+            },
+            {}
+        );
+
+        const props = {
+            coworker: coworkerUsername,
+            generic,
+            exceptions:
+                exceptionAccessRefs.current.old?.old?.[coworkerUsername] ??
+                coworkersState.exceptions[coworkerUsername],
+        };
+        // console.log(props);
+        updateCoworkerRules({props});
 
         //re-render
     };
@@ -126,8 +155,22 @@ export default function AddRules() {
                                 coworkerAccess={coworkersState.generic[coworkerUsername]}
                             />
 
-                            <button>Update</button>
-                            <button>delete</button>
+                            <button
+                                onClick={(e) => {
+                                    eventDefaults(e);
+                                    updateCoworker(coworkerUsername);
+                                }}
+                            >
+                                Update
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    eventDefaults(e);
+                                    deleteCoworker(coworkerUsername);
+                                }}
+                            >
+                                delete
+                            </button>
                             <button
                                 onClick={(e) => {
                                     e.preventDefault();
@@ -195,6 +238,7 @@ export default function AddRules() {
                     coworker={popUpState.coworker}
                     oldOrNew={popUpState.oldOrNew}
                     coworkerUsername={popUpState.coworkerUsername}
+                    snippets={snippetsState}
                 />
             ) : (
                 <></>

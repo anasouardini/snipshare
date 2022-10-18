@@ -7,7 +7,7 @@ const readAll = async (req, res) => {
     const response = await CoworkerRules.readAllRules({owner});
     const coworkers = response[0];
 
-    console.log(response[0][0]);
+    // console.log(response[0][0]);
     let rules = {generic: {}, exceptions: {}};
     if (response[0].length) {
         rules = {
@@ -37,14 +37,14 @@ const readCoworker = async (req, res) => {
         exceptions: rulesResponse[0][0].exceptions,
     };
 
-    console.log(response);
+    // console.log(response);
 
     res.json({msg: rules});
 };
 
 const create = async (req, res) => {
     const owner = req.user.username;
-    console.log(req.body.props);
+    // console.log(req.body.props);
 
     //-I- check if the coworker exists, better to add coworkers by id and usernames like in discord
     const userResponse = await User.getUser(req.body.props.coworker);
@@ -93,26 +93,26 @@ const update = async (req, res) => {
     }
 
     if (!response[0]?.affectedRows) {
-        return res.status(400).json({msg: 'could not add a coworker rule'});
+        return res.status(400).json({msg: 'could not update a coworker rule'});
     }
 
-    res.json({msg: 'a coworker rule has been created successfully'});
+    res.json({msg: 'a coworker rule has been updated successfully'});
 };
 
 const remove = async (req, res) => {
     const owner = req.user.username;
-
+    // console.log(req.body);
     const response = await CoworkerRules.remove(owner, req.body.props);
-
+    // console.log(response);
     if (!response) {
         return res.sedStatus(500);
     }
 
     if (!response[0]?.affectedRows) {
-        return res.status(400).json({msg: 'could not add a coworker rule'});
+        return res.status(400).json({msg: 'could not delete a coworker rule'});
     }
 
-    res.json({msg: 'a coworker rule has been created successfully'});
+    res.json({msg: 'a coworker rule has been deleted successfully'});
 };
 
 module.exports = {readAll, readCoworker, create, update, remove};

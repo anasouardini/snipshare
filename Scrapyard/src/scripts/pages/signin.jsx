@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import {create} from '../tools/bridge';
 import {useNavigate} from 'react-location';
 
-export default function Login() {
+export default function Signin() {
     const navigate = useNavigate();
     const changeRoute = (to) => {
         navigate({to, replace: true});
@@ -60,7 +60,7 @@ export default function Login() {
                     }
                 `}
             </style>
-            <h1 className={classes.title}>Login</h1>
+            <h1 className={classes.title}>SignIn</h1>
 
             <form className={classes.form}>
                 <label className={classes.label}>

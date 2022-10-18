@@ -10,12 +10,16 @@ import {useContext} from 'react';
 import {GlobalContext} from '../pages/shared/sharedLayout';
 
 export default function Snippets() {
-    const whoami = useContext(GlobalContext);
-
     const navigate = useNavigate();
     const changeRoute = (to) => {
         navigate({to, replace: true});
     };
+
+    const whoami = useContext(GlobalContext);
+
+    if (whoami == '' || whoami == 'none') {
+        return changeRoute('/signin');
+    }
     const {
         data: {user: userParam},
     } = useMatch();
@@ -75,7 +79,7 @@ export default function Snippets() {
         console.log(children);
         if (children.err) {
             if (children.err == 'unauthorized') {
-                return changeRoute('/login');
+                return changeRoute('/signin');
             }
 
             return;

@@ -56,8 +56,8 @@ export const update = (route, body) =>
         })
         .catch((err) => false);
 
-export const remove = (route) =>
-    fetch(server.url + route, server.options('delete'))
+export const remove = (route, body) =>
+    fetch(server.url + route, server.options('delete', body))
         .then(async (res) => {
             return {
                 ...(await res

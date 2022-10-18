@@ -18,8 +18,10 @@ export default function SharedLayout(props) {
     useEffect(() => {
         (async () => {
             const whoamiUsr = await read('whoami');
-            if (whoamiUsr.redirect) {
-                return navigate('./signin');
+            if (whoamiUsr.status == 401) {
+                console.log(whoamiUsr);
+                setWhoamiState('none');
+                return changeRoute('./signin');
             }
             if (whoamiUsr.status != 200) {
                 return;
@@ -99,7 +101,13 @@ export default function SharedLayout(props) {
                 </ul>
             </nav>
             {/* {props.children} */}
-            <GlobalContext.Provider value={whoamiState}>{props.children}</GlobalContext.Provider>
+            {whoamiState ? (
+                <GlobalContext.Provider value={whoamiState}>
+                    {props.children}
+                </GlobalContext.Provider>
+            ) : (
+                <></>
+            )}
         </div>
     );
 }

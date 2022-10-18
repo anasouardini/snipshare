@@ -1,6 +1,5 @@
 import React from 'react';
 import {useEffect} from 'react';
-import {useRef} from 'react';
 import {forwardRef} from 'react';
 import {useState} from 'react';
 import AccessControl from '../components/accessControl';
@@ -31,11 +30,16 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
 
     const addNewException = (e) => {
         eventDefaults(e);
+
         const parentRef = ref.current[props.oldOrNew];
 
         const exceptions = parentRef.old[props.coworkerUsername];
 
         const exceptionID = parentRef.new.exceptionID.value;
+
+        if (exceptions?.[exceptionID]) {
+            return console.log('snippet already exists');
+        }
 
         // this passes the access values to <accessControl/> then it's used as references the dom checkboxes
         exceptions[exceptionID] = Object.keys(parentRef.new.exceptionAccess).reduce(
@@ -111,6 +115,27 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
             <></>
         );
 
+    const snippetsDataList = () => {
+        return (
+            <datalis id="snippets">
+                <select
+                    id="snippets"
+                    ref={(el) => {
+                        ref.current[props.oldOrNew].new.exceptionID = el;
+                    }}
+                >
+                    {props.snippets.map((snippet) => {
+                        return (
+                            <option key={snippet.id} value={snippet.id}>
+                                {snippet.title}
+                            </option>
+                        );
+                    })}
+                </select>
+            </datalis>
+        );
+    };
+
     return (
         <div className={`z-10 fixed top-0 left-0 w-full h-full flex items-center justify-center`}>
             <div
@@ -133,13 +158,15 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                     <div className="flex gap-4">
                         {ref.current[props.oldOrNew].new ? (
                             <>
-                                <input
+                                {snippetsDataList()}
+                                {/* <input
                                     type="text"
                                     placeholder="snippet"
                                     ref={(el) => {
                                         ref.current[props.oldOrNew].new.exceptionID = el;
                                     }}
-                                />
+                                    list="snippets"
+                                /> */}
                                 <AccessControl
                                     ref={ref.current[props.oldOrNew].new.exceptionAccess}
                                 />

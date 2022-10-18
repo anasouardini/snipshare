@@ -1,4 +1,4 @@
-import {create, read} from './bridge';
+import {create, read, remove, update} from './bridge';
 
 let snippets = {};
 let users = [];
@@ -24,8 +24,8 @@ const getSnipCode = () => alteredSnippet.code;
 
 // GLOBALS
 
-const updateSnippets = async (user) => {
-    const response = await read(`${user ? `${user}/` : ''}snippets`);
+const updateSnippets = async (user, meta) => {
+    const response = await read(`${user ? `${user}/` : ''}snippets${meta ? '?meta=true' : ''}`);
     console.log(response);
 
     if (response) {
@@ -98,6 +98,38 @@ const createCoworkerRules = async (body) => {
     }
 };
 
+const updateCoworkerRules = async (body) => {
+    const response = await update(`coworkerRules`, body);
+
+    if (response) {
+        if (response?.redirect) {
+            return 'unauthorized';
+        }
+        // console.log('fetching');
+        console.log(response);
+        if (response.status == 200) {
+            return response.msg;
+        }
+        return;
+    }
+};
+
+const deleteCoworkerRules = async (body) => {
+    const response = await remove(`coworkerRules`, body);
+
+    if (response) {
+        if (response?.redirect) {
+            return 'unauthorized';
+        }
+        // console.log('fetching');
+        console.log(response);
+        if (response.status == 200) {
+            return response.msg;
+        }
+        return;
+    }
+};
+
 export {
     updateSnippets,
     getSnippets,
@@ -113,4 +145,6 @@ export {
     getUsers,
     readCoworkerRules,
     createCoworkerRules,
+    updateCoworkerRules,
+    deleteCoworkerRules,
 };

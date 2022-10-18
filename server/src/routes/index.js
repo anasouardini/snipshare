@@ -38,6 +38,7 @@ router.get(
     controller.snippet.readMiddleware,
     controller.snippet.readUserAll
 );
+
 router.get('/:user/:snippetID', gotoLogin, controller.snippet.read);
 router.post('/:user/snippet', gotoLogin, controller.snippet.create);
 router.put('/:user/:snippetID', gotoLogin, controller.snippet.edit);
