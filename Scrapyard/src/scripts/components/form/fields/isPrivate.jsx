@@ -1,16 +1,19 @@
 import React from 'react';
-import {setIsPrivate} from '../../../tools/snipStore';
+import {forwardRef} from 'react';
 
-export default function IsPrivate(props) {
-    const handleCheckBox = (e) => {
-        e.stopPropagation();
-        setIsPrivate(e.target.checked);
-    };
-
+const IsPrivate = forwardRef((props, ref) => {
+    // console.log(props);
     return (
         <label>
-            <input className="mr-1" onChange={handleCheckBox} type="checkbox" />
+            <input
+                ref={ref}
+                // onChange={() => {}}
+                type="checkbox"
+                {...props}
+            />
             private
         </label>
     );
-}
+});
+
+export default IsPrivate;

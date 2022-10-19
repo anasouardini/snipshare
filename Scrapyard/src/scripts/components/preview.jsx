@@ -1,5 +1,4 @@
 import React from 'react';
-import {Bridge} from '../tools/stateBridge';
 import fieldsMap from './form/fieldsMap';
 
 export default function Preview(props) {

@@ -36,10 +36,11 @@ const authAction = async (req, action) => {
     const rulesResponse = await CoworkerRules.readCoworkerRules(owner, usr);
     // if the use is not a coworker
     if (rulesResponse[0].length) {
+        // console.log(rulesResponse[0][0].exceptions[snippetID]);
         if (
-            (rulesResponse[0].exceptions?.[snippetID] &&
-                rulesResponse[0].exceptions[snippetID]?.[action]) ||
-            rulesResponse[0].generic?.[action]
+            (rulesResponse[0][0].exceptions?.[snippetID] &&
+                rulesResponse[0][0].exceptions[snippetID]?.[action]) ||
+            rulesResponse[0][0].generic?.[action]
         ) {
             return {status: 200};
         }
@@ -57,13 +58,14 @@ const read = async (req, res) => {
 };
 
 const edit = async (req, res) => {
-    const result = await authAction(req, 'edit');
+    const result = await authAction(req, 'update');
     if (result?.status == 401) {
-        res.status(result.status).json({msg: result.msg});
+        return res.status(result.status).json({msg: result.msg});
     }
 
     const owner = req.params.user;
-    const response = await Snippet.editSnippet(owner, props);
+    const response = await Snippet.editSnippet(owner, req.body.props, req.params.snippetID);
+    // console.log(response);
     return response[0]?.affectedRows
         ? {status: 200, msg: `snippet has been edited`}
         : {status: 500, msg: `something happend while editting the snippet`};
@@ -72,7 +74,7 @@ const edit = async (req, res) => {
 const remove = async (req, res) => {
     const result = await authAction(req, 'delete');
     if (result?.status == 401) {
-        res.status(result.status).json({msg: result.msg});
+        return res.status(result.status).json({msg: result.msg});
     }
 
     const owner = req.params.user;

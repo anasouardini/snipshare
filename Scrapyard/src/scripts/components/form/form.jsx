@@ -2,14 +2,16 @@ import React, {useRef} from 'react';
 import {useContext} from 'react';
 import {GlobalContext} from '../../pages/shared/sharedLayout';
 import {create, read, update} from '../../tools/bridge';
-import {getIsPrivate, getSnipCode} from '../../tools/snipStore';
 import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
-    const whoami = useContext(GlobalContext);
+    const whoami = props.whoami;
+
     const refs = {
-        title: useRef('title'),
-        descr: useRef('descr'),
+        title: useRef(''),
+        descr: useRef(''),
+        Snippet: useRef(''),
+        isPrivate: useRef(''),
     };
 
     const handleClose = (e) => {
@@ -19,36 +21,31 @@ export default function Form(props) {
     };
 
     const createRequestBody = () => {
-        // create and edit request
-        const snipProps = {
-            title: refs.title.current.value,
-            descr: refs.descr.current.value,
-            snippet: getSnipCode(),
-            isPrivate: getIsPrivate(),
-        };
         const body = {props: {}};
 
-        console.log(snipProps);
         props.fields.forEach((field) => {
-            console.log(snipProps[field.attr.key]);
-
+            const fieldKey = field.attr.key;
             // keept the != undefined, because js is weird
-            if (snipProps?.[field.attr.key] != undefined) {
-                body.props[field.attr.key] = snipProps[field.attr.key];
+            if (refs?.[fieldKey] != undefined) {
+                if (refs[fieldKey].current.type == 'checkbox') {
+                    body.props[fieldKey] = refs[fieldKey].current.checked;
+                } else {
+                    body.props[fieldKey] = refs[fieldKey].current.value;
+                }
             }
         });
-        console.log(body);
+
+        // console.log(body);
         return body;
     };
 
     const handleEdit = async () => {
+        // return createRequestBody();
         const response = await update(props.snipUser + '/' + props.snipId, {
             user: props.snipUser,
             ...createRequestBody(),
         });
         console.log(response);
-
-        props.hidePopUp('form');
 
         if (response.status == 200) {
             props.updateSnippetsCB();
@@ -59,8 +56,6 @@ export default function Form(props) {
         const response = await create(`${whoami}/snippet`, createRequestBody());
         console.log(response);
 
-        props.hidePopUp('form');
-
         if (response.status == 200) {
             props.updateSnippetsCB();
         }
@@ -69,6 +64,8 @@ export default function Form(props) {
     const handleSubmit = (e) => {
         e.stopPropagation();
         e.preventDefault();
+
+        props.hidePopUp('form');
 
         if (props.action == 'edit') {
             return handleEdit();

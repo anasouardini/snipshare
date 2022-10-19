@@ -58,7 +58,6 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
     const handleClose = (e) => {
         eventDefaults(e);
 
-        //TODO: parse dom values
         const userOldExceptions = ref.current[props.oldOrNew].old[props.coworkerUsername];
         Object.keys(userOldExceptions).forEach((exceptionID) => {
             Object.keys(userOldExceptions[exceptionID]).forEach((access) => {
@@ -190,7 +189,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                     className="w-[100px] bg-lime-600 leading-8 rounded-md text-white mx-auto"
                     onClick={handleClose}
                 >
-                    Done
+                    Save
                 </button>
             </form>
         </div>

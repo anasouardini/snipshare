@@ -1,14 +1,12 @@
 import React, {useState} from 'react';
-import {useContext} from 'react';
 import {useEffect} from 'react';
-import {GlobalContext} from '../pages/shared/sharedLayout';
 import {remove} from '../tools/bridge';
 import {deepClone} from '../tools/deepClone';
 import Form from './form/form';
 import Preview from './preview';
 
 export default function Snippet(props) {
-    const whoami = useContext(GlobalContext);
+    const whoami = props.whoami;
 
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,
@@ -41,12 +39,20 @@ export default function Snippet(props) {
                 },
             },
             {
-                type: 'Snippet',
+                type: 'IsPrivate',
                 attr: {
-                    key: 'Snippet',
-                    value: snipInfoState.snippet.snippet,
+                    key: 'isPrivate',
+                    defaultChecked: snipInfoState.snippet.isPrivate,
+                    className: 'mr-2 accent-lime-600',
                 },
             },
+            // {
+            //     type: 'Snippet',
+            //     attr: {
+            //         key: 'Snippet',
+            //         value: snipInfoState.snippet.snippet,
+            //     },
+            // },
         ],
     });
 
@@ -130,6 +136,7 @@ export default function Snippet(props) {
         })();
     };
     const hidePopUp = (popUp) => {
+        console.log('hiding pop up');
         let newState = {...popUpState};
         if (popUp == 'form') {
             newState.showForm = false;

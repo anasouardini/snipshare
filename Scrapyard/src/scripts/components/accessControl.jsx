@@ -12,7 +12,7 @@ const AccessControl = forwardRef((props, ref) => {
                 acc[accessKey] = props?.coworkerAccess[accessKey];
                 return acc;
             }, {});
-            console.log(accessObj);
+            // console.log(accessObj);
             setAccessState(accessObj);
         } else {
             setAccessState({read: false, update: false, delete: false});
@@ -31,7 +31,7 @@ const AccessControl = forwardRef((props, ref) => {
                         }}
                         name="read"
                         defaultChecked={accessState.read}
-                        onChange={() => {}}
+                        // onChange={() => {}}
                     />
                     <input
                         className="accent-lime-600"
@@ -41,7 +41,7 @@ const AccessControl = forwardRef((props, ref) => {
                         }}
                         name="update"
                         defaultChecked={accessState.update}
-                        onChange={() => {}}
+                        // onChange={() => {}}
                     />
                     <input
                         className="accent-lime-600"
@@ -51,7 +51,7 @@ const AccessControl = forwardRef((props, ref) => {
                         }}
                         name="delete"
                         defaultChecked={accessState.delete}
-                        onChange={() => {}}
+                        // onChange={() => {}}
                     />
                 </>
             ) : (

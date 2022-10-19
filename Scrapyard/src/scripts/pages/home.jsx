@@ -1,15 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {useContext} from 'react';
 import {useNavigate} from 'react-location';
 import Form from '../components/form/form';
 import Snippet from '../components/snippet';
 import {updateSnippets, updateUsers} from '../tools/snipStore';
-import {GlobalContext} from './shared/sharedLayout';
 
 export default function Home() {
-    const whoami = useContext(GlobalContext);
-    // console.log(whoami);
-
+    const [whoami, setWhoamiState] = useState('');
     const [usersState, setUsersState] = useState({users: []});
     const [snippetsState, setSnippetsState] = useState({snippets: []});
     const [popUpState, setPopUpState] = useState({
@@ -72,6 +68,19 @@ export default function Home() {
         const getData = (() => {
             let users = [];
             let snippets = [];
+            let whoamiUsr = '';
+
+            const fetchWhoami = async () => {
+                whoamiUsr = await read('whoami');
+                if (whoamiUsr.status == 401) {
+                    console.log(whoamiUsr);
+                    setWhoamiState('none');
+                    return changeRoute('./signin');
+                }
+                if (whoamiUsr.status != 200) {
+                    return;
+                }
+            };
 
             const fetchUsers = async () => {
                 const response = await updateUsers();
@@ -97,17 +106,20 @@ export default function Home() {
             const setStates = () => {
                 setUsersState({users});
                 setSnippetsState({snippets});
+                setWhoamiState(whoamiUsr.msg);
 
                 // not sure about this
                 users = null;
                 snippets = null;
+                whoamiUsr = null;
             };
 
-            return {fetchUsers, fetchAllSnippets, setStates};
+            return {fetchUsers, fetchAllSnippets, fetchWhoami, setStates};
         })();
 
         (async () => {
             getData.fetchUsers();
+            getData.fetchWhoami();
             await getData.fetchAllSnippets();
             getData.setStates();
         })();
@@ -178,6 +190,7 @@ export default function Home() {
                         fields={formFieldsState.fields}
                         updateSnippetsCB={update}
                         hidePopUp={hidePopUp}
+                        whoami={whoami}
                     />
                 ) : (
                     <></>

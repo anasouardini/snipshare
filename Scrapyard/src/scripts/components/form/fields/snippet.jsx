@@ -1,10 +1,10 @@
 import React from 'react';
+import {forwardRef} from 'react';
 import MonacoEditor from 'react-monaco-editor';
-import {getSnipCode, setSnipCode} from '../../../tools/snipStore';
 
-export default function Snippet(props) {
+const Snippet = forwardRef((props, ref) => {
     const monacoEditorAttr = {
-        // width: '300',
+        width: '300',
         height: '200',
         language: 'javascript',
         theme: 'vs-dark',
@@ -12,7 +12,9 @@ export default function Snippet(props) {
         options: {
             selectOnLineNumbers: true,
         },
-        onChange: (value) => setSnipCode(value),
+        onChange: (value) => {
+            ref = value;
+        },
         // editorDidMount : HandleEditorMount,
     };
 
@@ -24,4 +26,6 @@ export default function Snippet(props) {
             </div>
         </>
     );
-}
+});
+
+export default Snippet;

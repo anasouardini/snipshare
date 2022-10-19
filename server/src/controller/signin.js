@@ -2,7 +2,6 @@ const User = require('../model/user');
 const jwt = require('jsonwebtoken');
 const fs = require('fs/promises');
 const bcrypt = require('bcrypt');
-const {nextTick} = require('process');
 
 require('dotenv').config();
 

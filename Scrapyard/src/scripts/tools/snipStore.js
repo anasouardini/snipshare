@@ -3,30 +3,10 @@ import {create, read, remove, update} from './bridge';
 let snippets = {};
 let users = [];
 
-let alteredSnippet = {isPrivate: false, coworkers: {}, code: ''};
-
-// SNIPPET TEMP STATE
-
-const setIsPrivate = (value) => {
-    alteredSnippet.isPrivate = value;
-};
-
-const getIsPrivate = () => alteredSnippet.isPrivate;
-
-const setCoworkers = (data) => {
-    alteredSnippet.coworkers = data;
-};
-
-const getCoworkers = () => alteredSnippet.coworkers;
-
-const setSnipCode = (value) => (alteredSnippet.code = value);
-const getSnipCode = () => alteredSnippet.code;
-
 // GLOBALS
-
 const updateSnippets = async (user, meta) => {
     const response = await read(`${user ? `${user}/` : ''}snippets${meta ? '?meta=true' : ''}`);
-    console.log(response);
+    // console.log(response);
 
     if (response) {
         // console.log('fetching');
@@ -135,12 +115,6 @@ export {
     getSnippets,
     updateSnippet,
     getSnippet,
-    setCoworkers,
-    getCoworkers,
-    setIsPrivate,
-    getIsPrivate,
-    setSnipCode,
-    getSnipCode,
     updateUsers,
     getUsers,
     readCoworkerRules,

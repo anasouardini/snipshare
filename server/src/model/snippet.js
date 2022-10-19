@@ -9,8 +9,10 @@ const getUserSnippets = (usr) => {
 };
 const getSnippet = (usr, snipID) =>
     poolPromise(`select * from snippets where user = ? and id = ?`, [usr, snipID]);
+
 const deleteSnippet = (usr, snipID) =>
     poolPromise(`delete from snippets where user = ? and id = ?`, [usr, snipID]);
+
 const createSnippet = (props) =>
     poolPromise(
         `INSERT INTO
@@ -25,12 +27,12 @@ const createSnippet = (props) =>
             props.snippet,
         ]
     );
-const editSnippet = (owner, props) =>
+const editSnippet = (owner, props, snippetID) =>
     poolPromise(
         `UPDATE
             snippets SET title=?, descr=?, snippet=?, isPrivate=?
             WHERE user=? AND id=?;`,
-        [props.title, props.descr, props.snippet, Number(props.isPrivate), owner, props.id]
+        [props.title, props.descr, '', Number(props.isPrivate), owner, snippetID]
     );
 
 module.exports = {

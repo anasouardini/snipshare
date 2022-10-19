@@ -12,12 +12,9 @@ import {
     updateSnippets,
 } from '../tools/snipStore';
 import {useNavigate} from 'react-location';
-import {useContext} from 'react';
-
-import {GlobalContext} from '../pages/shared/sharedLayout';
 
 export default function AddRules() {
-    const whoami = useContext(GlobalContext);
+    const [whoami, setWhoamiState] = useState('');
     // console.log('whoami', whoami);
     const navigate = useNavigate();
     const changeRoute = (to) => {
@@ -39,9 +36,10 @@ export default function AddRules() {
         old: {},
     });
 
-    console.log(exceptionAccessRefs.current);
+    // console.log(exceptionAccessRefs.current);
 
     const getData = async () => {
+        console.log('updating data');
         // get coworkers
         const coworkersResponse = await readCoworkerRules();
         if (coworkersResponse) {
@@ -56,7 +54,7 @@ export default function AddRules() {
         // get snippets list
         const snippetsResponse = await updateSnippets(whoami, 'meta');
         if (!snippetsResponse.err) {
-            console.log('snippets', snippetsResponse);
+            // console.log('snippets', snippetsResponse);
             return setSnippetsState(snippetsResponse);
         }
 
@@ -65,8 +63,22 @@ export default function AddRules() {
         }
     };
 
+    const updateWhoami = async () => {
+        const whoamiUsr = await read('whoami');
+        if (whoamiUsr.status == 401) {
+            console.log(whoamiUsr);
+            setWhoamiState('none');
+            return changeRoute('./signin');
+        }
+        if (whoamiUsr.status != 200) {
+            return;
+        }
+        setWhoamiState(whoamiUsr.msg);
+    };
+
     useEffect(() => {
         getData();
+        updateWhoami();
     }, []);
 
     const eventDefaults = (e) => {
@@ -74,11 +86,13 @@ export default function AddRules() {
         e.preventDefault();
     };
 
-    const deleteCoworker = (coworkerUsername) => {
-        deleteCoworkerRules({props: {coworker: coworkerUsername}});
+    const deleteCoworker = async (coworkerUsername) => {
+        //wait fot the changes before getting the new data
+        await deleteCoworkerRules({props: {coworker: coworkerUsername}});
+        getData();
     };
 
-    const addNewCoworker = (e) => {
+    const addNewCoworker = async (e) => {
         eventDefaults(e);
         const generic = Object.keys(genericAccessRefs.current.new).reduce((acc, accessKey) => {
             acc[accessKey] = genericAccessRefs.current.new[accessKey].checked;
@@ -97,13 +111,15 @@ export default function AddRules() {
             generic,
             exceptions: Object.values(exceptionAccessRefs.current.new?.old ?? {key: {}})[0] ?? {},
         };
-        createCoworkerRules({props});
+        //wait fot the changes before getting the new data
+        await createCoworkerRules({props});
 
         // clear the new coworker so there will be only one new coworker object
         exceptionAccessRefs.current.new.old = {};
         exceptionAccessRefs.current.new.new = {};
 
         //re-render
+        getData();
     };
 
     const updateCoworker = (coworkerUsername) => {
@@ -126,6 +142,7 @@ export default function AddRules() {
         updateCoworkerRules({props});
 
         //re-render
+        getData();
     };
 
     const showExceptionsPopUp = (coworker, oldOrNew, coworkerUsername) => {

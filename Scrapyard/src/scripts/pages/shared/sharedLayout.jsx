@@ -15,19 +15,21 @@ export default function SharedLayout(props) {
         navigate({to, replace: true});
     };
 
+    const updateWhoami = async () => {
+        const whoamiUsr = await read('whoami');
+        if (whoamiUsr.status == 401) {
+            console.log(whoamiUsr);
+            setWhoamiState('none');
+            return changeRoute('./signin');
+        }
+        if (whoamiUsr.status != 200) {
+            return;
+        }
+        setWhoamiState(whoamiUsr.msg);
+    };
+
     useEffect(() => {
-        (async () => {
-            const whoamiUsr = await read('whoami');
-            if (whoamiUsr.status == 401) {
-                console.log(whoamiUsr);
-                setWhoamiState('none');
-                return changeRoute('./signin');
-            }
-            if (whoamiUsr.status != 200) {
-                return;
-            }
-            setWhoamiState(whoamiUsr.msg);
-        })();
+        updateWhoami();
     }, []);
 
     const classes = {
@@ -96,13 +98,20 @@ export default function SharedLayout(props) {
                             console.log(response);
                         }}
                     >
-                        restart
+                        reinitDB
                     </li>
                 </ul>
             </nav>
             {/* {props.children} */}
             {whoamiState ? (
-                <GlobalContext.Provider value={whoamiState}>
+                <GlobalContext.Provider
+                    value={{
+                        whoami: whoamiState,
+                        updateWhoami: () => {
+                            updateWhoami();
+                        },
+                    }}
+                >
                     {props.children}
                 </GlobalContext.Provider>
             ) : (
