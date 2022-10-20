@@ -5,15 +5,16 @@ import {useNavigate} from 'react-location';
 import Form from '../components/form/form';
 import {deepClone} from '../tools/deepClone';
 import {updateSnippets} from '../tools/snipStore';
+import {useContext} from 'react';
+import {GlobalContext} from './shared/sharedLayout';
 
 export default function Snippets() {
     const navigate = useNavigate();
     const changeRoute = (to) => {
         navigate({to, replace: true});
-        s;
     };
 
-    const [whoami, setWhoamiState] = useState('');
+    const whoami = useContext(GlobalContext);
 
     if (whoami == '' || whoami == 'none') {
         return changeRoute('/signin');
@@ -72,22 +73,9 @@ export default function Snippets() {
         ],
     });
 
-    const updateWhoami = async () => {
-        const whoamiUsr = await read('whoami');
-        if (whoamiUsr.status == 401) {
-            console.log(whoamiUsr);
-            setWhoamiState('none');
-            return changeRoute('./signin');
-        }
-        if (whoamiUsr.status != 200) {
-            return;
-        }
-        setWhoamiState(whoamiUsr.msg);
-    };
-
     const update = async () => {
         const children = await updateSnippets(userParam);
-        console.log(children);
+        // console.log(children);
         if (children.err) {
             if (children.err == 'unauthorized') {
                 return changeRoute('/signin');
@@ -102,7 +90,6 @@ export default function Snippets() {
     };
     useEffect(() => {
         update();
-        updateWhoami();
     }, [userParam]);
 
     const handleCreate = (e) => {

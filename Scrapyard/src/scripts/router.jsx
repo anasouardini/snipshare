@@ -5,6 +5,7 @@ import SignUp from './pages/signup';
 import Snippets from './pages/snippets';
 import Home from './pages/home';
 import AddRules from './pages/coworkerRules';
+import {QueryClient, QueryClientProvider} from 'react-query';
 
 const routes = [
     {path: '/', element: <Home />},
@@ -21,17 +22,20 @@ const routes = [
     },
 ];
 
-const location = new ReactLocation();
-
 function App() {
+    const location = new ReactLocation();
+    const client = new QueryClient();
+
     return (
-        <Router routes={routes} location={location}>
-            <div className=" h-[100vh]">
-                <SharedLayout>
-                    <Outlet component={routes} />
-                </SharedLayout>
-            </div>
-        </Router>
+        <QueryClientProvider client={client}>
+            <Router routes={routes} location={location}>
+                <div className=" h-[100vh]">
+                    <SharedLayout>
+                        <Outlet component={routes} />
+                    </SharedLayout>
+                </div>
+            </Router>
+        </QueryClientProvider>
     );
 }
 

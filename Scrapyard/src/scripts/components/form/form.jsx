@@ -5,7 +5,7 @@ import {create, read, update} from '../../tools/bridge';
 import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
-    const whoami = props.whoami;
+    const whoami = useContext(GlobalContext);
 
     const refs = {
         title: useRef(''),

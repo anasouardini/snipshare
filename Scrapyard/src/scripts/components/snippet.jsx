@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
+import {useContext} from 'react';
 import {useEffect} from 'react';
+import {GlobalContext} from '../pages/shared/sharedLayout';
 import {remove} from '../tools/bridge';
 import {deepClone} from '../tools/deepClone';
 import Form from './form/form';
 import Preview from './preview';
 
 export default function Snippet(props) {
-    const whoami = props.whoami;
+    const whoami = useContext(GlobalContext);
 
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,

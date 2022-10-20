@@ -1,36 +1,24 @@
 import React from 'react';
 import {createContext} from 'react';
-import {useState} from 'react';
-import {useEffect} from 'react';
 import {useNavigate} from 'react-location';
+import {useQuery} from 'react-query';
 import {create, read} from '../../tools/bridge';
 
 export const GlobalContext = createContext('');
 
+const updateWhoami = async () => {
+    const whoamiUsr = await read('whoami');
+
+    return whoamiUsr.msg;
+};
+
 export default function SharedLayout(props) {
-    const [whoamiState, setWhoamiState] = useState('');
+    const {data: whoami, status} = useQuery(['whoami'], updateWhoami);
 
     const navigate = useNavigate();
     const changeRoute = (to) => {
         navigate({to, replace: true});
     };
-
-    const updateWhoami = async () => {
-        const whoamiUsr = await read('whoami');
-        if (whoamiUsr.status == 401) {
-            console.log(whoamiUsr);
-            setWhoamiState('none');
-            return changeRoute('./signin');
-        }
-        if (whoamiUsr.status != 200) {
-            return;
-        }
-        setWhoamiState(whoamiUsr.msg);
-    };
-
-    useEffect(() => {
-        updateWhoami();
-    }, []);
 
     const classes = {
         li: 'm-2 cursor-pointer border-b-[4px] border-b-transparent hover:border-b-[4px] hover:border-b-lime-600 text-gray-200',
@@ -51,7 +39,7 @@ export default function SharedLayout(props) {
                     <li
                         className={classes.li}
                         onClick={() => {
-                            changeRoute(whoamiState + '/snippets');
+                            changeRoute(whoami + '/snippets');
                         }}
                     >
                         my snippets
@@ -103,17 +91,8 @@ export default function SharedLayout(props) {
                 </ul>
             </nav>
             {/* {props.children} */}
-            {whoamiState ? (
-                <GlobalContext.Provider
-                    value={{
-                        whoami: whoamiState,
-                        updateWhoami: () => {
-                            updateWhoami();
-                        },
-                    }}
-                >
-                    {props.children}
-                </GlobalContext.Provider>
+            {status == 'success' ? (
+                <GlobalContext.Provider value={whoami}>{props.children}</GlobalContext.Provider>
             ) : (
                 <></>
             )}
