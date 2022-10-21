@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigate} from 'react-location';
+import {useNavigate} from 'react-router';
 import Form from '../components/form/form';
 import Snippet from '../components/snippet';
 
@@ -60,9 +60,6 @@ export default function Home() {
     });
 
     const navigate = useNavigate();
-    const changeRoute = (to) => {
-        navigate({to, replace: true});
-    };
 
     useEffect(() => {
         const getData = (() => {
@@ -73,7 +70,7 @@ export default function Home() {
                 const response = await updateUsers();
                 if (response) {
                     if (response.err == 'unauthorized') {
-                        return changeRoute('/login');
+                        return navigate('/login');
                     }
 
                     users = response;
@@ -84,7 +81,7 @@ export default function Home() {
                 const response = await updateSnippets();
                 if (response) {
                     if (response.err == 'unauthorized') {
-                        return changeRoute('/login');
+                        return navigate('/login');
                     }
                     snippets = response;
                 }
@@ -114,7 +111,7 @@ export default function Home() {
             <li
                 className="ml-4 py-1 px-3 border-b-[2px] border-b-lime-600 cursor-pointer"
                 onClick={(e) => {
-                    e.stopPropagation(), changeRoute(`/${user}/snippets`);
+                    e.stopPropagation(), navigate(`/${user}/snippets`);
                 }}
                 key={user}
             >

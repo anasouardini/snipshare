@@ -1,12 +1,9 @@
 import React, {useRef} from 'react';
 import {create} from '../tools/bridge';
-import {useNavigate} from 'react-location';
+import {useNavigate} from 'react-router';
 
 export default function Signin() {
     const navigate = useNavigate();
-    const changeRoute = (to) => {
-        navigate({to, replace: true});
-    };
 
     const refs = {
         username: useRef('username'),
@@ -28,7 +25,7 @@ export default function Signin() {
 
         if (response) {
             if (response.status == 200) {
-                return changeRoute('/');
+                return navigate('/');
             }
             // console.log('success');
             // console.log(response);

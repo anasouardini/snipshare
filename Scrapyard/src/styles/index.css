@@ -21,3 +21,7 @@ input{
     background-repeat: no-repeat;
     background-size: contain;
 }
+
+.active{
+    @apply border-b-[4px] border-b-lime-600
+}

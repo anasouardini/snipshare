@@ -1,4 +1,5 @@
 import React from 'react';
+import {useNavigate} from 'react-router';
 import {useState} from 'react';
 import {useRef} from 'react';
 import ExceptionsPopUp from '../components/exceptionsPopUp';
@@ -11,15 +12,12 @@ import {
     updateCoworkerRules,
     updateSnippets,
 } from '../tools/snipStore';
-import {useNavigate} from 'react-location';
+import {read} from '../tools/bridge';
 
 export default function AddRules() {
     const [whoami, setWhoamiState] = useState('');
     // console.log('whoami', whoami);
     const navigate = useNavigate();
-    const changeRoute = (to) => {
-        navigate({to, replace: true});
-    };
 
     const [coworkersState, setCoworkersState] = useState({});
     const [snippetsState, setSnippetsState] = useState({});
@@ -44,7 +42,7 @@ export default function AddRules() {
         const coworkersResponse = await readCoworkerRules();
         if (coworkersResponse) {
             if (coworkersResponse == 'unauthorized') {
-                return changeRoute('/signin');
+                return navigate('/signin', {replace: true});
             }
         }
 
@@ -59,16 +57,17 @@ export default function AddRules() {
         }
 
         if (snippetsResponse.err == 'unauthorized') {
-            return changeRoute('/signin');
+            return navigate('/signin', {replace: true});
         }
     };
 
     const updateWhoami = async () => {
         const whoamiUsr = await read('whoami');
+
         if (whoamiUsr.status == 401) {
             console.log(whoamiUsr);
             setWhoamiState('none');
-            return changeRoute('./signin');
+            return navigate('./signin');
         }
         if (whoamiUsr.status != 200) {
             return;

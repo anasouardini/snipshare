@@ -1,11 +1,12 @@
 import React, {useRef} from 'react';
-import {useContext} from 'react';
-import {GlobalContext} from '../../pages/shared/sharedLayout';
+import {useOutletContext} from 'react-router-dom';
+
 import {create, read, update} from '../../tools/bridge';
 import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
-    const whoami = useContext(GlobalContext);
+    // const whoami = useContext(GlobalContext);
+    const {whoami} = useOutletContext();
 
     const refs = {
         title: useRef(''),

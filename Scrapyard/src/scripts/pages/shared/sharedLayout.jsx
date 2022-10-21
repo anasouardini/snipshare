@@ -1,10 +1,11 @@
 import React from 'react';
-import {createContext} from 'react';
-import {useNavigate} from 'react-location';
+import {Outlet} from 'react-router-dom';
+// import {useNavigate} from 'react-router';
 import {useQuery} from 'react-query';
 import {create, read} from '../../tools/bridge';
+import {Link, NavLink} from 'react-router-dom';
 
-export const GlobalContext = createContext('');
+// export const GlobalContext = createContext('');
 
 const updateWhoami = async () => {
     const whoamiUsr = await read('whoami');
@@ -15,64 +16,50 @@ const updateWhoami = async () => {
 export default function SharedLayout(props) {
     const {data: whoami, status} = useQuery(['whoami'], updateWhoami);
 
-    const navigate = useNavigate();
-    const changeRoute = (to) => {
-        navigate({to, replace: true});
-    };
+    // const navigate = useNavigate();
+    // const changeRoute = (to) => {
+    //     navigate({to, replace: true});
+    // };
 
     const classes = {
         li: 'm-2 cursor-pointer border-b-[4px] border-b-transparent hover:border-b-[4px] hover:border-b-lime-600 text-gray-200',
     };
-    // console.log(props.children.props);
+    console.log(whoami);
     return (
         <div className="font-roboto">
             <nav>
                 <ul className="flex">
-                    <li
-                        className={classes.li}
-                        onClick={() => {
-                            changeRoute('/');
-                        }}
-                    >
-                        Home
+                    <li className={classes.li}>
+                        <NavLink end to="/">
+                            Home
+                        </NavLink>
                     </li>
-                    <li
-                        className={classes.li}
-                        onClick={() => {
-                            changeRoute(whoami + '/snippets');
-                        }}
-                    >
-                        my snippets
+                    <li className={classes.li}>
+                        <NavLink to={`${whoami}/snippets`}>My Snippets</NavLink>
                     </li>
 
-                    <li
-                        className={`${classes.li} ml-auto`}
-                        onClick={() => {
-                            changeRoute('/addRules');
-                        }}
-                    >
-                        Add Rules
+                    <li className={`${classes.li} ml-auto`}>
+                        <NavLink to="/addRules">Add Rules</NavLink>
                     </li>
-                    <li
-                        className={`${classes.li}`}
-                        onClick={() => {
-                            changeRoute('/signin');
-                        }}
-                    >
-                        SignIn
-                    </li>
-                    <li
-                        className={classes.li}
-                        onClick={() => {
-                            changeRoute('/signup');
-                        }}
-                    >
-                        SignUp
-                    </li>
+                    {whoami == 'unauthorized' ? (
+                        <>
+                            <li className={`${classes.li}`}>
+                                <NavLink to="/login" replace>
+                                    Login
+                                </NavLink>
+                            </li>
+                            <li className={classes.li}>
+                                <NavLink to="/signup" replace>
+                                    Create Account
+                                </NavLink>
+                            </li>
+                        </>
+                    ) : (
+                        <></>
+                    )}
                     <li
                         className={classes.li}
                         onClick={async () => {
-                            changeRoute('/signin');
                             const response = await create('logout');
                             console.log(response);
                         }}
@@ -92,8 +79,10 @@ export default function SharedLayout(props) {
             </nav>
             {/* {props.children} */}
             {status == 'success' ? (
-                <GlobalContext.Provider value={whoami}>{props.children}</GlobalContext.Provider>
+                // <GlobalContext.Provider value={whoami}>
+                <Outlet context={whoami} />
             ) : (
+                // </GlobalContext.Provider>
                 <></>
             )}
         </div>

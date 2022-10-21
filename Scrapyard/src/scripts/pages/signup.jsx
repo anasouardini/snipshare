@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {create} from '../tools/bridge';
-import {useNavigate} from 'react-location';
+// import {useNavigate} from 'react-router';
 
 export default function SignUp() {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function SignUp() {
             // console.log('success');
             console.log(response);
             if (response.status == 200) {
-                navigate({to: '/signin', replace: true});
+                navigate('/signin', {replace: true});
             }
             return;
         }

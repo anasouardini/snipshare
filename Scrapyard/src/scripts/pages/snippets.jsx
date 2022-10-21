@@ -1,27 +1,23 @@
-import React, {useState, useEffect, createContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import Snippet from '../components/snippet';
-import {useMatch} from 'react-location';
-import {useNavigate} from 'react-location';
+// import {useNavigate, useMatch} from 'react-location';
+import {useParams, useOutletContext} from 'react-router-dom';
 import Form from '../components/form/form';
 import {deepClone} from '../tools/deepClone';
 import {updateSnippets} from '../tools/snipStore';
-import {useContext} from 'react';
-import {GlobalContext} from './shared/sharedLayout';
+import {useNavigate} from 'react-router-dom';
 
 export default function Snippets() {
     const navigate = useNavigate();
-    const changeRoute = (to) => {
-        navigate({to, replace: true});
-    };
 
-    const whoami = useContext(GlobalContext);
+    // const {whoami} = useContext(GlobalContext);
+    const {whoami} = useOutletContext();
 
     if (whoami == '' || whoami == 'none') {
-        return changeRoute('/signin');
+        return navigate('/signin', {replace: true});
     }
-    const {
-        data: {user: userParam},
-    } = useMatch();
+
+    const {user: userParam} = useParams();
 
     const [popUpState, setPopUpState] = useState({
         showForm: false,
@@ -31,7 +27,7 @@ export default function Snippets() {
         children: [],
     });
 
-    const [formFieldsState, setFormFieldsState] = useState({
+    const [formFieldsState, _] = useState({
         fields: [
             {
                 type: 'input',
@@ -78,7 +74,7 @@ export default function Snippets() {
         // console.log(children);
         if (children.err) {
             if (children.err == 'unauthorized') {
-                return changeRoute('/signin');
+                return navigate('/signin', {replace: true});
             }
 
             return;
