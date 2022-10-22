@@ -15,6 +15,8 @@ export default function Snippet(props) {
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,
     });
+    // console.log(snipInfoState.snippet);
+
     const [popUpState, setPopUpState] = useState({showForm: false, showPreview: false});
 
     const fieldsClasses = {
@@ -63,13 +65,7 @@ export default function Snippet(props) {
     useEffect(() => {
         if (props.user == whoami) {
             const stateCpy = deepClone(formFieldsState);
-            stateCpy.fields.push({
-                type: 'Coworkers',
-                attr: {
-                    key: 'coworkers',
-                    name: 'coworkers',
-                },
-            });
+
             stateCpy.fields.push({
                 type: 'IsPrivate',
                 attr: {
@@ -104,10 +100,6 @@ export default function Snippet(props) {
                 snipInfoState.snippet.user + '/' + snipInfoState.snippet.id
             );
             console.log(response.msg);
-
-            if (response.status == 200) {
-                props.updateSnippetsCB();
-            }
         }
     };
     // console.log(snipInfoState.snippet);

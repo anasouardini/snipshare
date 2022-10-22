@@ -1,5 +1,5 @@
 import React from 'react';
-import {useNavigate} from 'react-router';
+import {useNavigate, useOutletContext} from 'react-router';
 import {useState} from 'react';
 import {useRef} from 'react';
 import ExceptionsPopUp from '../components/exceptionsPopUp';
@@ -9,18 +9,22 @@ import {
     createCoworkerRules,
     deleteCoworkerRules,
     readCoworkerRules,
+    getSnippets,
     updateCoworkerRules,
-    updateSnippets,
 } from '../tools/snipStore';
-import {read} from '../tools/bridge';
+
+import {useQuery} from 'react-query';
 
 export default function AddRules() {
-    const [whoami, setWhoamiState] = useState('');
-    // console.log('whoami', whoami);
     const navigate = useNavigate();
 
-    const [coworkersState, setCoworkersState] = useState({});
-    const [snippetsState, setSnippetsState] = useState({});
+    const whoami = useOutletContext();
+    if (whoami == '' || whoami == 'unauthorized') {
+        console.log('redirecting');
+        return navigate('/login', {replace: true});
+    }
+    console.log('whoami', whoami);
+
     const [popUpState, setPopUpState] = useState({showExceptions: false});
 
     // list of checkboxes
@@ -36,49 +40,29 @@ export default function AddRules() {
 
     // console.log(exceptionAccessRefs.current);
 
-    const getData = async () => {
-        console.log('updating data');
-        // get coworkers
-        const coworkersResponse = await readCoworkerRules();
-        if (coworkersResponse) {
-            if (coworkersResponse == 'unauthorized') {
-                return navigate('/signin', {replace: true});
-            }
-        }
+    const {
+        data: coworkersRulesData,
+        status: coworkersRulesStatus,
+        error: coworkersRulesErr,
+    } = useQuery('coworkers', () => {
+        return readCoworkerRules();
+    });
+    if (coworkersRulesErr?.req?.status == 401) {
+        return navigate('/login', {replace: true});
+    }
+    // console.log(coworkersRulesData);
 
-        console.log(coworkersResponse);
-        setCoworkersState(coworkersResponse);
-
-        // get snippets list
-        const snippetsResponse = await updateSnippets(whoami, 'meta');
-        if (!snippetsResponse.err) {
-            // console.log('snippets', snippetsResponse);
-            return setSnippetsState(snippetsResponse);
-        }
-
-        if (snippetsResponse.err == 'unauthorized') {
-            return navigate('/signin', {replace: true});
-        }
-    };
-
-    const updateWhoami = async () => {
-        const whoamiUsr = await read('whoami');
-
-        if (whoamiUsr.status == 401) {
-            console.log(whoamiUsr);
-            setWhoamiState('none');
-            return navigate('./signin');
-        }
-        if (whoamiUsr.status != 200) {
-            return;
-        }
-        setWhoamiState(whoamiUsr.msg);
-    };
-
-    useEffect(() => {
-        getData();
-        updateWhoami();
-    }, []);
+    // get snippets list
+    const {
+        data: snippetsData,
+        status: snippetsStatus,
+        error: snippetsErr,
+    } = useQuery(['snippets'], () => {
+        return getSnippets(whoami, 'meta');
+    });
+    if (snippetsErr?.req?.status == 401) {
+        return navigate('/login', {replace: true});
+    }
 
     const eventDefaults = (e) => {
         e.stopPropagation();
@@ -88,7 +72,7 @@ export default function AddRules() {
     const deleteCoworker = async (coworkerUsername) => {
         //wait fot the changes before getting the new data
         await deleteCoworkerRules({props: {coworker: coworkerUsername}});
-        getData();
+        updateRules();
     };
 
     const addNewCoworker = async (e) => {
@@ -100,7 +84,7 @@ export default function AddRules() {
         const coworker = exceptionAccessRefs.current.new.coworkerUsername.value;
 
         //-I- check if the coworker exists, better to add coworkers by id and usernames like in discord
-        if (coworkersState.generic[coworker]) {
+        if (coworkersRulesData.generic[coworker]) {
             return console.log('this coworker already exists');
         }
 
@@ -118,7 +102,7 @@ export default function AddRules() {
         exceptionAccessRefs.current.new.new = {};
 
         //re-render
-        getData();
+        updateRules();
     };
 
     const updateCoworker = (coworkerUsername) => {
@@ -135,13 +119,13 @@ export default function AddRules() {
             generic,
             exceptions:
                 exceptionAccessRefs.current.old?.old?.[coworkerUsername] ??
-                coworkersState.exceptions[coworkerUsername],
+                coworkersRulesData.exceptions[coworkerUsername],
         };
         // console.log(props);
         updateCoworkerRules({props});
 
         //re-render
-        getData();
+        updateRules();
     };
 
     const showExceptionsPopUp = (coworker, oldOrNew, coworkerUsername) => {
@@ -151,13 +135,14 @@ export default function AddRules() {
     const hidePopUp = () => {
         setPopUpState({...popUpState, showExceptions: false});
     };
+
     const listCoworkers = () =>
-        coworkersState.generic ? (
-            Object.keys(coworkersState.generic).map((coworkerUsername) => {
+        coworkersRulesData.generic ? (
+            Object.keys(coworkersRulesData.generic).map((coworkerUsername) => {
                 //* a copy of the state keeps the doctor away
-                // console.log(coworkersState.generic[coworkerUsername]);
+                // console.log(coworkersRulesData.generic[coworkerUsername]);
                 genericAccessRefs.current.old[coworkerUsername] = {
-                    ...coworkersState.generic[coworkerUsername],
+                    ...coworkersRulesData.generic[coworkerUsername],
                 };
                 return (
                     <li key={coworkerUsername} className="mt-[1rem]">
@@ -168,7 +153,7 @@ export default function AddRules() {
                             </div>
                             <AccessControl
                                 ref={genericAccessRefs.current.old[coworkerUsername]}
-                                coworkerAccess={coworkersState.generic[coworkerUsername]}
+                                coworkerAccess={coworkersRulesData.generic[coworkerUsername]}
                             />
 
                             <button
@@ -193,7 +178,7 @@ export default function AddRules() {
                                     showExceptionsPopUp(
                                         {
                                             [coworkerUsername]:
-                                                coworkersState.exceptions[coworkerUsername],
+                                                coworkersRulesData.exceptions[coworkerUsername],
                                         },
                                         'old',
                                         coworkerUsername
@@ -210,7 +195,7 @@ export default function AddRules() {
             <></>
         );
 
-    return (
+    return coworkersRulesStatus == 'success' && snippetsStatus == 'success' ? (
         <div className="container mt-[4rem]">
             <div className="flex gap-4">
                 <input
@@ -254,11 +239,13 @@ export default function AddRules() {
                     coworker={popUpState.coworker}
                     oldOrNew={popUpState.oldOrNew}
                     coworkerUsername={popUpState.coworkerUsername}
-                    snippets={snippetsState}
+                    snippets={snippetsData}
                 />
             ) : (
                 <></>
             )}
         </div>
+    ) : (
+        <></>
     );
 }

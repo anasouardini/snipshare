@@ -3,18 +3,18 @@ import Snippet from '../components/snippet';
 // import {useNavigate, useMatch} from 'react-location';
 import {useParams, useOutletContext} from 'react-router-dom';
 import Form from '../components/form/form';
-import {deepClone} from '../tools/deepClone';
-import {updateSnippets} from '../tools/snipStore';
+
+import {getSnippets} from '../tools/snipStore';
 import {useNavigate} from 'react-router-dom';
+import {useQuery} from 'react-query';
 
 export default function Snippets() {
     const navigate = useNavigate();
 
-    // const {whoami} = useContext(GlobalContext);
     const {whoami} = useOutletContext();
-
-    if (whoami == '' || whoami == 'none') {
-        return navigate('/signin', {replace: true});
+    if (whoami == '' || whoami == 'unauthorized') {
+        console.log(whoami);
+        return navigate('/login', {replace: true});
     }
 
     const {user: userParam} = useParams();
@@ -23,9 +23,18 @@ export default function Snippets() {
         showForm: false,
         showPreview: false,
     });
-    const [snipInfoState, setSnipInfoState] = useState({
-        children: [],
+
+    const {
+        data: snippets,
+        status,
+        error,
+    } = useQuery(['snippets'], () => {
+        return getSnippets(userParam);
     });
+    // console.log(snippets);
+    if (error?.req?.status == 401) {
+        return navigate('/login', {replace: true});
+    }
 
     const [formFieldsState, _] = useState({
         fields: [
@@ -69,25 +78,6 @@ export default function Snippets() {
         ],
     });
 
-    const update = async () => {
-        const children = await updateSnippets(userParam);
-        // console.log(children);
-        if (children.err) {
-            if (children.err == 'unauthorized') {
-                return navigate('/signin', {replace: true});
-            }
-
-            return;
-        }
-
-        const stateCpy = deepClone(snipInfoState);
-        stateCpy.children = children;
-        setSnipInfoState(stateCpy);
-    };
-    useEffect(() => {
-        update();
-    }, [userParam]);
-
     const handleCreate = (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -96,17 +86,10 @@ export default function Snippets() {
     };
 
     const listSnippets = (snippets) => {
-        // console.log(snipInfoState);
+        // console.log(status);
+        // console.log(snippets);
         return snippets.map((snippet) => {
-            // console.log(snippet);
-            return (
-                <Snippet
-                    updateSnippetsCB={update}
-                    whoami={whoami}
-                    key={snippet.id}
-                    snippet={snippet}
-                />
-            );
+            return <Snippet whoami={whoami} key={snippet.id} snippet={snippet} />;
         });
     };
 
@@ -121,11 +104,11 @@ export default function Snippets() {
         setPopUpState(newState);
     };
 
-    return (
+    return status == 'success' ? (
         <div>
             <h1 className="text-2xl font-bold my-11 text-center">{userParam}'s Snippets</h1>
             <div className="flex flex-wrap mx-auto items-stretch justify-center gap-7">
-                {listSnippets(snipInfoState.children)}
+                {listSnippets(snippets)}
 
                 {/* add a snippet button */}
                 {whoami == userParam ? (
@@ -139,16 +122,13 @@ export default function Snippets() {
                     <></>
                 )}
                 {popUpState.showForm ? (
-                    <Form
-                        action="create"
-                        fields={formFieldsState.fields}
-                        updateSnippetsCB={update}
-                        hidePopUp={hidePopUp}
-                    />
+                    <Form action="create" fields={formFieldsState.fields} hidePopUp={hidePopUp} />
                 ) : (
                     <></>
                 )}
             </div>
         </div>
+    ) : (
+        <></>
     );
 }

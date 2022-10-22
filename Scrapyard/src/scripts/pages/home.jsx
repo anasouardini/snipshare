@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigate} from 'react-router';
+import {useQuery} from 'react-query';
+import {useNavigate, useOutletContext} from 'react-router';
 import Form from '../components/form/form';
 import Snippet from '../components/snippet';
 
-import {updateSnippets, updateUsers} from '../tools/snipStore';
+import {getSnippets, getUsers} from '../tools/snipStore';
 
 export default function Home() {
-    const [usersState, setUsersState] = useState({users: []});
-    const [snippetsState, setSnippetsState] = useState({snippets: []});
     const [popUpState, setPopUpState] = useState({
         showForm: false,
         showPreview: false,
@@ -60,54 +59,37 @@ export default function Home() {
     });
 
     const navigate = useNavigate();
+    const {whoami} = useOutletContext();
+    if (whoami == '' || whoami == 'unauthorized') {
+        console.log('redirecting');
+        return navigate('/login', {replace: true});
+    }
 
-    useEffect(() => {
-        const getData = (() => {
-            let users = [];
-            let snippets = [];
+    const {
+        data: users,
+        status: getUsersStatus,
+        error: getUsersErr,
+    } = useQuery(['users'], () => {
+        return getUsers();
+    });
+    if (getUsersErr?.req?.status == 401) {
+        return navigate('/login', {replace: true});
+    }
 
-            const fetchUsers = async () => {
-                const response = await updateUsers();
-                if (response) {
-                    if (response.err == 'unauthorized') {
-                        return navigate('/login');
-                    }
-
-                    users = response;
-                }
-            };
-
-            const fetchAllSnippets = async () => {
-                const response = await updateSnippets();
-                if (response) {
-                    if (response.err == 'unauthorized') {
-                        return navigate('/login');
-                    }
-                    snippets = response;
-                }
-            };
-
-            const setStates = () => {
-                setUsersState({users});
-                setSnippetsState({snippets});
-
-                // not sure about this
-                users = null;
-                snippets = null;
-            };
-
-            return {fetchUsers, fetchAllSnippets, setStates};
-        })();
-
-        (async () => {
-            getData.fetchUsers();
-            await getData.fetchAllSnippets();
-            getData.setStates();
-        })();
-    }, []);
+    const {
+        data: snippets,
+        status: snippetsStatus,
+        error: snippetsErr,
+    } = useQuery(['snippets'], () => {
+        return getSnippets();
+    });
+    if (snippetsErr?.req?.status == 401) {
+        return navigate('/login', {replace: true});
+    }
+    // console.log(snippets);
 
     const listUsers = () =>
-        usersState.users.map((user) => (
+        users.map((user) => (
             <li
                 className="ml-4 py-1 px-3 border-b-[2px] border-b-lime-600 cursor-pointer"
                 onClick={(e) => {
@@ -133,7 +115,6 @@ export default function Home() {
     };
 
     const listSnippets = (snippets) => {
-        // console.log(snippets);
         return snippets.map((snippet) => (
             <Snippet updateSnippetsCB={update} key={snippet.id} snippet={snippet} />
         ));
@@ -146,7 +127,7 @@ export default function Home() {
         setPopUpState({...popUpState, showForm: true});
     };
 
-    return (
+    return snippetsStatus == 'success' ? (
         <div>
             <h2 className="text-center my-[3rem] text-2xl font-bold">
                 Check what others are doning
@@ -155,7 +136,7 @@ export default function Home() {
 
             <h2 className="text-center mt-[5rem] mb-[3rem] text-2xl font-bold">Other Snippets</h2>
             <div className="flex flex-wrap mx-auto items-stretch justify-center gap-7">
-                {listSnippets(snippetsState.snippets)}
+                {listSnippets(snippets)}
                 {/* add a snippet button */}
                 {
                     <button
@@ -177,5 +158,7 @@ export default function Home() {
                 )}
             </div>
         </div>
+    ) : (
+        <></>
     );
 }

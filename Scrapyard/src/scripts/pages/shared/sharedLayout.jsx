@@ -1,32 +1,26 @@
 import React from 'react';
-import {Outlet} from 'react-router-dom';
-// import {useNavigate} from 'react-router';
+import {Outlet, useNavigate} from 'react-router-dom';
 import {useQuery} from 'react-query';
 import {create, read} from '../../tools/bridge';
 import {Link, NavLink} from 'react-router-dom';
 
-// export const GlobalContext = createContext('');
-
 const updateWhoami = async () => {
     const whoamiUsr = await read('whoami');
 
-    return whoamiUsr.msg;
+    return whoamiUsr;
 };
 
 export default function SharedLayout(props) {
     const {data: whoami, status} = useQuery(['whoami'], updateWhoami);
-
-    // const navigate = useNavigate();
-    // const changeRoute = (to) => {
-    //     navigate({to, replace: true});
-    // };
+    console.log(whoami);
+    const navigate = useNavigate();
 
     const classes = {
         li: 'm-2 cursor-pointer border-b-[4px] border-b-transparent hover:border-b-[4px] hover:border-b-lime-600 text-gray-200',
     };
-    console.log(whoami);
-    return (
+    return whoami?.msg ? (
         <div className="font-roboto">
+            {/* {whoami.msg} */}
             <nav>
                 <ul className="flex">
                     <li className={classes.li}>
@@ -35,13 +29,13 @@ export default function SharedLayout(props) {
                         </NavLink>
                     </li>
                     <li className={classes.li}>
-                        <NavLink to={`${whoami}/snippets`}>My Snippets</NavLink>
+                        <NavLink to={`${whoami.msg}/snippets`}>My Snippets</NavLink>
                     </li>
 
                     <li className={`${classes.li} ml-auto`}>
                         <NavLink to="/addRules">Add Rules</NavLink>
                     </li>
-                    {whoami == 'unauthorized' ? (
+                    {whoami.status == 401 ? (
                         <>
                             <li className={`${classes.li}`}>
                                 <NavLink to="/login" replace>
@@ -62,6 +56,7 @@ export default function SharedLayout(props) {
                         onClick={async () => {
                             const response = await create('logout');
                             console.log(response);
+                            return navigate('/login', {replace: true});
                         }}
                     >
                         Logout
@@ -80,11 +75,13 @@ export default function SharedLayout(props) {
             {/* {props.children} */}
             {status == 'success' ? (
                 // <GlobalContext.Provider value={whoami}>
-                <Outlet context={whoami} />
+                <Outlet context={whoami.msg} />
             ) : (
                 // </GlobalContext.Provider>
                 <></>
             )}
         </div>
+    ) : (
+        <></>
     );
 }

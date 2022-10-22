@@ -118,6 +118,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
         return (
             <datalis id="snippets">
                 <select
+                    className="bg-[#282828]"
                     id="snippets"
                     ref={(el) => {
                         ref.current[props.oldOrNew].new.exceptionID = el;
