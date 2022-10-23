@@ -5,14 +5,9 @@ import {useRef} from 'react';
 import ExceptionsPopUp from '../components/exceptionsPopUp';
 import AccessControl from '../components/accessControl';
 import {useEffect} from 'react';
-import {
-    createCoworkerRules,
-    deleteCoworkerRules,
-    readCoworkerRules,
-    getSnippets,
-    updateCoworkerRules,
-} from '../tools/snipStore';
+import {readCoworkerRules, getSnippets} from '../tools/snipStore';
 
+import {create, remove} from '../tools/bridge';
 import {useQuery} from 'react-query';
 
 export default function AddRules() {
@@ -71,8 +66,11 @@ export default function AddRules() {
 
     const deleteCoworker = async (coworkerUsername) => {
         //wait fot the changes before getting the new data
-        await deleteCoworkerRules({props: {coworker: coworkerUsername}});
-        updateRules();
+        const response = await remove(`coworkerRules`, body);
+
+        if (response.status == 200) {
+            updateRules();
+        }
     };
 
     const addNewCoworker = async (e) => {
@@ -95,17 +93,19 @@ export default function AddRules() {
             exceptions: Object.values(exceptionAccessRefs.current.new?.old ?? {key: {}})[0] ?? {},
         };
         //wait fot the changes before getting the new data
-        await createCoworkerRules({props});
+        const response = await create(`coworkerRules`, body);
 
-        // clear the new coworker so there will be only one new coworker object
-        exceptionAccessRefs.current.new.old = {};
-        exceptionAccessRefs.current.new.new = {};
+        if (response.status == 200) {
+            // clear the new coworker so there will be only one new coworker object
+            exceptionAccessRefs.current.new.old = {};
+            exceptionAccessRefs.current.new.new = {};
 
-        //re-render
-        updateRules();
+            //re-render
+            updateRules();
+        }
     };
 
-    const updateCoworker = (coworkerUsername) => {
+    const updateCoworker = async (coworkerUsername) => {
         const generic = Object.keys(genericAccessRefs.current.old[coworkerUsername]).reduce(
             (acc, accessKey) => {
                 acc[accessKey] = genericAccessRefs.current.old[coworkerUsername][accessKey].checked;
@@ -122,10 +122,12 @@ export default function AddRules() {
                 coworkersRulesData.exceptions[coworkerUsername],
         };
         // console.log(props);
-        updateCoworkerRules({props});
+        const response = await update(`coworkerRules`, body);
 
-        //re-render
-        updateRules();
+        if (response.status == 200) {
+            //re-render
+            updateRules();
+        }
     };
 
     const showExceptionsPopUp = (coworker, oldOrNew, coworkerUsername) => {

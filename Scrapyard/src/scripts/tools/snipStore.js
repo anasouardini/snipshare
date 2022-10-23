@@ -1,6 +1,5 @@
-import {create, read, remove, update} from './bridge';
+import {read} from './bridge';
 
-// GLOBALS
 const getSnippets = async (user, meta) => {
     const response = await read(`${user ? `${user}/` : ''}snippets${meta ? '?meta=true' : ''}`);
 
@@ -30,45 +29,4 @@ const readCoworkerRules = async () => {
     return response;
 };
 
-const createCoworkerRules = async (body) => {
-    const response = await create(`coworkerRules`, body);
-
-    if (response.status == 200) {
-        return response.msg;
-    }
-    return response;
-};
-
-const updateCoworkerRules = async (body) => {
-    const response = await update(`coworkerRules`, body);
-
-    if (response.status == 200) {
-        return response.msg;
-    }
-    return response;
-};
-
-const deleteCoworkerRules = async (body) => {
-    const response = await remove(`coworkerRules`, body);
-
-    if (response) {
-        if (response?.redirect) {
-            return 'unauthorized';
-        }
-        // console.log('fetching');
-        console.log(response);
-        if (response.status == 200) {
-            return response.msg;
-        }
-        return;
-    }
-};
-
-export {
-    getSnippets,
-    getUsers,
-    readCoworkerRules,
-    createCoworkerRules,
-    updateCoworkerRules,
-    deleteCoworkerRules,
-};
+export {getSnippets, getUsers, readCoworkerRules};
