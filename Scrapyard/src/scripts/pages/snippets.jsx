@@ -4,7 +4,7 @@ import Snippet from '../components/snippet';
 import {useParams, useOutletContext} from 'react-router-dom';
 import Form from '../components/form/form';
 
-import {getSnippets} from '../tools/snipStore';
+import {commonSnippetFields, getSnippets} from '../tools/snipStore';
 import {useNavigate} from 'react-router-dom';
 import {useQuery} from 'react-query';
 
@@ -12,10 +12,10 @@ export default function Snippets() {
     const navigate = useNavigate();
 
     const {whoami} = useOutletContext();
-    if (whoami == '' || whoami == 'unauthorized') {
-        console.log(whoami);
-        return navigate('/login', {replace: true});
-    }
+    // if (whoami == '' || whoami == 'unauthorized') {
+    //     console.log(whoami);
+    //     return navigate('/login', {replace: true});
+    // }
 
     const {user: userParam} = useParams();
 
@@ -37,45 +37,7 @@ export default function Snippets() {
     }
 
     const [formFieldsState, _] = useState({
-        fields: [
-            {
-                type: 'input',
-                attr: {
-                    key: 'title',
-                    placeholder: 'title',
-                    name: 'title',
-                    type: 'text',
-                },
-            },
-            {
-                type: 'textarea',
-                attr: {
-                    key: 'descr',
-                    placeholder: 'description',
-                    name: 'descr',
-                    type: 'textarea',
-                },
-            },
-            {
-                type: 'Snippet',
-                attr: {
-                    key: 'snippet',
-                    value: '',
-                },
-            },
-            {
-                type: 'IsPrivate',
-                attr: {
-                    key: 'isPrivate',
-                },
-            },
-            // {
-            //     type: 'Coworkers',
-            //     attr: {
-            //         key: 'coworkers',
-            //     },
-            // },
-        ],
+        fields: [...commonSnippetFields],
     });
 
     const handleCreate = (e) => {

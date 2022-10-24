@@ -14,11 +14,11 @@ export default function AddRules() {
     const navigate = useNavigate();
 
     const whoami = useOutletContext();
-    if (whoami == '' || whoami == 'unauthorized') {
-        console.log('redirecting');
-        return navigate('/login', {replace: true});
-    }
-    console.log('whoami', whoami);
+    // if (whoami == '' || whoami == 'unauthorized') {
+    //     console.log('redirecting');
+    //     return navigate('/login', {replace: true});
+    // }
+    // console.log('whoami', whoami);
 
     const [popUpState, setPopUpState] = useState({showExceptions: false});
 

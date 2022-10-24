@@ -4,7 +4,7 @@ import {useNavigate, useOutletContext} from 'react-router';
 import Form from '../components/form/form';
 import Snippet from '../components/snippet';
 
-import {getSnippets, getUsers} from '../tools/snipStore';
+import {commonSnippetFields, getSnippets, getUsers} from '../tools/snipStore';
 
 export default function Home() {
     const [popUpState, setPopUpState] = useState({
@@ -15,55 +15,15 @@ export default function Home() {
         inputs: 'border-b-2 border-b-lime-600 p-1 outline-lime-300 focus:outline-1 bg-[#181818]',
     };
     const [formFieldsState, setFormFieldsState] = useState({
-        fields: [
-            {
-                type: 'input',
-                attr: {
-                    key: 'title',
-                    placeholder: 'title',
-                    name: 'title',
-                    type: 'text',
-                    className: fieldsClasses.inputs,
-                },
-            },
-            {
-                type: 'textarea',
-                attr: {
-                    key: 'descr',
-                    placeholder: 'description',
-                    name: 'descr',
-                    type: 'textarea',
-                    className: fieldsClasses.inputs,
-                },
-            },
-            {
-                type: 'Snippet',
-                attr: {
-                    key: 'snippet',
-                    value: '',
-                },
-            },
-            {
-                type: 'IsPrivate',
-                attr: {
-                    key: 'isPrivate',
-                },
-            },
-            // {
-            //     type: 'Coworkers',
-            //     attr: {
-            //         key: 'coworkers',
-            //     },
-            // },
-        ],
+        fields: [...commonSnippetFields],
     });
 
     const navigate = useNavigate();
-    const {whoami} = useOutletContext();
-    if (whoami == '' || whoami == 'unauthorized') {
-        console.log('redirecting');
-        return navigate('/login', {replace: true});
-    }
+    const whoami = useOutletContext();
+    // if (whoami == '' || whoami == 'unauthorized') {
+    //     console.log('redirecting');
+    //     return navigate('/login', {replace: true});
+    // }
 
     const {
         data: users,
@@ -127,7 +87,8 @@ export default function Home() {
         setPopUpState({...popUpState, showForm: true});
     };
 
-    return snippetsStatus == 'success' ? (
+    // console.log(users, getUsersStatus, getUsersErr);
+    return snippets && users ? (
         <div>
             <h2 className="text-center my-[3rem] text-2xl font-bold">
                 Check what others are doning

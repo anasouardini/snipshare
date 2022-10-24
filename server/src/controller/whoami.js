@@ -1,4 +1,5 @@
 const whoami = (req, res) => {
+    // console.log(req.user);
     if (req.user) {
         return res.json({msg: req.user.username});
     }
