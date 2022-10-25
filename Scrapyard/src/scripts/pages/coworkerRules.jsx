@@ -7,7 +7,7 @@ import AccessControl from '../components/accessControl';
 import {useEffect} from 'react';
 import {readCoworkerRules, getSnippets} from '../tools/snipStore';
 
-import {create, remove} from '../tools/bridge';
+import {create, remove, update} from '../tools/bridge';
 import {useQuery} from 'react-query';
 
 export default function AddRules() {
@@ -24,7 +24,7 @@ export default function AddRules() {
 
     // list of checkboxes
     const genericAccessRefs = useRef({
-        new: {read: '', update: '', delete: ''},
+        new: {},
         old: {},
     });
 
@@ -66,10 +66,10 @@ export default function AddRules() {
 
     const deleteCoworker = async (coworkerUsername) => {
         //wait fot the changes before getting the new data
-        const response = await remove(`coworkerRules`, body);
+        const response = await remove(`coworkerRules`, {props: {coworker: coworkerUsername}});
 
         if (response.status == 200) {
-            updateRules();
+            // updateRules();
         }
     };
 
@@ -93,15 +93,16 @@ export default function AddRules() {
             exceptions: Object.values(exceptionAccessRefs.current.new?.old ?? {key: {}})[0] ?? {},
         };
         //wait fot the changes before getting the new data
-        const response = await create(`coworkerRules`, body);
+        const response = await create(`coworkerRules`, {props});
 
+        console.log(response);
         if (response.status == 200) {
             // clear the new coworker so there will be only one new coworker object
             exceptionAccessRefs.current.new.old = {};
             exceptionAccessRefs.current.new.new = {};
 
             //re-render
-            updateRules();
+            // updateRules();
         }
     };
 
@@ -122,11 +123,11 @@ export default function AddRules() {
                 coworkersRulesData.exceptions[coworkerUsername],
         };
         // console.log(props);
-        const response = await update(`coworkerRules`, body);
+        const response = await update(`coworkerRules`, {props});
 
         if (response.status == 200) {
             //re-render
-            updateRules();
+            // updateRules();
         }
     };
 
@@ -156,6 +157,7 @@ export default function AddRules() {
                             <AccessControl
                                 ref={genericAccessRefs.current.old[coworkerUsername]}
                                 coworkerAccess={coworkersRulesData.generic[coworkerUsername]}
+                                type="generic"
                             />
 
                             <button
@@ -207,7 +209,7 @@ export default function AddRules() {
                         exceptionAccessRefs.current.new.coworkerUsername = el;
                     }}
                 />
-                <AccessControl ref={genericAccessRefs.current.new} />
+                <AccessControl ref={genericAccessRefs.current.new} type="generic" />
                 <button
                     onClick={(e) => {
                         e.preventDefault();
@@ -241,7 +243,7 @@ export default function AddRules() {
                     coworker={popUpState.coworker}
                     oldOrNew={popUpState.oldOrNew}
                     coworkerUsername={popUpState.coworkerUsername}
-                    snippets={snippetsData}
+                    snippets={snippetsData.snippets}
                 />
             ) : (
                 <></>

@@ -13,7 +13,8 @@ const Snippet = forwardRef((props, ref) => {
             selectOnLineNumbers: true,
         },
         onChange: (value) => {
-            ref = value;
+            ref.current = {value};
+            // console.log('snippetVal', ref.current);
         },
         // editorDidMount : HandleEditorMount,
     };

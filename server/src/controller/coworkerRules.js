@@ -42,6 +42,33 @@ const readCoworker = async (req, res) => {
     res.json({msg: rules});
 };
 
+const validateRules = (req, res, next) => {
+    const valid =
+        Object.keys(req.body.props.generic).length == 4 &&
+        req.body.props.generic.hasOwnProperty('create') &&
+        req.body.props.generic.hasOwnProperty('read') &&
+        req.body.props.generic.hasOwnProperty('update') &&
+        req.body.props.generic.hasOwnProperty('delete') &&
+        Object.keys(req.body.props.exceptions).every(
+            (exception) =>
+                Object.keys(req.body.props.exceptions[exception]).length == 3 &&
+                req.body.props.exceptions[exception].hasOwnProperty('read') &&
+                req.body.props.exceptions[exception].hasOwnProperty('update') &&
+                req.body.props.exceptions[exception].hasOwnProperty('delete') &&
+                true
+        ) &&
+        true;
+
+    console.log(req.body.props.generic);
+    console.log(req.body.props.exceptions);
+
+    if (!valid) {
+        return res.status(400).json({msg: 'the access is not formated correctly'});
+    }
+
+    next();
+};
+
 const create = async (req, res) => {
     const owner = req.user.username;
     // console.log(req.body.props);
@@ -73,11 +100,11 @@ const create = async (req, res) => {
     // console.log(response);
 
     if (!response) {
-        return res.sedStatus(500);
+        return res.status(500).json({msg: 'could not add a coworker rule, try again later'});
     }
 
     if (!response[0]?.affectedRows) {
-        return res.status(400).json({msg: 'could not add a coworker rule'});
+        return res.status(500).json({msg: 'could not add a coworker rule, try again later'});
     }
 
     res.json({msg: 'a coworker rule has been created successfully'});
@@ -115,4 +142,4 @@ const remove = async (req, res) => {
     res.json({msg: 'a coworker rule has been deleted successfully'});
 };
 
-module.exports = {readAll, readCoworker, create, update, remove};
+module.exports = {readAll, readCoworker, validateRules, create, update, remove};

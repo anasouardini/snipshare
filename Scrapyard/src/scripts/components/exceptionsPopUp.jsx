@@ -92,6 +92,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                                             exceptionID
                                         ]
                                     }
+                                    type="exceptions"
                                 />
 
                                 <button
@@ -169,6 +170,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                                 /> */}
                                 <AccessControl
                                     ref={ref.current[props.oldOrNew].new.exceptionAccess}
+                                    type="exceptions"
                                 />
                             </>
                         ) : (

@@ -15,14 +15,29 @@ const AccessControl = forwardRef((props, ref) => {
             // console.log(accessObj);
             setAccessState(accessObj);
         } else {
-            setAccessState({read: false, update: false, delete: false});
+            setAccessState({read: false, read: false, update: false, delete: false});
         }
     }, []);
 
+    // each checkbox creates an access on the ref
     return (
         <div>
             {Object.keys(accessState).length ? (
                 <>
+                    {props.type == 'generic' ? (
+                        <input
+                            className="accent-lime-600"
+                            type="checkbox"
+                            ref={(el) => {
+                                ref.create = el;
+                            }}
+                            name="create"
+                            defaultChecked={accessState.create}
+                            // onChange={() => {}}
+                        />
+                    ) : (
+                        <></>
+                    )}
                     <input
                         className="accent-lime-600"
                         type="checkbox"

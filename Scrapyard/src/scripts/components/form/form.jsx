@@ -6,12 +6,12 @@ import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
     // const whoami = useContext(GlobalContext);
-    const {whoami} = useOutletContext();
+    const whoami = useOutletContext();
 
     const refs = {
         title: useRef(''),
         descr: useRef(''),
-        Snippet: useRef(''),
+        snippet: useRef(''),
         isPrivate: useRef(''),
     };
 
@@ -24,11 +24,13 @@ export default function Form(props) {
     const createRequestBody = () => {
         const body = {props: {}};
 
+        console.log(props.fields);
         props.fields.forEach((field) => {
             const fieldKey = field.attr.key;
             // keept the != undefined, because js is weird
             if (refs?.[fieldKey] != undefined) {
-                if (refs[fieldKey].current.type == 'checkbox') {
+                if (field.attr.type == 'checkbox') {
+                    // console.log('fieldtype', refs[fieldKey].current.checked);
                     body.props[fieldKey] = refs[fieldKey].current.checked;
                 } else {
                     body.props[fieldKey] = refs[fieldKey].current.value;
@@ -36,7 +38,7 @@ export default function Form(props) {
             }
         });
 
-        // console.log(body);
+        console.log(body);
         return body;
     };
 
@@ -47,19 +49,12 @@ export default function Form(props) {
             ...createRequestBody(),
         });
         console.log(response);
-
-        if (response.status == 200) {
-            props.updateSnippetsCB();
-        }
     };
 
     const handleCreate = async () => {
-        const response = await create(`${whoami}/snippet`, createRequestBody());
+        console.log(props.owner);
+        const response = await create(`${props.owner}/snippet`, createRequestBody());
         console.log(response);
-
-        if (response.status == 200) {
-            props.updateSnippetsCB();
-        }
     };
 
     const handleSubmit = (e) => {
@@ -74,6 +69,7 @@ export default function Form(props) {
         handleCreate();
     };
 
+    // console.log(props.fields);
     // listing form fields
     const listInputs = (fields = []) => {
         return fields.map((input) => {

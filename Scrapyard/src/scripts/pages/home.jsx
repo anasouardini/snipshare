@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useQuery} from 'react-query';
-import {useNavigate, useOutletContext} from 'react-router';
+import {useNavigate, useOutletContext, useParams} from 'react-router';
 import Form from '../components/form/form';
 import Snippet from '../components/snippet';
 
@@ -19,6 +19,8 @@ export default function Home() {
     });
 
     const navigate = useNavigate();
+    const {user: userParam} = useParams();
+
     const whoami = useOutletContext();
     // if (whoami == '' || whoami == 'unauthorized') {
     //     console.log('redirecting');
@@ -97,22 +99,23 @@ export default function Home() {
 
             <h2 className="text-center mt-[5rem] mb-[3rem] text-2xl font-bold">Other Snippets</h2>
             <div className="flex flex-wrap mx-auto items-stretch justify-center gap-7">
-                {listSnippets(snippets)}
+                {listSnippets(snippets.snippets)}
                 {/* add a snippet button */}
-                {
-                    <button
-                        onClick={handleCreate}
-                        className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}
-                    >
-                        +
-                    </button>
-                }
+
+                {/* <button
+                    onClick={handleCreate}
+                    className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}
+                >
+                    +
+                </button> */}
+
                 {popUpState.showForm ? (
                     <Form
                         action="create"
                         fields={formFieldsState.fields}
                         updateSnippetsCB={update}
                         hidePopUp={hidePopUp}
+                        owner={userParam}
                     />
                 ) : (
                     <></>

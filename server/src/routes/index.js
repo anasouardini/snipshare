@@ -3,6 +3,7 @@ const controller = require('../controller');
 // const passport = require('../passport/local');
 
 const gotoLogin = (req, res, next) => {
+    // console.log(req.user);
     // if not logged in
     if (!req?.user) {
         return res.json({redirect: '/login'});
@@ -46,8 +47,18 @@ router.delete('/:user/:snippetID', gotoLogin, controller.snippet.remove);
 
 router.get('/coworkerRules', gotoLogin, controller.coworkerRules.readAll);
 router.get('/:coworker/coworkerRules', gotoLogin, controller.coworkerRules.readCoworker);
-router.post('/coworkerRules', gotoLogin, controller.coworkerRules.create);
-router.put('/coworkerRules', gotoLogin, controller.coworkerRules.update);
+router.post(
+    '/coworkerRules',
+    gotoLogin,
+    controller.coworkerRules.validateRules,
+    controller.coworkerRules.create
+);
+router.put(
+    '/coworkerRules',
+    gotoLogin,
+    controller.coworkerRules.validateRules,
+    controller.coworkerRules.update
+);
 router.delete('/coworkerRules', gotoLogin, controller.coworkerRules.remove);
 
 module.exports = router;

@@ -13,7 +13,7 @@ const getSnippets = async (user, meta) => {
 const getUsers = async () => {
     const response = await read(`users`);
 
-    console.log(response);
+    // console.log(response);
     if (response.status == 200) {
         return response.msg;
     }
@@ -52,13 +52,14 @@ const commonSnippetFields = [
         type: 'Snippet',
         attr: {
             key: 'snippet',
-            value: '',
+            type: 'text',
         },
     },
     {
         type: 'IsPrivate',
         attr: {
             key: 'isPrivate',
+            type: 'checkbox',
         },
     },
     // {

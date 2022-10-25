@@ -19,10 +19,11 @@ export default function SharedLayout(props) {
         setWhoami(whoamiUsr);
     };
 
+    // react-query sucks at this
     // const {data: whoami, status, error} = useQuery(['whoami'], updateWhoami);
     const [whoami, setWhoami] = useState('');
 
-    console.log('whoami', whoami);
+    // console.log('whoami', whoami);
     const navigate = useNavigate();
     const location = useLocation();
 

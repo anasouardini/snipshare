@@ -11,7 +11,7 @@ import {useQuery} from 'react-query';
 export default function Snippets() {
     const navigate = useNavigate();
 
-    const {whoami} = useOutletContext();
+    const whoami = useOutletContext();
     // if (whoami == '' || whoami == 'unauthorized') {
     //     console.log(whoami);
     //     return navigate('/login', {replace: true});
@@ -29,6 +29,7 @@ export default function Snippets() {
         status,
         error,
     } = useQuery(['snippets'], () => {
+        console.log('sdfd');
         return getSnippets(userParam);
     });
     // console.log(snippets);
@@ -40,6 +41,8 @@ export default function Snippets() {
         fields: [...commonSnippetFields],
     });
 
+    // console.log(commonSnippetFields);
+
     const handleCreate = (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -47,9 +50,9 @@ export default function Snippets() {
         setPopUpState({...popUpState, showForm: true});
     };
 
+    console.log(snippets);
     const listSnippets = (snippets) => {
         // console.log(status);
-        // console.log(snippets);
         return snippets.map((snippet) => {
             return <Snippet whoami={whoami} key={snippet.id} snippet={snippet} />;
         });
@@ -65,15 +68,15 @@ export default function Snippets() {
 
         setPopUpState(newState);
     };
-
+    console.log(snippets.genericAccess);
     return status == 'success' ? (
         <div>
             <h1 className="text-2xl font-bold my-11 text-center">{userParam}'s Snippets</h1>
             <div className="flex flex-wrap mx-auto items-stretch justify-center gap-7">
-                {listSnippets(snippets)}
+                {listSnippets(snippets.snippets)}
 
                 {/* add a snippet button */}
-                {whoami == userParam ? (
+                {whoami == userParam || snippets.genericAccess?.create ? (
                     <button
                         onClick={handleCreate}
                         className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}
@@ -84,7 +87,12 @@ export default function Snippets() {
                     <></>
                 )}
                 {popUpState.showForm ? (
-                    <Form action="create" fields={formFieldsState.fields} hidePopUp={hidePopUp} />
+                    <Form
+                        action="create"
+                        fields={formFieldsState.fields}
+                        hidePopUp={hidePopUp}
+                        owner={userParam}
+                    />
                 ) : (
                     <></>
                 )}

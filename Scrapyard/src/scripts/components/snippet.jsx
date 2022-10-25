@@ -62,21 +62,6 @@ export default function Snippet(props) {
         ],
     });
 
-    useEffect(() => {
-        if (props.user == whoami) {
-            const stateCpy = deepClone(formFieldsState);
-
-            stateCpy.fields.push({
-                type: 'IsPrivate',
-                attr: {
-                    key: 'isPrivate',
-                    name: 'isPrivate',
-                },
-            });
-            setFormFieldsState(stateCpy);
-        }
-    }, []);
-
     const handlePreview = (e) => {
         e.stopPropagation();
         if (snipInfoState.snippet.access?.read) {
@@ -132,7 +117,6 @@ export default function Snippet(props) {
         })();
     };
     const hidePopUp = (popUp) => {
-        console.log('hiding pop up');
         let newState = {...popUpState};
         if (popUp == 'form') {
             newState.showForm = false;

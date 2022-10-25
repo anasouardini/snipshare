@@ -161,6 +161,7 @@ const appendSnippet = (req, filteredSnippets, snippetObj, access) => {
 };
 
 const readUserAll = async (req, res) => {
+    const genericAccess = req.rules.generic;
     // console.log(req.snippets);
     // filter snippets according to rules
     const filteredSnippets = [];
@@ -191,7 +192,7 @@ const readUserAll = async (req, res) => {
     });
     // console.log(filteredSnippets);
 
-    res.json({msg: filteredSnippets});
+    res.json({msg: {snippets: filteredSnippets, genericAccess}});
 };
 
 const readAll = async (req, res) => {
@@ -229,15 +230,15 @@ const readAll = async (req, res) => {
         }
     });
 
-    res.json({msg: filteredSnippets});
+    res.json({msg: {snippets: filteredSnippets}});
 };
 
 const create = async (req, res) => {
-    console.log(req.body.props.coworkers);
+    // console.log(req.body.props.coworkers);
 
     if (req.user.username == req.params.user) {
         const response = await Snippet.createSnippet({user: req.user.username, ...req.body.props});
-        console.log(response);
+        // console.log(response);
         if (response && response[0]?.affectedRows) {
             return res.json({msg: 'snippet created successfully'});
         }
@@ -245,6 +246,29 @@ const create = async (req, res) => {
         return res.status(500).json({
             msg: 'something bad happend',
         });
+    }
+
+    // ELSE
+    // console.log(req.params.user, req.user.username);
+    const rulesResponse = await CoworkerRules.readCoworkerRules(req.params.user, req.user.username);
+    // console.log(req.params.user);
+    // if the use is not a coworker
+    if (rulesResponse[0].length) {
+        // check if user has the creation access
+        if (rulesResponse[0][0].generic?.create) {
+            const response = await Snippet.createSnippet({
+                user: req.params.user,
+                ...req.body.props,
+            });
+            // console.log(response);
+            if (response && response[0]?.affectedRows) {
+                return res.json({msg: 'snippet created successfully'});
+            }
+
+            return res.status(500).json({
+                msg: 'something bad happend',
+            });
+        }
     }
 
     // this should never run
