@@ -25,6 +25,7 @@ export default function Snippets() {
     });
 
     const {
+        refetch,
         data: snippets,
         status,
         error,
@@ -40,6 +41,8 @@ export default function Snippets() {
     const [formFieldsState, _] = useState({
         fields: [...commonSnippetFields],
     });
+
+    // refetch();
 
     // console.log(commonSnippetFields);
 
