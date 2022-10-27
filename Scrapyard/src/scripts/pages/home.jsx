@@ -12,7 +12,7 @@ export default function Home() {
         showPreview: false,
     });
     const fieldsClasses = {
-        inputs: 'border-b-2 border-b-lime-600 p-1 outline-lime-300 focus:outline-1 bg-[#181818]',
+        inputs: 'border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-1 bg-[#181818]',
     };
     const [formFieldsState, setFormFieldsState] = useState({
         fields: [...commonSnippetFields],
@@ -54,7 +54,7 @@ export default function Home() {
     const listUsers = () =>
         users.map((user) => (
             <li
-                className="ml-4 py-1 px-3 border-b-[2px] border-b-lime-600 cursor-pointer"
+                className="ml-4 py-1 px-3 border-b-[2px] border-b-primary cursor-pointer"
                 onClick={(e) => {
                     e.stopPropagation(), navigate(`/${user}/snippets`);
                 }}

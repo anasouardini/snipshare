@@ -27,7 +27,8 @@ export default function SharedLayout(props) {
     }, [location.pathname]);
 
     const classes = {
-        li: 'm-2 cursor-pointer border-b-[4px] border-b-transparent hover:border-b-[4px] hover:border-b-lime-600 text-gray-200',
+        navLink:
+            'cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200',
     };
 
     if (whoami && whoami?.status == 200 && location.pathname.includes('login')) {
@@ -45,31 +46,32 @@ export default function SharedLayout(props) {
             <div className="font-roboto">
                 {/* {whoami.msg} */}
                 <nav>
-                    <ul className="flex">
-                        <li className={classes.li}>
-                            <NavLink end to="/">
+                    <ul className="flex gap-3">
+                        <li>
+                            <NavLink className={classes.navLink} end to="/">
                                 Home
                             </NavLink>
                         </li>
-                        <li className={classes.li}>
-                            <NavLink to={`${whoami.msg}/snippets`}>My Snippets</NavLink>
-                        </li>
-                        <li className={classes.li}>
-                            <NavLink to={'/blank'}>blank</NavLink>
+                        <li>
+                            <NavLink className={classes.navLink} to={`${whoami.msg}/snippets`}>
+                                My Snippets
+                            </NavLink>
                         </li>
 
-                        <li className={`${classes.li} ml-auto`}>
-                            <NavLink to="/addRules">Add Rules</NavLink>
+                        <li className={`ml-auto`}>
+                            <NavLink className={classes.navLink} to="/addRules">
+                                Add Rules
+                            </NavLink>
                         </li>
                         {whoami.status == 401 ? (
                             <>
-                                <li className={`${classes.li}`}>
-                                    <NavLink to="/login" replace>
+                                <li>
+                                    <NavLink className={classes.navLink} to="/login" replace>
                                         Login
                                     </NavLink>
                                 </li>
-                                <li className={classes.li}>
-                                    <NavLink to="/signup" replace>
+                                <li>
+                                    <NavLink className={classes.navLink} to="/signup" replace>
                                         Create Account
                                     </NavLink>
                                 </li>
@@ -78,7 +80,7 @@ export default function SharedLayout(props) {
                             <></>
                         )}
                         <li
-                            className={classes.li}
+                            className="cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200"
                             onClick={async () => {
                                 const response = await create('logout');
                                 console.log(response);
@@ -88,7 +90,7 @@ export default function SharedLayout(props) {
                             Logout
                         </li>
                         <li
-                            className={classes.li}
+                            className="cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200"
                             onClick={async () => {
                                 const response = await create('restart');
                                 // setForceRenderState((st) => !st);

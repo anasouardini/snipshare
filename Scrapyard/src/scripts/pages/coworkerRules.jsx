@@ -10,6 +10,19 @@ import {readCoworkerRules, getSnippets} from '../tools/snipStore';
 import {create, remove, update} from '../tools/bridge';
 import {useQuery} from 'react-query';
 
+import {
+    FaMinusSquare,
+    FaFolderPlus,
+    FaPuzzlePiece,
+    FaMinusCircle,
+    FaRegMinusSquare,
+    FaArrowAltCircleUp,
+    FaArrowCircleUp,
+    FaRetweet,
+    FaPlusSquare,
+    FaHistory,
+} from 'react-icons/fa';
+
 export default function AddRules() {
     const navigate = useNavigate();
 
@@ -144,6 +157,14 @@ export default function AddRules() {
         setPopUpState({...popUpState, showExceptions: false});
     };
 
+    const classes = {
+        inputs: 'flex justify-between items-center mb-[2rem]',
+        buttons: 'flex gap-5',
+        button: 'border-2 border-primary px-2 py-1',
+        iconButton: 'text-2xl text-primary tooltip',
+        li: 'mb-2 px-3 py-2 border-2 border-[#323232] rounded-md hover:bg-[#262626]',
+    };
+
     const listCoworkers = () =>
         coworkersRulesData.generic ? (
             Object.keys(coworkersRulesData.generic).map((coworkerUsername) => {
@@ -153,8 +174,8 @@ export default function AddRules() {
                     ...coworkersRulesData.generic[coworkerUsername],
                 };
                 return (
-                    <li key={coworkerUsername} className="mt-[1rem]">
-                        <div className="flex gap-2">
+                    <li key={coworkerUsername} className={classes.li}>
+                        <div className="flex justify-between items-center">
                             <div>
                                 <img src="" alt="" />
                                 <span>{coworkerUsername}</span>
@@ -165,34 +186,46 @@ export default function AddRules() {
                                 type="generic"
                             />
 
-                            <button
-                                onClick={(e) => {
-                                    eventDefaults(e);
-                                    updateCoworker(coworkerUsername);
-                                }}
-                            >
-                                Update
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    eventDefaults(e);
-                                    deleteCoworker(coworkerUsername);
-                                }}
-                            >
-                                delete
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    showExceptionsPopUp(
-                                        coworkersRulesData.exceptions[coworkerUsername],
-                                        'old',
-                                        coworkerUsername
-                                    );
-                                }}
-                            >
-                                exceptions
-                            </button>
+                            <div className={classes.buttons}>
+                                <button
+                                    className={classes.iconButton}
+                                    onClick={(e) => {
+                                        eventDefaults(e);
+                                        updateCoworker(coworkerUsername);
+                                    }}
+                                >
+                                    <div className="tooltiptext">Update rule</div>
+                                    <FaRetweet />
+                                </button>
+                                <button
+                                    className={classes.iconButton}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        showExceptionsPopUp(
+                                            coworkersRulesData.exceptions[coworkerUsername],
+                                            'old',
+                                            coworkerUsername
+                                        );
+                                    }}
+                                >
+                                    <div className="tooltiptext">Exceptions</div>
+                                    <FaFolderPlus />
+                                    {/* <FaPuzzlePiece />
+                                    <FaHistory /> */}
+                                </button>
+                                <button
+                                    className={classes.iconButton}
+                                    onClick={(e) => {
+                                        eventDefaults(e);
+                                        deleteCoworker(coworkerUsername);
+                                    }}
+                                >
+                                    <div className="tooltiptext">Delete rule</div>
+                                    <FaMinusSquare />
+                                    {/* <FaMinusCircle />
+                                    <FaRegMinusSquare /> */}
+                                </button>
+                            </div>
                         </div>
                     </li>
                 );
@@ -203,7 +236,7 @@ export default function AddRules() {
 
     return coworkersRulesStatus == 'success' && snippetsStatus == 'success' ? (
         <div className="container mt-[4rem]">
-            <div className="flex gap-4">
+            <div className={classes.inputs}>
                 <input
                     type="text"
                     placeholder="user"
@@ -212,22 +245,25 @@ export default function AddRules() {
                     }}
                 />
                 <AccessControl ref={genericAccessRefs.current.new} type="generic" />
-                <button
-                    onClick={(e) => {
-                        e.preventDefault();
-                        const coworkerUsername =
-                            exceptionAccessRefs.current.new.coworkerUsername.value ?? 'new user';
-                        showExceptionsPopUp({}, 'new', coworkerUsername);
-                    }}
-                >
-                    exceptions
-                </button>
-                <button
-                    className="border-1-lime border-radius-[50%] text-xl"
-                    onClick={addNewCoworker}
-                >
-                    add Rule
-                </button>
+                <div className={classes.buttons}>
+                    <button
+                        className={classes.iconButton}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            const coworkerUsername =
+                                exceptionAccessRefs.current.new.coworkerUsername.value ??
+                                'new user';
+                            showExceptionsPopUp({}, 'new', coworkerUsername);
+                        }}
+                    >
+                        <div className="tooltiptext">Exceptions</div>
+                        <FaFolderPlus />
+                    </button>
+                    <button className={classes.iconButton} onClick={addNewCoworker}>
+                        <div className="tooltiptext">Add Rule</div>
+                        <FaPlusSquare />
+                    </button>
+                </div>
             </div>
             <div className="mt-[4rem]">
                 <ul>{listCoworkers()}</ul>

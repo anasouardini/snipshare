@@ -1,10 +1,7 @@
-import React from 'react';
-import {useEffect} from 'react';
-import {useRef} from 'react';
-import {forwardRef} from 'react';
-import {useState} from 'react';
+import React, {forwardRef, useState, useRef, useEffect} from 'react';
 import AccessControl from '../components/accessControl';
 import {deepClone} from '../tools/deepClone';
+import {FaRegPlusSquare, FaPlusSquare, FaMinusSquare} from 'react-icons/fa';
 
 const ExceptionsPopUp = forwardRef((props, ref) => {
     const [_, setForceRenderState] = useState(true);
@@ -114,14 +111,21 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
 
     // console.log(ref.current);
     // console.log(coworkerExceptionsRef.current);
+    const classes = {
+        inputs: 'flex justify-between items-center mb-[2rem]',
+        ruleItem: 'flex justify-between items-center',
+        buttons: 'flex gap-5',
+        iconButton: 'text-2xl text-primary tooltip',
+        li: 'mb-2 px-3 py-2 border-2 border-[#323232] rounded-md hover:bg-[#262626]',
+    };
 
     const listExceptions = () =>
         ref.current[props.oldOrNew].old ? (
             Object.keys(coworkerExceptionsRef.current).map((exceptionID) => {
                 return (
-                    <li key={exceptionID}>
-                        <div className="flex gap-4">
-                            <div>{exceptionID}</div>
+                    <li key={exceptionID} className={classes.li}>
+                        <div className={classes.ruleItem}>
+                            <div className="truncate w-[10rem]">{exceptionID}</div>
                             <AccessControl
                                 ref={coworkerExceptionsRef.current[exceptionID]}
                                 coworkerAccess={coworkerExceptionsRef.current[exceptionID]}
@@ -129,13 +133,15 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                             />
 
                             <button
+                                className={classes.iconButton}
                                 onClick={(e) => {
                                     eventDefaults(e);
                                     delete coworkerExceptionsRef.current[exceptionID];
                                     forceRerender();
                                 }}
                             >
-                                delete
+                                <div className="tooltiptext">Delete Exception</div>
+                                <FaMinusSquare />
                             </button>
                         </div>
                     </li>
@@ -172,12 +178,12 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
             <div
                 onClick={handleClose}
                 className={`fixed content-[""] top-0 left-0
-                w-full h-full bg-lime-600 opacity-20`}
+                w-full h-full bg-primary opacity-20`}
             ></div>
             <form className="flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative">
                 <span
                     onClick={handleClose}
-                    className='absolute content-["X"] top-2 right-2 text-xl cursor-pointer text-gray-700'
+                    className='text-primary absolute content-["X"] top-2 right-2 text-xl cursor-pointer'
                 >
                     X
                 </span>
@@ -186,18 +192,10 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                     <h1 className="mb-[4rem] text-2xl text-center">
                         Managing {props.coworkerUsername}'s Rules
                     </h1>
-                    <div className="flex gap-4">
+                    <div className={classes.inputs}>
                         {ref.current[props.oldOrNew].new ? (
                             <>
                                 {snippetsDataList()}
-                                {/* <input
-                                    type="text"
-                                    placeholder="snippet"
-                                    ref={(el) => {
-                                        ref.current[props.oldOrNew].new.exceptionID = el;
-                                    }}
-                                    list="snippets"
-                                /> */}
                                 <AccessControl
                                     ref={ref.current[props.oldOrNew].new.exceptionAccess}
                                     type="exceptions"
@@ -206,11 +204,10 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                         ) : (
                             <></>
                         )}
-                        <button
-                            className="border-1-lime border-radius-[50%] text-xl"
-                            onClick={addNewException}
-                        >
-                            +
+
+                        <button className={classes.iconButton} onClick={addNewException}>
+                            <FaPlusSquare className="" />
+                            <div className="tooltiptext">Add Exception</div>
                         </button>
                     </div>
                     <div>
@@ -218,12 +215,12 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                     </div>
                 </div>
 
-                <button
-                    className="w-[100px] bg-lime-600 leading-8 rounded-md text-white mx-auto"
+                {/* <button
+                    className="w-[100px] bg-primary leading-8 rounded-md text-white mx-auto"
                     onClick={handleClose}
                 >
                     Save
-                </button>
+                </button> */}
             </form>
         </div>
     );

@@ -63,7 +63,7 @@ export default function Snippet(props) {
             snipInfoState.snippet.access?.read ? 'bg-cyan-600' : 'bg-gray-400 cursor-not-allowed'
         }`,
         btnEdit: `${
-            snipInfoState.snippet.access?.update ? 'bg-lime-600' : 'bg-gray-400 cursor-not-allowed'
+            snipInfoState.snippet.access?.update ? 'bg-primary' : 'bg-gray-400 cursor-not-allowed'
         }`,
         btnDelete: `${
             snipInfoState.snippet.access?.delete ? 'bg-red-500' : 'bg-gray-400 cursor-not-allowed'

@@ -9,7 +9,11 @@ body{
 
 input, textarea{
     background: transparent;
-    @apply border-b-2 border-b-lime-600 p-1 outline-lime-300 focus:outline-1 bg-[#181818];
+    @apply border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-1 bg-[#181818];
+}
+
+input[type=checkbox]{
+    @apply accent-primary
 }
 
 .container{
@@ -23,5 +27,23 @@ input, textarea{
 }
 
 .active{
-    @apply border-b-[4px] border-b-lime-600
+    @apply border-b-[3px] border-b-primary
+}
+
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+.tooltip .tooltiptext {
+    @apply invisible w-[max-content] bg-[#323232] text-[white] text-sm text-center absolute px-2 py-1 top-6 left-[-60px]
+}
+  
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+nav{
+    @apply px-[5%] py-2
 }

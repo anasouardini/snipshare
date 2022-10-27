@@ -86,7 +86,7 @@ export default function Form(props) {
             <div
                 onClick={handleClose}
                 className={`fixed content-[""] top-0 left-0
-                        w-full h-full bg-lime-600 opacity-20`}
+                        w-full h-full bg-primary opacity-20`}
             ></div>
             <form className="flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative">
                 <span
@@ -98,7 +98,7 @@ export default function Form(props) {
                 {listInputs(props.fields)}
 
                 <button
-                    className="w-[100px] bg-lime-600 leading-8 rounded-md text-white mx-auto z-10"
+                    className="w-[100px] bg-primary leading-8 rounded-md text-white mx-auto z-10"
                     onClick={handleSubmit}
                 >
                     {props.action == 'edit' ? 'Edit' : 'Create'}

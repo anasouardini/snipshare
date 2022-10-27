@@ -1,7 +1,4 @@
-import {useEffect} from 'react';
-import {useState} from 'react';
-
-import {forwardRef} from 'react';
+import {useState, forwardRef, useEffect} from 'react';
 
 const AccessControl = forwardRef((props, ref) => {
     const [accessState, setAccessState] = useState({});
@@ -19,55 +16,73 @@ const AccessControl = forwardRef((props, ref) => {
         }
     }, []);
 
+    const classes = {
+        parent: 'flex flex-gap-2',
+        checkbox: 'ml-1',
+        checkboxLabel: 'ml-3',
+    };
+
     // each checkbox creates an access on the ref
     return (
-        <div>
+        <div className={classes.parent}>
             {Object.keys(accessState).length ? (
                 <>
                     {props.type == 'generic' ? (
-                        <input
-                            className="accent-lime-600"
-                            type="checkbox"
-                            ref={(el) => {
-                                ref.create = el;
-                            }}
-                            name="create"
-                            defaultChecked={accessState.create}
-                            // onChange={() => {}}
-                        />
+                        <label className={classes.checkboxLabel}>
+                            Create
+                            <input
+                                className={classes.checkbox}
+                                type="checkbox"
+                                ref={(el) => {
+                                    ref.create = el;
+                                }}
+                                name="create"
+                                defaultChecked={accessState.create}
+                                // onChange={() => {}}
+                            />
+                        </label>
                     ) : (
                         <></>
                     )}
-                    <input
-                        className="accent-lime-600"
-                        type="checkbox"
-                        ref={(el) => {
-                            ref.read = el;
-                        }}
-                        name="read"
-                        defaultChecked={accessState.read}
-                        // onChange={() => {}}
-                    />
-                    <input
-                        className="accent-lime-600"
-                        type="checkbox"
-                        ref={(el) => {
-                            ref.update = el;
-                        }}
-                        name="update"
-                        defaultChecked={accessState.update}
-                        // onChange={() => {}}
-                    />
-                    <input
-                        className="accent-lime-600"
-                        type="checkbox"
-                        ref={(el) => {
-                            ref.delete = el;
-                        }}
-                        name="delete"
-                        defaultChecked={accessState.delete}
-                        // onChange={() => {}}
-                    />
+                    <label className={classes.checkboxLabel}>
+                        Read
+                        <input
+                            className={classes.checkbox}
+                            type="checkbox"
+                            ref={(el) => {
+                                ref.read = el;
+                            }}
+                            name="read"
+                            defaultChecked={accessState.read}
+                            // onChange={() => {}}
+                        />
+                    </label>
+                    <label className={classes.checkboxLabel}>
+                        Update
+                        <input
+                            className={classes.checkbox}
+                            type="checkbox"
+                            ref={(el) => {
+                                ref.update = el;
+                            }}
+                            name="update"
+                            defaultChecked={accessState.update}
+                            // onChange={() => {}}
+                        />
+                    </label>
+                    <label className={classes.checkboxLabel}>
+                        Delete
+                        <input
+                            className={classes.checkbox}
+                            type="checkbox"
+                            ref={(el) => {
+                                ref.delete = el;
+                            }}
+                            name="delete"
+                            defaultChecked={accessState.delete}
+                            // onChange={() => {}}
+                        />
+                    </label>
                 </>
             ) : (
                 <></>

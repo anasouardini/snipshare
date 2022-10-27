@@ -34,13 +34,13 @@ export default function SignUp() {
     const classes = {
         parent: `border-3 w-[500px] mx-auto mt-40`,
         title: `text-center text-3xl mb-[50px] relative
-                before:content-[""] before:absolute before:top-[105%] before:w-10 before:h-1 before:bg-lime-600`,
+                before:content-[""] before:absolute before:top-[105%] before:w-10 before:h-1 before:bg-primary`,
         form: 'flex flex-col w-lg',
         input: 'p-[5px]',
-        textInput: 'border-0 border-b-2 border-b-lime-600 outline-0',
+        textInput: 'border-0 border-b-2 border-b-primary outline-0',
         checkbox: 'w-xl mr-3',
         label: 'max-w-[300px] mx-auto',
-        submit: 'w-full border-b-2 border-b-lime-600 mt-4 pb-2',
+        submit: 'w-full border-b-2 border-b-primary mt-4 pb-2',
     };
 
     const handleSubmit = (e) => {

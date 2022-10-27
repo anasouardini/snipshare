@@ -10,7 +10,7 @@ export default function Preview(props) {
                     props.hidePopUp('preview');
                 }}
                 className={`fixed content-[""] top-0 left-0
-                        w-full h-full bg-lime-600 opacity-20`}
+                        w-full h-full bg-primary opacity-20`}
             ></div>
             <div className="flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative">
                 <span
