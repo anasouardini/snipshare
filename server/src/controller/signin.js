@@ -38,6 +38,7 @@ const signinUser = async (req, res, next) => {
 
     // check credentials in users table
     const userResponse = await User.getUser(req.body.usr);
+    // console.log(userResponse);
 
     if (!userResponse) {
         return res.sendStatus(500);

@@ -1,5 +1,6 @@
 import React from 'react';
 import {useEffect} from 'react';
+import {useRef} from 'react';
 import {forwardRef} from 'react';
 import {useState} from 'react';
 import AccessControl from '../components/accessControl';
@@ -11,15 +12,32 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
         setForceRenderState((old) => !old);
     };
 
+    // DRYing a little
+    const coworkerExceptionsRef = useRef({});
+
     useEffect(() => {
-        const coworkerExceptions = props.coworker[props.coworkerUsername]; // empty obj in case of a new coworker
-        //* a copy of the state keeps the doctor away
-        if (!ref.current[props.oldOrNew]?.old?.[props.coworkerUsername]) {
-            ref.current[props.oldOrNew] = {
-                old: {[props.coworkerUsername]: {...coworkerExceptions}},
-                new: {exceptionID: {}, exceptionAccess: {}},
-            };
+        // console.log('initial ref', ref.current);
+
+        if (props.oldOrNew == 'new') {
+            if (!ref.current[props.oldOrNew]?.old) {
+                ref.current[props.oldOrNew] = {
+                    //* a copy of the state keeps the doctor away
+                    old: {...props.coworker},
+                };
+            }
+            coworkerExceptionsRef.current = ref.current[props.oldOrNew].old;
+        } else {
+            if (!ref.current[props.oldOrNew]?.old) {
+                ref.current[props.oldOrNew] = {
+                    old: {[props.coworkerUsername]: {...props.coworker}},
+                };
+            }
+            coworkerExceptionsRef.current = ref.current[props.oldOrNew].old[props.coworkerUsername];
         }
+
+        ref.current[props.oldOrNew].new = {exceptionID: {}, exceptionAccess: {}};
+        // console.log('ref ref', coworkerExceptionsRef.current);
+
         forceRerender();
     }, []);
 
@@ -33,24 +51,23 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
 
         const parentRef = ref.current[props.oldOrNew];
 
-        const exceptions = parentRef.old[props.coworkerUsername];
-
         const exceptionID = parentRef.new.exceptionID.value;
 
-        if (exceptions?.[exceptionID]) {
+        if (coworkerExceptionsRef.current?.[exceptionID]) {
             return console.log('snippet already exists');
         }
 
-        // this passes the access values to <accessControl/> then it's used as references the dom checkboxes
-        exceptions[exceptionID] = Object.keys(parentRef.new.exceptionAccess).reduce(
-            (acc, accessKey) => {
-                acc[accessKey] = parentRef.new.exceptionAccess[accessKey].checked;
-                return acc;
-            },
-            {}
-        );
+        // this passes the access intermediate values to <accessControl/>
+        // then it's used a references obj the dom checkboxes
+        coworkerExceptionsRef.current[exceptionID] = Object.keys(
+            parentRef.new.exceptionAccess
+        ).reduce((acc, accessKey) => {
+            acc[accessKey] = parentRef.new.exceptionAccess[accessKey].checked;
+            return acc;
+        }, {});
 
-        console.log(ref.current[props.oldOrNew]);
+        // console.log(ref.current[props.oldOrNew].old);
+        // console.log(coworkerExceptionsRef);
 
         forceRerender();
     };
@@ -58,59 +75,54 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
     const handleClose = (e) => {
         eventDefaults(e);
 
-        const userOldExceptions = ref.current[props.oldOrNew].old[props.coworkerUsername];
-        Object.keys(userOldExceptions).forEach((exceptionID) => {
-            Object.keys(userOldExceptions[exceptionID]).forEach((access) => {
-                userOldExceptions[exceptionID][access] =
-                    userOldExceptions[exceptionID][access].checked;
+        Object.keys(coworkerExceptionsRef.current).forEach((exceptionID) => {
+            Object.keys(coworkerExceptionsRef.current[exceptionID]).forEach((access) => {
+                coworkerExceptionsRef.current[exceptionID][access] =
+                    coworkerExceptionsRef.current[exceptionID][access].checked;
             });
         });
 
-        //! this potential memory leak is because of react not me
-        ref.current[props.oldOrNew].old[props.coworkerUsername] = deepClone(userOldExceptions);
+        // the `coworkerExceptionsRef` is now referencing dom elements instead of ref.current...
+
+        //! not knowing how this works is dangerous
+        ref.current[props.oldOrNew].old = deepClone(coworkerExceptionsRef.current); //- this works
+        //coworkerExceptionsRef.current = deepClone(coworkerExceptionsRef.current);//- this doesn't
+
+        // console.log(coworkerExceptionsRef.current);
+        // console.log(ref.current[props.oldOrNew].old);
 
         // unmount pop-up
         props.hidePopUp();
     };
 
+    // console.log(ref.current);
+
     const listExceptions = () =>
         ref.current[props.oldOrNew].old ? (
-            Object.keys(ref.current[props.oldOrNew].old[props.coworkerUsername]).map(
-                (exceptionID) => {
-                    return (
-                        <li key={exceptionID}>
-                            <div className="flex gap-4">
-                                <div>{exceptionID}</div>
-                                <AccessControl
-                                    ref={
-                                        ref.current[props.oldOrNew].old[props.coworkerUsername][
-                                            exceptionID
-                                        ]
-                                    }
-                                    coworkerAccess={
-                                        ref.current[props.oldOrNew].old[props.coworkerUsername][
-                                            exceptionID
-                                        ]
-                                    }
-                                    type="exceptions"
-                                />
+            Object.keys(coworkerExceptionsRef.current).map((exceptionID) => {
+                return (
+                    <li key={exceptionID}>
+                        <div className="flex gap-4">
+                            <div>{exceptionID}</div>
+                            <AccessControl
+                                ref={coworkerExceptionsRef.current[exceptionID]}
+                                coworkerAccess={coworkerExceptionsRef.current[exceptionID]}
+                                type="exceptions"
+                            />
 
-                                <button
-                                    onClick={(e) => {
-                                        eventDefaults(e);
-                                        delete ref.current[props.oldOrNew].old[
-                                            props.coworkerUsername
-                                        ][exceptionID];
-                                        forceRerender();
-                                    }}
-                                >
-                                    delete
-                                </button>
-                            </div>
-                        </li>
-                    );
-                }
-            )
+                            <button
+                                onClick={(e) => {
+                                    eventDefaults(e);
+                                    delete coworkerExceptionsRef.current[exceptionID];
+                                    forceRerender();
+                                }}
+                            >
+                                delete
+                            </button>
+                        </div>
+                    </li>
+                );
+            })
         ) : (
             <></>
         );

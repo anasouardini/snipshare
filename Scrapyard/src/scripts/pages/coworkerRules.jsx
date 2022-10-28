@@ -33,7 +33,7 @@ export default function AddRules() {
         old: {},
     });
 
-    // console.log(exceptionAccessRefs.current);
+    console.log(exceptionAccessRefs.current);
 
     const {
         data: coworkersRulesData,
@@ -86,11 +86,13 @@ export default function AddRules() {
             return console.log('this coworker already exists');
         }
 
-        // console.log(Object.values(exceptionAccessRefs.current.new?.old)[0]);
+        console.log('add new', Object.values(exceptionAccessRefs.current.new?.old)[0]);
         const props = {
             coworker,
             generic,
-            exceptions: Object.values(exceptionAccessRefs.current.new?.old ?? {key: {}})[0] ?? {},
+            exceptions: {
+                [coworker]: Object.values(exceptionAccessRefs.current.new?.old ?? {key: {}})[0],
+            },
         };
         //wait fot the changes before getting the new data
         const response = await create(`coworkerRules`, {props});
@@ -132,10 +134,12 @@ export default function AddRules() {
     };
 
     const showExceptionsPopUp = (coworker, oldOrNew, coworkerUsername) => {
+        // console.log(coworkersRulesData, coworker);
         setPopUpState({...popUpState, showExceptions: true, coworker, oldOrNew, coworkerUsername});
     };
 
     const hidePopUp = () => {
+        console.log(exceptionAccessRefs.current);
         setPopUpState({...popUpState, showExceptions: false});
     };
 
@@ -180,10 +184,7 @@ export default function AddRules() {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     showExceptionsPopUp(
-                                        {
-                                            [coworkerUsername]:
-                                                coworkersRulesData.exceptions[coworkerUsername],
-                                        },
+                                        coworkersRulesData.exceptions[coworkerUsername],
                                         'old',
                                         coworkerUsername
                                     );
@@ -215,13 +216,7 @@ export default function AddRules() {
                         e.preventDefault();
                         const coworkerUsername =
                             exceptionAccessRefs.current.new.coworkerUsername.value ?? 'new user';
-                        showExceptionsPopUp(
-                            {
-                                [coworkerUsername]: {},
-                            },
-                            'new',
-                            coworkerUsername
-                        );
+                        showExceptionsPopUp({}, 'new', coworkerUsername);
                     }}
                 >
                     exceptions
