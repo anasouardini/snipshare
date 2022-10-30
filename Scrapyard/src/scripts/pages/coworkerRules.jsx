@@ -33,7 +33,11 @@ export default function AddRules() {
     // }
     // console.log('whoami', whoami);
 
+    const [_, setForceRenderState] = useState(false);
+
     const [popUpState, setPopUpState] = useState({showExceptions: false});
+
+    const changedCoworkers = useRef(new Set([]));
 
     // list of checkboxes
     const genericAccessRefs = useRef({
@@ -45,7 +49,7 @@ export default function AddRules() {
         new: {coworkerUsername: {}},
         old: {},
     });
-    console.log(exceptionAccessRefs.current);
+    // console.log(exceptionAccessRefs.current);
 
     const {
         data: coworkersRulesData,
@@ -143,6 +147,7 @@ export default function AddRules() {
         const response = await update(`coworkerRules`, {props});
 
         if (response.status == 200) {
+            changedCoworkers.current.delete(coworkerUsername);
             refetch();
         }
     };
@@ -152,8 +157,13 @@ export default function AddRules() {
         setPopUpState({...popUpState, showExceptions: true, coworker, oldOrNew, coworkerUsername});
     };
 
+    const markChangedCoworker = (coworkerUsername) => {
+        changedCoworkers.current.add(coworkerUsername);
+        setForceRenderState((old) => !old);
+    };
+
     const hidePopUp = () => {
-        console.log('before hide popup', exceptionAccessRefs.current.new.old);
+        // console.log('before hide popup', exceptionAccessRefs.current.new.old);
         setPopUpState({...popUpState, showExceptions: false});
     };
 
@@ -184,11 +194,18 @@ export default function AddRules() {
                                 ref={genericAccessRefs.current.old[coworkerUsername]}
                                 coworkerAccess={coworkersRulesData.generic[coworkerUsername]}
                                 type="generic"
+                                markChangedCoworker={(e) => {
+                                    markChangedCoworker(coworkerUsername);
+                                }}
                             />
 
                             <div className={classes.buttons}>
                                 <button
-                                    className={classes.iconButton}
+                                    className={`${classes.iconButton} ${
+                                        changedCoworkers.current.has(coworkerUsername)
+                                            ? 'text-orange-400'
+                                            : ''
+                                    }`}
                                     onClick={(e) => {
                                         eventDefaults(e);
                                         updateCoworker(coworkerUsername);
@@ -239,7 +256,7 @@ export default function AddRules() {
             <div className={classes.inputs}>
                 <input
                     type="text"
-                    placeholder="user"
+                    placeholder="new Coworker"
                     ref={(el) => {
                         exceptionAccessRefs.current.new.coworkerUsername = el;
                     }}
@@ -276,6 +293,7 @@ export default function AddRules() {
                     oldOrNew={popUpState.oldOrNew}
                     coworkerUsername={popUpState.coworkerUsername}
                     snippets={snippetsData.snippets}
+                    markChangedCoworker={markChangedCoworker}
                 />
             ) : (
                 <></>

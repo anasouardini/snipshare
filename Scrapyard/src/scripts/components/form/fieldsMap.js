@@ -1,9 +1,9 @@
 import IsPrivate from './fields/isPrivate';
-import Snippet from './fields/snippet';
+import CodeSnippet from './fields/snippet';
 
 const fieldsMap = {
     IsPrivate,
-    Snippet,
+    CodeSnippet,
 };
 
 export default (type) => fieldsMap[type] ?? type;

@@ -11,9 +11,7 @@ export default function Home() {
         showForm: false,
         showPreview: false,
     });
-    const fieldsClasses = {
-        inputs: 'border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-1 bg-[#181818]',
-    };
+
     const [formFieldsState, setFormFieldsState] = useState({
         fields: [...commonSnippetFields],
     });
@@ -49,7 +47,7 @@ export default function Home() {
     if (snippetsErr?.req?.status == 401) {
         return navigate('/login', {replace: true});
     }
-    // console.log(snippets);
+    console.log(snippets);
 
     const listUsers = () =>
         users.map((user) => (
@@ -107,7 +105,7 @@ export default function Home() {
             <ul className="flex justify-center">{listUsers()}</ul>
 
             <h2 className="text-center mt-[5rem] mb-[3rem] text-2xl font-bold">Other Snippets</h2>
-            <div className="flex flex-wrap mx-auto items-stretch justify-center gap-7">
+            <div className="flex flex-col mx-auto items-center justify-center gap-7">
                 {listSnippets(snippets.snippets)}
                 {/* add a snippet button */}
 

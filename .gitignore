@@ -5,6 +5,8 @@
 
 #custom
 .vscode
+*.env
+track.md
 
 
 # Node artifact files
@@ -51,4 +53,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-*.env

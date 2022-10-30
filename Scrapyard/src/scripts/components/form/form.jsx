@@ -1,12 +1,11 @@
 import React, {useRef} from 'react';
-import {useOutletContext} from 'react-router-dom';
+// import {useOutletContext} from 'react-router-dom';
 
-import {create, read, update} from '../../tools/bridge';
+import {create, update} from '../../tools/bridge';
 import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
-    // const whoami = useContext(GlobalContext);
-    const whoami = useOutletContext();
+    // const whoami = useOutletContext();
 
     const refs = {
         title: useRef(''),
@@ -24,7 +23,7 @@ export default function Form(props) {
     const createRequestBody = () => {
         const body = {props: {}};
 
-        console.log(props.fields);
+        // console.log(props.fields);
         props.fields.forEach((field) => {
             const fieldKey = field.attr.key;
             // keept the != undefined, because js is weird
@@ -32,6 +31,9 @@ export default function Form(props) {
                 if (field.attr.type == 'checkbox') {
                     // console.log('fieldtype', refs[fieldKey].current.checked);
                     body.props[fieldKey] = refs[fieldKey].current.checked;
+                } else if (field.attr.type == 'snippet') {
+                    body.props[fieldKey] = refs[fieldKey].current.getValue();
+                    // console.log(body.props[fieldKey]);
                 } else {
                     // console.log(refs[fieldKey].current);
                     body.props[fieldKey] = refs[fieldKey].current.value;
@@ -44,11 +46,12 @@ export default function Form(props) {
     };
 
     const handleEdit = async () => {
+        // createRequestBody();
+
         const response = await update(props.snipUser + '/' + props.snipId, {
             user: props.snipUser,
             ...createRequestBody(),
         });
-        // createRequestBody();
         console.log(response);
 
         props.updateEditedSnippet();
@@ -72,11 +75,22 @@ export default function Form(props) {
         handleCreate();
     };
 
-    // console.log(props.fields);
+    // console.log(Object.values(props.fields)[2].attr);
     // listing form fields
     const listInputs = (fields = []) => {
         return fields.map((input) => {
             const Component = fieldsMap(input.type);
+            if (input.attr.key == 'descr') {
+                const descrHeight = input.attr.defaultValue.split(/\r\n|\r|\n/).length * 42;
+                // console.log(descrHeight);
+                return (
+                    <Component
+                        ref={refs[input?.attr?.key]}
+                        {...input.attr}
+                        style={{height: `min(${descrHeight}px, 100px)`}}
+                    />
+                );
+            }
             return <Component ref={refs[input?.attr?.key]} {...input.attr} />;
         });
     };

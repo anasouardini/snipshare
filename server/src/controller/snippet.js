@@ -37,7 +37,7 @@ const authAction = async (req, action) => {
             }
         }
 
-        const {id, user, title, descr, snippet, isPrivate} = snippetResponse[0][0];
+        const {id, user, title, descr, snippet, isPrivate, author} = snippetResponse[0][0];
         return {
             status: 200,
             msg: {
@@ -47,6 +47,7 @@ const authAction = async (req, action) => {
                 descr,
                 snippet,
                 isPrivate,
+                author,
                 access,
             },
         };
@@ -99,7 +100,7 @@ const edit = async (req, res) => {
 
     const owner = req.params.user;
     const response = await Snippet.editSnippet(owner, req.body.props, req.params.snippetID);
-    // console.log(response);
+    // console.log(req.body.props);
     return response[0]?.affectedRows
         ? res.json({status: 200, msg: `snippet has been edited`})
         : res.json({status: 500, msg: `something happend while editting the snippet`});
@@ -133,9 +134,10 @@ const readMiddleware = async (req, res, next) => {
         ? await Snippet.getUserSnippets(snippetsOwner)
         : await Snippet.getAllSnippets();
 
+    // console.log(snippetsResponse);
     // if empty
-    if (!snippetsResponse[0].length) {
-        return res.json({msg: []});
+    if (!snippetsResponse[0]?.length) {
+        return res.json({msg: {snippets: []}});
     }
 
     req.snippets = snippetsResponse[0];
@@ -176,7 +178,7 @@ const readMiddleware = async (req, res, next) => {
 const appendSnippet = (req, filteredSnippets, snippetObj, access) => {
     // console.log(access);
     if (access?.read) {
-        const {id, user, title, descr, snippet, isPrivate} = snippetObj;
+        const {id, user, title, descr, snippet, isPrivate, author} = snippetObj;
         if (req.query?.meta) {
             return filteredSnippets.push({
                 id,
@@ -190,6 +192,7 @@ const appendSnippet = (req, filteredSnippets, snippetObj, access) => {
             descr,
             snippet,
             isPrivate,
+            author,
             access,
         });
     }
@@ -282,8 +285,31 @@ const create = async (req, res) => {
         return res.status(400).json({msg: 'request format is not valid'});
     }
 
+    let authorized = false;
     if (req.user.username == req.params.user) {
-        const response = await Snippet.createSnippet({user: req.user.username, ...req.body.props});
+        authorized = true;
+    } else {
+        // console.log(req.params.user, req.user.username);
+        const rulesResponse = await CoworkerRules.readCoworkerRules(
+            req.params.user,
+            req.user.username
+        );
+        // console.log(req.params.user);
+        // if the use is not a coworker
+        if (rulesResponse[0].length) {
+            // check if user has the creation access
+            if (rulesResponse[0][0].generic?.create) {
+                authorized = true;
+            }
+        }
+    }
+
+    if (authorized) {
+        const response = await Snippet.createSnippet({
+            owner: req.params.user,
+            ...req.body.props,
+            author: req.user.username,
+        });
         // console.log(response);
         if (response && response[0]?.affectedRows) {
             return res.json({msg: 'snippet created successfully'});
@@ -292,29 +318,6 @@ const create = async (req, res) => {
         return res.status(500).json({
             msg: 'something bad happend',
         });
-    }
-
-    // ELSE
-    // console.log(req.params.user, req.user.username);
-    const rulesResponse = await CoworkerRules.readCoworkerRules(req.params.user, req.user.username);
-    // console.log(req.params.user);
-    // if the use is not a coworker
-    if (rulesResponse[0].length) {
-        // check if user has the creation access
-        if (rulesResponse[0][0].generic?.create) {
-            const response = await Snippet.createSnippet({
-                user: req.params.user,
-                ...req.body.props,
-            });
-            // console.log(response);
-            if (response && response[0]?.affectedRows) {
-                return res.json({msg: 'snippet created successfully'});
-            }
-
-            return res.status(500).json({
-                msg: 'something bad happend',
-            });
-        }
     }
 
     // this should never run

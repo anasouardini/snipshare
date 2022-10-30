@@ -28,7 +28,8 @@ const queries = {
         title varchar(200) NOT NULL,
         descr varchar(1000) NOT NULL,
         snippet varchar(5000) NOT NULL,
-        isPrivate tinyint NOT NULL
+        isPrivate tinyint NOT NULL,
+        author varchar(100) NOT NULL
     );`,
 
     insertMods: `
@@ -68,7 +69,8 @@ const queries = {
             isPrivate,
             title,
             descr,
-            snippet
+            snippet,
+            author
         )
         VALUES
         (
@@ -78,7 +80,8 @@ const queries = {
             'venego snippet 1',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'venego'
         ),
         (
             '${uuid()}',
@@ -87,7 +90,8 @@ const queries = {
             'venego snippet 4',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'venego'
         ),
         (
             '${uuid()}',
@@ -96,7 +100,8 @@ const queries = {
             'venego snippet 2',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'venego'
         ),
         (
             '${uuid()}',
@@ -105,7 +110,8 @@ const queries = {
             'venego snippet 3',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'venego'
         ),
 
 
@@ -116,7 +122,8 @@ const queries = {
             '3sila snippet 1',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            '3sila'
         ),
         (
             '${uuid()}',
@@ -125,7 +132,8 @@ const queries = {
             '3sila snippet 4',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            '3sila'
         ),
         (
             '${uuid()}',
@@ -134,7 +142,8 @@ const queries = {
             '3sila snippet 2',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            '3sila'
         ),
         (
             '${uuid()}',
@@ -143,7 +152,8 @@ const queries = {
             '3sila snippet 3',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            '3sila'
         ),
 
 
@@ -154,7 +164,8 @@ const queries = {
             'm9ila snippet 1',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'm9ila'
         ),
         (
             '${uuid()}',
@@ -163,7 +174,8 @@ const queries = {
             'm9ila snippet 4',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'm9ila'
         ),
         (
             '${uuid()}',
@@ -172,7 +184,8 @@ const queries = {
             'm9ila snippet 2',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'm9ila'
         ),
         (
             '${uuid()}',
@@ -181,7 +194,8 @@ const queries = {
             'm9ila snippet 3',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'm9ila'
         ),
 
 
@@ -192,7 +206,8 @@ const queries = {
             '3disa snippet 1',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            '3disa'
         ),
         (
             '${uuid()}',
@@ -201,7 +216,8 @@ const queries = {
             '3disa snippet 4',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            '3disa'
         ),
         (
             '${uuid()}',
@@ -210,7 +226,8 @@ const queries = {
             '3disa snippet 2',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            '3disa'
         ),
         (
             '${uuid()}',
@@ -219,27 +236,36 @@ const queries = {
             '3disa snippet 3',
             'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
             or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)'
-        )
-
-        ;`,
+            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            '3disa'
+        );`,
 };
 
 const restart = async () => {
-    const response =
-        (await poolPromise(queries.cleardb)) &&
-        (await poolPromise(queries.createMods)) &&
-        (await poolPromise(queries.insertMods)) &&
-        (await poolPromise(queries.createUsers)) &&
-        (await poolPromise(queries.insertUsers)) &&
-        (await poolPromise(queries.createSnippets)) &&
-        (await poolPromise(queries.insertSnippets)) &&
-        (await poolPromise(queries.createCoworkers)) &&
-        true;
+    let response = await poolPromise(queries.cleardb);
+    response = await poolPromise(queries.createMods);
+    if (!response) return false;
 
-    // const response = poolPromise(queries.insertUsers);
+    response = await poolPromise(queries.insertMods);
+    if (!response) return false;
 
-    return response;
+    response = await poolPromise(queries.createUsers);
+    if (!response) return false;
+
+    response = await poolPromise(queries.insertUsers);
+    if (!response) return false;
+
+    response = await poolPromise(queries.createSnippets);
+    // console.log(response);
+    if (!response) return false;
+
+    response = await poolPromise(queries.insertSnippets);
+    if (!response) return false;
+
+    response = await poolPromise(queries.createCoworkers);
+    if (!response) return false;
+
+    return true;
 };
 
 module.exports = {

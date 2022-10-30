@@ -1,4 +1,4 @@
-import {useState, forwardRef, useEffect} from 'react';
+import React, {useState, forwardRef, useEffect} from 'react';
 
 const AccessControl = forwardRef((props, ref) => {
     const [accessState, setAccessState] = useState({});
@@ -31,6 +31,7 @@ const AccessControl = forwardRef((props, ref) => {
                         <label className={classes.checkboxLabel}>
                             Create
                             <input
+                                onChange={props.markChangedCoworker}
                                 className={classes.checkbox}
                                 type="checkbox"
                                 ref={(el) => {
@@ -47,6 +48,7 @@ const AccessControl = forwardRef((props, ref) => {
                     <label className={classes.checkboxLabel}>
                         Read
                         <input
+                            onChange={props.markChangedCoworker}
                             className={classes.checkbox}
                             type="checkbox"
                             ref={(el) => {
@@ -60,6 +62,7 @@ const AccessControl = forwardRef((props, ref) => {
                     <label className={classes.checkboxLabel}>
                         Update
                         <input
+                            onChange={props.markChangedCoworker}
                             className={classes.checkbox}
                             type="checkbox"
                             ref={(el) => {
@@ -73,6 +76,7 @@ const AccessControl = forwardRef((props, ref) => {
                     <label className={classes.checkboxLabel}>
                         Delete
                         <input
+                            onChange={props.markChangedCoworker}
                             className={classes.checkbox}
                             type="checkbox"
                             ref={(el) => {

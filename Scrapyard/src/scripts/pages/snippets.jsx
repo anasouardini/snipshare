@@ -87,11 +87,11 @@ export default function Snippets() {
 
         setPopUpState(newState);
     };
-    // console.log(snippets.genericAccess);
+    // console.log(snippets);
     return status == 'success' ? (
         <div>
-            <h1 className="text-2xl font-bold my-11 text-center">{userParam}'s Snippets</h1>
-            <div className="flex flex-wrap mx-auto items-stretch justify-center gap-7">
+            <h1 className="text-2xl font-bold my-11 text-center">{userParam}&apos;s Snippets</h1>
+            <div className="flex flex-col mx-auto items-center justify-center gap-7">
                 {listSnippets(snippets.snippets)}
 
                 {/* add a snippet button */}

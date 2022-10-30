@@ -11,7 +11,7 @@ const IsPrivate = forwardRef((props, ref) => {
                 type="checkbox"
                 {...props}
             />
-            private
+            &nbsp; private
         </label>
     );
 });

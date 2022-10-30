@@ -1,7 +1,7 @@
 import React, {forwardRef, useState, useRef, useEffect} from 'react';
 import AccessControl from '../components/accessControl';
 import {deepClone} from '../tools/deepClone';
-import {FaRegPlusSquare, FaPlusSquare, FaMinusSquare} from 'react-icons/fa';
+import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa';
 
 const ExceptionsPopUp = forwardRef((props, ref) => {
     const [_, setForceRenderState] = useState(true);
@@ -27,8 +27,13 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
         } else {
             if (!ref.current[props.oldOrNew]?.old) {
                 ref.current[props.oldOrNew] = {
+                    // get the old rules for this old coworker
                     old: {[props.coworkerUsername]: {...props.coworker}},
                 };
+            }
+            // if the old coworker is already edited, don't overwrite the old new rules
+            else if (!ref.current[props.oldOrNew]?.old?.[props.coworkerUsername]) {
+                ref.current[props.oldOrNew].old[props.coworkerUsername] = props.coworker;
             }
             coworkerExceptionsRef.current = ref.current[props.oldOrNew].old[props.coworkerUsername];
             // console.log('ref', ref.current[props.oldOrNew].old);
@@ -71,13 +76,16 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
             return acc;
         }, {});
 
+        // add coworker to the ref of set of changed coworkers in coworkerRules
+        props.markChangedCoworker(props.coworkerUsername);
+
         // console.log(ref.current[props.oldOrNew].old);
         // console.log(coworkerExceptionsRef);
 
         forceRerender();
     };
 
-    console.log(ref.current[props.oldOrNew].old);
+    // console.log(ref.current[props.oldOrNew].old);
     const handleClose = (e) => {
         eventDefaults(e);
 
@@ -130,6 +138,9 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                                 ref={coworkerExceptionsRef.current[exceptionID]}
                                 coworkerAccess={coworkerExceptionsRef.current[exceptionID]}
                                 type="exceptions"
+                                markChangedCoworker={(e) => {
+                                    props.markChangedCoworker(props.coworkerUsername);
+                                }}
                             />
 
                             <button
@@ -137,6 +148,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                                 onClick={(e) => {
                                     eventDefaults(e);
                                     delete coworkerExceptionsRef.current[exceptionID];
+                                    props.markChangedCoworker(props.coworkerUsername);
                                     forceRerender();
                                 }}
                             >

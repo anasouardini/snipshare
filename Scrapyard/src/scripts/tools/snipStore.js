@@ -50,17 +50,17 @@ const commonSnippetFields = [
         },
     },
     {
-        type: 'Snippet',
+        type: 'CodeSnippet',
         attr: {
             key: 'snippet',
-            type: 'text',
+            type: 'snippet',
         },
     },
     {
-        type: 'IsPrivate',
+        type: 'IsPrivate', // used as the component name
         attr: {
-            key: 'isPrivate',
-            type: 'checkbox',
+            key: 'isPrivate', // used as a ref
+            type: 'checkbox', // determins how to handle value
         },
     },
     // {
