@@ -7,12 +7,7 @@ import {useEffect} from 'react';
 import {useState} from 'react';
 
 export default function SharedLayout(props) {
-    const updateWhoami = async () => {
-        const whoamiUsr = await read('whoami');
-
-        return whoamiUsr;
-    };
-
+    // const [_, setForceRenderState] = useState(false);
     const updateWhoamiState = async () => {
         const whoamiUsr = await read('whoami');
 
@@ -36,12 +31,12 @@ export default function SharedLayout(props) {
     };
 
     if (whoami && whoami?.status == 200 && location.pathname.includes('login')) {
-        console.log('redirecting to home from shared layout');
+        // console.log('redirecting to home from shared layout');
         navigate('/');
     }
 
     if (whoami && whoami?.status == 401 && !location.pathname.includes('login')) {
-        console.log('redirecting to login');
+        // console.log('redirecting to login');
         navigate('/login', {replace: true});
     }
 
@@ -58,6 +53,9 @@ export default function SharedLayout(props) {
                         </li>
                         <li className={classes.li}>
                             <NavLink to={`${whoami.msg}/snippets`}>My Snippets</NavLink>
+                        </li>
+                        <li className={classes.li}>
+                            <NavLink to={'/blank'}>blank</NavLink>
                         </li>
 
                         <li className={`${classes.li} ml-auto`}>
@@ -93,6 +91,7 @@ export default function SharedLayout(props) {
                             className={classes.li}
                             onClick={async () => {
                                 const response = await create('restart');
+                                // setForceRenderState((st) => !st);
                                 console.log(response);
                             }}
                         >

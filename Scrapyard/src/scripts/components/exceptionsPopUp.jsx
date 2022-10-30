@@ -14,7 +14,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
 
     // DRYing a little
     const coworkerExceptionsRef = useRef({});
-
+    // console.log(coworkerExceptionsRef);
     useEffect(() => {
         // console.log('initial ref', ref.current);
 
@@ -25,6 +25,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                     old: {...props.coworker},
                 };
             }
+
             coworkerExceptionsRef.current = ref.current[props.oldOrNew].old;
         } else {
             if (!ref.current[props.oldOrNew]?.old) {
@@ -33,12 +34,19 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                 };
             }
             coworkerExceptionsRef.current = ref.current[props.oldOrNew].old[props.coworkerUsername];
+            // console.log('ref', ref.current[props.oldOrNew].old);
         }
 
+        // console.log('coworker', props.coworker);
         ref.current[props.oldOrNew].new = {exceptionID: {}, exceptionAccess: {}};
-        // console.log('ref ref', coworkerExceptionsRef.current);
+        // console.log('ref ref', ref.current);
 
         forceRerender();
+
+        // return () => {
+        //     console.log('ref ref', deepClone(ref.current[props.oldOrNew].old));
+        //     console.log();
+        // };
     }, []);
 
     const eventDefaults = (e) => {
@@ -72,6 +80,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
         forceRerender();
     };
 
+    console.log(ref.current[props.oldOrNew].old);
     const handleClose = (e) => {
         eventDefaults(e);
 
@@ -85,17 +94,26 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
         // the `coworkerExceptionsRef` is now referencing dom elements instead of ref.current...
 
         //! not knowing how this works is dangerous
-        ref.current[props.oldOrNew].old = deepClone(coworkerExceptionsRef.current); //- this works
-        //coworkerExceptionsRef.current = deepClone(coworkerExceptionsRef.current);//- this doesn't
+        if (props.oldOrNew == 'new') {
+            ref.current[props.oldOrNew].old = deepClone(coworkerExceptionsRef.current); //- this works
+        } else {
+            ref.current[props.oldOrNew].old[props.coworkerUsername] = deepClone(
+                coworkerExceptionsRef.current
+            ); //- this works
+        }
+        // coworkerExceptionsRef.current = deepClone(coworkerExceptionsRef.current); //- this doesn't
 
         // console.log(coworkerExceptionsRef.current);
-        // console.log(ref.current[props.oldOrNew].old);
+        // console.log('handle close', ref.current[props.oldOrNew].old);
 
         // unmount pop-up
+        // forceRerender();
         props.hidePopUp();
+        console.log();
     };
 
     // console.log(ref.current);
+    // console.log(coworkerExceptionsRef.current);
 
     const listExceptions = () =>
         ref.current[props.oldOrNew].old ? (
@@ -129,23 +147,23 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
 
     const snippetsDataList = () => {
         return (
-            <datalis id="snippets">
-                <select
-                    className="bg-[#282828]"
-                    id="snippets"
-                    ref={(el) => {
-                        ref.current[props.oldOrNew].new.exceptionID = el;
-                    }}
-                >
-                    {props.snippets.map((snippet) => {
-                        return (
-                            <option key={snippet.id} value={snippet.id}>
-                                {snippet.title}
-                            </option>
-                        );
-                    })}
-                </select>
-            </datalis>
+            // <datalis id="snippets">
+            <select
+                className="bg-[#282828]"
+                id="snippets"
+                ref={(el) => {
+                    ref.current[props.oldOrNew].new.exceptionID = el;
+                }}
+            >
+                {props.snippets.map((snippet) => {
+                    return (
+                        <option key={snippet.id} value={snippet.id}>
+                            {snippet.title}
+                        </option>
+                    );
+                })}
+            </select>
+            // </datalis>
         );
     };
 

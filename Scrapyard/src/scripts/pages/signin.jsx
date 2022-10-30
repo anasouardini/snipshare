@@ -3,7 +3,6 @@ import {create} from '../tools/bridge';
 import {useNavigate, useOutletContext} from 'react-router';
 
 export default function Signin() {
-    console.log('sdklfjsdl');
     const navigate = useNavigate();
 
     const refs = {
@@ -26,7 +25,7 @@ export default function Signin() {
 
         if (response) {
             if (response.status == 200) {
-                console.log('redirect to home');
+                // console.log('redirect to home');
                 return navigate('/');
             }
             // console.log('success');

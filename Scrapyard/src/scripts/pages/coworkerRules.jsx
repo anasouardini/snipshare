@@ -32,29 +32,30 @@ export default function AddRules() {
         new: {coworkerUsername: {}},
         old: {},
     });
-
     console.log(exceptionAccessRefs.current);
 
     const {
         data: coworkersRulesData,
         status: coworkersRulesStatus,
         error: coworkersRulesErr,
+        refetch,
     } = useQuery('coworkers', () => {
         return readCoworkerRules();
     });
     if (coworkersRulesErr?.req?.status == 401) {
         return navigate('/login', {replace: true});
     }
-    // console.log(coworkersRulesData);
+    // console.log('query coworkers', coworkersRulesData);
 
     // get snippets list
     const {
         data: snippetsData,
         status: snippetsStatus,
         error: snippetsErr,
-    } = useQuery(['snippets'], () => {
+    } = useQuery(['snippetsMeta'], () => {
         return getSnippets(whoami, 'meta');
     });
+
     if (snippetsErr?.req?.status == 401) {
         return navigate('/login', {replace: true});
     }
@@ -69,7 +70,7 @@ export default function AddRules() {
         const response = await remove(`coworkerRules`, {props: {coworker: coworkerUsername}});
 
         if (response.status == 200) {
-            // updateRules();
+            refetch();
         }
     };
 
@@ -79,20 +80,22 @@ export default function AddRules() {
             acc[accessKey] = genericAccessRefs.current.new[accessKey].checked;
             return acc;
         }, {});
+
         const coworker = exceptionAccessRefs.current.new.coworkerUsername.value;
+
+        const Excpts = exceptionAccessRefs.current.new?.old;
+        const exceptions = popUpState.oldOrNew == 'new' ? Excpts ?? {} : Excpts[coworker] ?? {};
 
         //-I- check if the coworker exists, better to add coworkers by id and usernames like in discord
         if (coworkersRulesData.generic[coworker]) {
             return console.log('this coworker already exists');
         }
 
-        console.log('add new', Object.values(exceptionAccessRefs.current.new?.old)[0]);
+        // console.log('add new', exceptionAccessRefs.current.new?.old);
         const props = {
             coworker,
             generic,
-            exceptions: {
-                [coworker]: Object.values(exceptionAccessRefs.current.new?.old ?? {key: {}})[0],
-            },
+            exceptions,
         };
         //wait fot the changes before getting the new data
         const response = await create(`coworkerRules`, {props});
@@ -103,8 +106,7 @@ export default function AddRules() {
             exceptionAccessRefs.current.new.old = {};
             exceptionAccessRefs.current.new.new = {};
 
-            //re-render
-            // updateRules();
+            refetch();
         }
     };
 
@@ -128,8 +130,7 @@ export default function AddRules() {
         const response = await update(`coworkerRules`, {props});
 
         if (response.status == 200) {
-            //re-render
-            // updateRules();
+            refetch();
         }
     };
 
@@ -139,7 +140,7 @@ export default function AddRules() {
     };
 
     const hidePopUp = () => {
-        console.log(exceptionAccessRefs.current);
+        console.log('before hide popup', exceptionAccessRefs.current.new.old);
         setPopUpState({...popUpState, showExceptions: false});
     };
 

@@ -1,16 +1,14 @@
 import React, {useState} from 'react';
 import {useOutletContext} from 'react-router-dom';
-import {useContext} from 'react';
-import {useEffect} from 'react';
 
-import {remove} from '../tools/bridge';
-import {deepClone} from '../tools/deepClone';
+import {commonSnippetFields} from '../tools/snipStore';
+import {read, remove} from '../tools/bridge';
 import Form from './form/form';
 import Preview from './preview';
 
 export default function Snippet(props) {
     // const whoami = useContext(GlobalContext);
-    const {whoami} = useOutletContext();
+    const whoami = useOutletContext();
 
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,
@@ -19,47 +17,8 @@ export default function Snippet(props) {
 
     const [popUpState, setPopUpState] = useState({showForm: false, showPreview: false});
 
-    const fieldsClasses = {
-        inputs: 'border-b-2 border-b-lime-600 p-1 outline-lime-300 focus:outline-1 bg-[#181818]',
-    };
     const [formFieldsState, setFormFieldsState] = useState({
-        fields: [
-            {
-                type: 'input',
-                attr: {
-                    key: 'title',
-                    defaultValue: snipInfoState.snippet.title,
-                    name: 'title',
-                    type: 'text',
-                    className: fieldsClasses.inputs,
-                },
-            },
-            {
-                type: 'textarea',
-                attr: {
-                    key: 'descr',
-                    defaultValue: snipInfoState.snippet.descr,
-                    name: 'descr',
-                    type: 'textarea',
-                    className: fieldsClasses.inputs,
-                },
-            },
-            {
-                type: 'IsPrivate',
-                attr: {
-                    key: 'isPrivate',
-                    defaultChecked: snipInfoState.snippet.isPrivate,
-                    className: 'mr-2 accent-lime-600',
-                },
-            },
-            // {
-            //     type: 'Snippet',
-            //     attr: {
-            //         key: 'Snippet',
-            //         value: snipInfoState.snippet.snippet,
-            //     },
-            // },
-        ],
+        fields: [...commonSnippetFields],
     });
 
     const handlePreview = (e) => {
@@ -72,18 +31,27 @@ export default function Snippet(props) {
     const handleEdit = (e) => {
         e.stopPropagation();
         if (snipInfoState.snippet.access?.update) {
+            formFieldsState.fields.forEach((field) => {
+                if (field.attr.type == 'checkbox') {
+                    field.attr.defaultChecked = snipInfoState.snippet[field.attr.key];
+                } else {
+                    field.attr.defaultValue = snipInfoState.snippet[field.attr.key];
+                }
+            });
             setPopUpState({showForm: true, showPreview: false});
         }
     };
 
     const handleDelete = async (e) => {
         e.stopPropagation();
+        // console.log('sdfkljsdfj');
 
         if (snipInfoState.snippet.access?.delete) {
             // console.log(snipInfoState.snippet);
             const response = await remove(
                 snipInfoState.snippet.user + '/' + snipInfoState.snippet.id
             );
+            props.update();
             console.log(response.msg);
         }
     };
@@ -102,19 +70,12 @@ export default function Snippet(props) {
         }`,
     };
 
-    const update = () => {
-        (async () => {
-            const response = await updateSnippet(
-                snipInfoState.snippet.user,
-                snipInfoState.snippet.id
-            );
-            if (response) {
-                if (response == 'unauthorized') {
-                    return changeRoute('/signin');
-                }
-                setSnipInfoState({...snipInfoState, snippet: response});
-            }
-        })();
+    const updateEditedSnippet = async () => {
+        const response = await read(`${whoami}/${snipInfoState.snippet.id}`);
+        if (response?.status == 200) {
+            console.log('raeding new version');
+            setSnipInfoState({snippet: response.msg});
+        }
     };
     const hidePopUp = (popUp) => {
         let newState = {...popUpState};
@@ -187,10 +148,10 @@ export default function Snippet(props) {
                 <Form
                     action="edit"
                     fields={formFieldsState.fields}
-                    updateSnippetCB={update}
                     hidePopUp={hidePopUp}
                     snipId={snipInfoState.snippet.id}
                     snipUser={snipInfoState.snippet.user}
+                    updateEditedSnippet={updateEditedSnippet}
                 />
             ) : (
                 <></>

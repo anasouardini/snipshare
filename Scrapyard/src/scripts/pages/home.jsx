@@ -39,6 +39,7 @@ export default function Home() {
     }
 
     const {
+        refetch: snippetsRefetch,
         data: snippets,
         status: snippetsStatus,
         error: snippetsErr,
@@ -73,12 +74,19 @@ export default function Home() {
             newState.showPreview = false;
         }
 
+        //- this renders twice
         setPopUpState(newState);
+        snippetsRefetch();
     };
 
     const listSnippets = (snippets) => {
         return snippets.map((snippet) => (
-            <Snippet updateSnippetsCB={update} key={snippet.id} snippet={snippet} />
+            <Snippet
+                updateSnippetsCB={update}
+                key={snippet.id}
+                snippet={snippet}
+                update={snippetsRefetch}
+            />
         ));
     };
 
@@ -86,6 +94,7 @@ export default function Home() {
         e.stopPropagation();
         e.preventDefault();
         //mount form
+
         setPopUpState({...popUpState, showForm: true});
     };
 
@@ -102,20 +111,19 @@ export default function Home() {
                 {listSnippets(snippets.snippets)}
                 {/* add a snippet button */}
 
-                {/* <button
+                <button
                     onClick={handleCreate}
                     className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}
                 >
                     +
-                </button> */}
+                </button>
 
                 {popUpState.showForm ? (
                     <Form
                         action="create"
                         fields={formFieldsState.fields}
-                        updateSnippetsCB={update}
                         hidePopUp={hidePopUp}
-                        owner={userParam}
+                        owner={whoami}
                     />
                 ) : (
                     <></>

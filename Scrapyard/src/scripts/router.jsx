@@ -22,6 +22,7 @@ function App() {
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/addRules" element={<AddRules />} />
                             <Route path="/:user/snippets" element={<Snippets />} />
+                            <Route path="/blank" element={<p> blank page</p>} />
                             <Route path="*" element={<p>not found</p>} />
                         </Route>
                     </Routes>

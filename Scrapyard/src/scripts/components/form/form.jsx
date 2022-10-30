@@ -33,6 +33,7 @@ export default function Form(props) {
                     // console.log('fieldtype', refs[fieldKey].current.checked);
                     body.props[fieldKey] = refs[fieldKey].current.checked;
                 } else {
+                    // console.log(refs[fieldKey].current);
                     body.props[fieldKey] = refs[fieldKey].current.value;
                 }
             }
@@ -43,12 +44,14 @@ export default function Form(props) {
     };
 
     const handleEdit = async () => {
-        // return createRequestBody();
         const response = await update(props.snipUser + '/' + props.snipId, {
             user: props.snipUser,
             ...createRequestBody(),
         });
+        // createRequestBody();
         console.log(response);
+
+        props.updateEditedSnippet();
     };
 
     const handleCreate = async () => {
@@ -95,7 +98,7 @@ export default function Form(props) {
                 {listInputs(props.fields)}
 
                 <button
-                    className="w-[100px] bg-lime-600 leading-8 rounded-md text-white mx-auto"
+                    className="w-[100px] bg-lime-600 leading-8 rounded-md text-white mx-auto z-10"
                     onClick={handleSubmit}
                 >
                     {props.action == 'edit' ? 'Edit' : 'Create'}

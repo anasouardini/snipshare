@@ -25,14 +25,18 @@ export default function Snippets() {
     });
 
     const {
-        refetch,
+        refetch: snippetsRefetch,
         data: snippets,
         status,
         error,
     } = useQuery(['snippets'], () => {
-        console.log('sdfd');
         return getSnippets(userParam);
     });
+    useEffect(() => {
+        // console.log('refetching');
+        snippetsRefetch();
+    }, [userParam]);
+
     // console.log(snippets);
     if (error?.req?.status == 401) {
         return navigate('/login', {replace: true});
@@ -42,7 +46,7 @@ export default function Snippets() {
         fields: [...commonSnippetFields],
     });
 
-    // refetch();
+    // snippetsRefetch();
 
     // console.log(commonSnippetFields);
 
@@ -50,14 +54,24 @@ export default function Snippets() {
         e.stopPropagation();
         e.preventDefault();
         //mount form
+
         setPopUpState({...popUpState, showForm: true});
     };
 
-    console.log(snippets);
     const listSnippets = (snippets) => {
         // console.log(status);
         return snippets.map((snippet) => {
-            return <Snippet whoami={whoami} key={snippet.id} snippet={snippet} />;
+            return (
+                <Snippet
+                    whoami={whoami}
+                    key={snippet.id}
+                    snippet={snippet}
+                    update={() => {
+                        // console.log('hhh');
+                        snippetsRefetch();
+                    }}
+                />
+            );
         });
     };
 
@@ -69,9 +83,11 @@ export default function Snippets() {
             newState.showPreview = false;
         }
 
+        snippetsRefetch();
+
         setPopUpState(newState);
     };
-    console.log(snippets.genericAccess);
+    // console.log(snippets.genericAccess);
     return status == 'success' ? (
         <div>
             <h1 className="text-2xl font-bold my-11 text-center">{userParam}'s Snippets</h1>

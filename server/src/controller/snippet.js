@@ -1,40 +1,61 @@
 const Snippet = require('../model/snippet.js');
 const CoworkerRules = require('../model/coworkersRules.js');
 const User = require('../model/user.js');
+const Z = require('zod');
 
 const authAction = async (req, action) => {
     const owner = req.params.user;
     const usr = req.user.username;
     const snippetID = req.params.snippetID;
 
-    const defaultResponse = {status: 401, msg: `you are not authorized to ${action} this snippet`};
+    const defaultResponse = {
+        status: 401,
+        msg: `you are not authorized to ${action} this snippet, or there is no such snippet`,
+    };
 
     // if the user is the owner
-    if (owner == usr) return {status: 200};
+    if (owner == usr && action != 'read') return {status: 200};
+
+    let rulesResponse = null;
 
     if (action == 'read') {
         const snippetResponse = await Snippet.getSnippet(usr, snippetID);
-        if (snippetResponse[0].length && !snippetResponse[0][0].isPrivate) {
-            const {id, user, title, descr, snippet, isPrivate} = snippetResponse[0][0];
+        if (!snippetResponse[0].length) return defaultResponse;
 
-            return {
-                status: 200,
-                msg: {
-                    id,
-                    user,
-                    title,
-                    descr,
-                    snippet,
-                    isPrivate,
-                },
-            };
+        let access = {};
+
+        if (owner == usr) {
+            access = {read: true, update: true, delete: true};
+        } else {
+            rulesResponse = await CoworkerRules.readCoworkerRules(owner, usr);
+            if (rulesResponse[0].length) {
+                access =
+                    rulesResponse[0][0].exceptions?.[snippetID] ??
+                    rulesResponse[0][0].generic?.[action];
+            } else {
+                return defaultResponse;
+            }
         }
 
-        return defaultResponse;
+        const {id, user, title, descr, snippet, isPrivate} = snippetResponse[0][0];
+        return {
+            status: 200,
+            msg: {
+                id,
+                user,
+                title,
+                descr,
+                snippet,
+                isPrivate,
+                access,
+            },
+        };
     }
 
-    const rulesResponse = await CoworkerRules.readCoworkerRules(owner, usr);
-    // if the use is not a coworker
+    if (rulesResponse == null) {
+        rulesResponse = await CoworkerRules.readCoworkerRules(owner, usr);
+    }
+    // if the user is a coworker
     if (rulesResponse[0].length) {
         // console.log(rulesResponse[0][0].exceptions[snippetID]);
         if (
@@ -54,10 +75,23 @@ const read = async (req, res) => {
     // if has access authAction will return the snippet props
     // - I should probably separate the concerns,
     //- but I have to figure out how to do this using one db request
+    // console.log(result);
     res.status(result.status).json({msg: result.msg});
 };
 
 const edit = async (req, res) => {
+    // input validation
+    const schema = Z.object({
+        title: Z.string(),
+        descr: Z.string(),
+        snippet: Z.string(),
+        isPrivate: Z.boolean(),
+    });
+    if (schema.safeParse(req.body.props).error) {
+        // console.log(schema.safeParse(req.body.props).error);
+        return res.status(400).json({msg: 'request format is not valid'});
+    }
+
     const result = await authAction(req, 'update');
     if (result?.status == 401) {
         return res.status(result.status).json({msg: result.msg});
@@ -67,8 +101,8 @@ const edit = async (req, res) => {
     const response = await Snippet.editSnippet(owner, req.body.props, req.params.snippetID);
     // console.log(response);
     return response[0]?.affectedRows
-        ? {status: 200, msg: `snippet has been edited`}
-        : {status: 500, msg: `something happend while editting the snippet`};
+        ? res.json({status: 200, msg: `snippet has been edited`})
+        : res.json({status: 500, msg: `something happend while editting the snippet`});
 };
 
 const remove = async (req, res) => {
@@ -80,9 +114,10 @@ const remove = async (req, res) => {
     const owner = req.params.user;
     const snippetID = req.params.snippetID;
     const response = await Snippet.deleteSnippet(owner, snippetID);
+    // console.log('remove snippet', response);
     return response[0]?.affectedRows
-        ? {status: 200, msg: `snippet has been deleted`}
-        : {status: 500, msg: `something happend while deleting the snippet`};
+        ? res.json({status: 200, msg: `snippet has been deleted`})
+        : res.json({status: 500, msg: `something happend while deleting the snippet`});
 };
 
 // ____________________________
@@ -234,7 +269,18 @@ const readAll = async (req, res) => {
 };
 
 const create = async (req, res) => {
-    // console.log(req.body.props.coworkers);
+    // console.log(req.body.props);
+
+    // input validation
+    const schema = Z.object({
+        title: Z.string(),
+        descr: Z.string(),
+        snippet: Z.string(),
+        isPrivate: Z.boolean(),
+    });
+    if (schema.safeParse(req.body.props).error) {
+        return res.status(400).json({msg: 'request format is not valid'});
+    }
 
     if (req.user.username == req.params.user) {
         const response = await Snippet.createSnippet({user: req.user.username, ...req.body.props});

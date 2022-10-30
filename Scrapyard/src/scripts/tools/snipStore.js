@@ -30,6 +30,7 @@ const readCoworkerRules = async () => {
 };
 
 const commonSnippetFields = [
+    //- the attr.key is used as Ref and snippet prop
     {
         type: 'input',
         attr: {

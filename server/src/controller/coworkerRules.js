@@ -1,27 +1,28 @@
 const CoworkerRules = require('../model/coworkersRules');
 const User = require('../model/user');
+const Z = require('zod');
 
 const readAll = async (req, res) => {
     const owner = req.user.username;
 
     const response = await CoworkerRules.readAllRules({owner});
-    const coworkers = response[0];
 
     // console.log(response[0][0]);
     let rules = {generic: {}, exceptions: {}};
     if (response[0].length) {
         rules = {
-            generic: coworkers.reduce((acc, coworker) => {
+            generic: response[0].reduce((acc, coworker) => {
                 acc[coworker.coworker] = coworker.generic;
                 return acc;
             }, {}),
-            exceptions: coworkers.reduce((acc, coworker) => {
+            exceptions: response[0].reduce((acc, coworker) => {
                 acc[coworker.coworker] = coworker.exceptions;
                 return acc;
             }, {}),
         };
     }
 
+    // console.log('readall coworkersrules', rules);
     res.json({msg: rules});
 };
 
@@ -43,26 +44,24 @@ const readCoworker = async (req, res) => {
 };
 
 const validateRules = (req, res, next) => {
-    const valid =
-        Object.keys(req.body.props.generic).length == 4 &&
-        req.body.props.generic.hasOwnProperty('create') &&
-        req.body.props.generic.hasOwnProperty('read') &&
-        req.body.props.generic.hasOwnProperty('update') &&
-        req.body.props.generic.hasOwnProperty('delete') &&
-        Object.keys(req.body.props.exceptions).every(
-            (exception) =>
-                Object.keys(req.body.props.exceptions[exception]).length == 3 &&
-                req.body.props.exceptions[exception].hasOwnProperty('read') &&
-                req.body.props.exceptions[exception].hasOwnProperty('update') &&
-                req.body.props.exceptions[exception].hasOwnProperty('delete') &&
-                true
-        ) &&
-        true;
+    // console.log('props coworkerrules', req.body.props);
+    const accessObjSchema = Z.object({
+        read: Z.boolean(),
+        update: Z.boolean(),
+        delete: Z.boolean(),
+    });
+    const genericAccessObjSchema = accessObjSchema.merge(Z.object({create: Z.boolean()}));
 
-    console.log(req.body.props.generic);
-    console.log(req.body.props.exceptions);
+    const schema = Z.object({
+        coworker: Z.string(),
+        generic: genericAccessObjSchema,
+        exceptions: Z.object({}).catchall(accessObjSchema),
+    });
+    // console.log(req.body.props.generic);
+    // console.log(req.body.props.exceptions);
 
-    if (!valid) {
+    if (schema.safeParse(req.body.props)?.error) {
+        // console.log(schema.safeParse(req.body.props)?.error);
         return res.status(400).json({msg: 'the access is not formated correctly'});
     }
 
