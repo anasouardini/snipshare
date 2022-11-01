@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const controller = require('../controller');
 // const passport = require('../passport/local');
+const url = require('url');
 
 const gotoLogin = (req, res, next) => {
     // console.log(req.user);
@@ -26,6 +27,7 @@ const gotoHome = (req, res, next) => {
 router.post('/restart', gotoLogin, controller.init.restart);
 // auth
 //! mods and users login routes should be separates
+router.get('/api/auth/google', controller.signin.signinOAuth);
 router.post('/signin', gotoHome, controller.signin.signinUser, controller.signin.signinMod);
 router.post('/signup', gotoHome, controller.signup);
 router.post('/logout', controller.logout);

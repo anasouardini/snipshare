@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
-import {create} from '../tools/bridge';
-import {useNavigate, useOutletContext} from 'react-router';
+import {create, read} from '../tools/bridge';
+import {useNavigate} from 'react-router';
+import {useEffect} from 'react';
 
 export default function Signin() {
     const navigate = useNavigate();
@@ -10,7 +11,24 @@ export default function Signin() {
         password: useRef('password'),
         keepSignIn: useRef('keepSignIn'),
     };
-    1;
+
+    useEffect(() => {
+        const fragId = window.location.hash;
+        if (fragId != '') {
+            const idToken = fragId.split('&')[0].split('=')[1];
+            // console.log('idToken', idToken);
+
+            read(`api/auth/google?idToken=${idToken}`);
+        }
+        navigate('/login', {replace: true});
+    }, []);
+
+    const handleOAuth = (e) => {
+        e.preventDefault();
+
+        window.open('http://127.0.0.1:2000/api/auth/google', '_self');
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         getUser(); //asyn
@@ -94,6 +112,9 @@ export default function Signin() {
                         Log In
                     </button>
                 </label>
+                <button className={classes.submit} onClick={handleOAuth}>
+                    Oauth
+                </button>
             </form>
         </div>
     );

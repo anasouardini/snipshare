@@ -61,4 +61,33 @@ const signinUser = async (req, res, next) => {
     next();
 };
 
-module.exports = {signinUser, signinMod};
+const signinOAuth = (req, res) => {
+    if (req.query?.idToken) {
+        console.log('got the JWT');
+        return res.json({msg: 'processing the the user profile'});
+    }
+
+    console.log('redirecting to the consent');
+
+    const toUrlEncoded = (obj) =>
+        Object.keys(obj)
+            .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
+            .join('&');
+
+    const consentData = {
+        endPoint: 'https://accounts.google.com/o/oauth2/v2/auth',
+        query: {
+            client_id: '161581761691-3tjdu1rca5q35h60qcgrd7eb0tb2ulmp.apps.googleusercontent.com',
+            response_type: 'id_token', //implicit flow (openid connect)
+            redirect_uri: 'http://127.0.0.1:3000/login',
+            scope: 'openid profile email', // OIDC => email + profile
+
+            nonce: 'akonamatata',
+            // state: 'I need a unique session token',
+        },
+    };
+
+    res.redirect(`${consentData.endPoint}?${toUrlEncoded(consentData.query)}`);
+};
+
+module.exports = {signinUser, signinMod, signinOAuth};
