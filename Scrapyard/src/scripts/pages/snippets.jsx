@@ -32,6 +32,7 @@ export default function Snippets() {
     } = useQuery(['snippets'], () => {
         return getSnippets(userParam);
     });
+
     useEffect(() => {
         // console.log('refetching');
         snippetsRefetch();
@@ -42,8 +43,8 @@ export default function Snippets() {
         return navigate('/login', {replace: true});
     }
 
-    const [formFieldsState, _] = useState({
-        fields: [...commonSnippetFields],
+    const [formFieldsState] = useState({
+        fields: Object.values(structuredClone({commonSnippetFields}))[0],
     });
 
     // snippetsRefetch();

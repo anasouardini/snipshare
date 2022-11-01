@@ -5,11 +5,13 @@ import {useRef} from 'react';
 
 const CodeSnippet = forwardRef((props, ref) => {
     // console.log(props);
-    const linesNumber = useRef(0);
     const lineHeight = 19;
-    linesNumber.current =
-        Math.min(props.defaultValue.split(/\r\n|\r|\n/).length * lineHeight, 10 * lineHeight) +
-        lineHeight; //last line (+lineHeight) to remove the scroll bar
+    const linesNumber = useRef(5 * lineHeight);
+    if (props?.defaultValue) {
+        linesNumber.current =
+            Math.min(props.defaultValue.split(/\r\n|\r|\n/).length * lineHeight, 10 * lineHeight) +
+            lineHeight; //last line (+lineHeight) to remove the scroll bar
+    }
 
     const handleOnMount = (editor, monaco) => {
         if (props?.readOnly) {

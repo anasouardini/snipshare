@@ -2,6 +2,74 @@ const CoworkerRules = require('../model/coworkersRules');
 const User = require('../model/user');
 const Z = require('zod');
 
+// ================ separating these so I can use then outside of this model
+
+const readCoworkerRule = async (owner, coworker) => {
+    const rulesResponse = await CoworkerRules.readCoworkerRules(owner, coworker);
+    if (!rulesResponse[0].length) {
+        return {msg: 'there is no such coworker', status: 400};
+    }
+
+    return {
+        status: 200,
+        msg: {
+            generic: rulesResponse[0][0].generic,
+            exceptions: rulesResponse[0][0].exceptions,
+        },
+    };
+};
+
+const updateCoworker = async (owner, props) => {
+    const response = await CoworkerRules.update(owner, props);
+    if (!response?.[0]?.affectedRows) {
+        return {status: 500, msg: 'something bad happened'};
+    }
+
+    return {status: 200, msg: 'coworker updated successfully'};
+};
+
+//- I probably should spread this back where It is used
+const userExists = async (user) => {
+    const userResponse = await User.getUser(user);
+
+    if (!userResponse) {
+        return {status: 500, msg: 'something bad happened'};
+    }
+
+    if (!userResponse[0].length) {
+        return {status: 400, msg: 'this username does not exist'};
+    }
+
+    return {status: 200, msg: userResponse[0][0]};
+};
+
+const usrIsCoworker = async (owner, coworker) => {
+    const coworkerResponse = await CoworkerRules.readCoworkerRules(owner, coworker);
+
+    if (!coworkerResponse) {
+        return {status: 500, msg: 'something bad happened'};
+    }
+
+    if (coworkerResponse[0].length) {
+        return true;
+    }
+
+    return false;
+};
+
+const createCoworker = async (owner, props) => {
+    const response = await CoworkerRules.create(owner, props);
+    // console.log(response);
+
+    if (!response?.[0]?.affectedRows) {
+        return {status: 500, msg: 'could not add a coworker rule, try again later'};
+    }
+
+    return {status: 200, msg: 'coworker has been created successfully'};
+};
+
+// ========================
+
 const readAll = async (req, res) => {
     const owner = req.user.username;
 
@@ -30,17 +98,8 @@ const readCoworker = async (req, res) => {
     const owner = req.user.username;
     const coworker = req.query.params.coworker;
 
-    const response = await CoworkerRules.readCoworkerRules(owner, coworker);
-
-    let rules = [];
-    rules = {
-        generic: rulesResponse[0][0].generic,
-        exceptions: rulesResponse[0][0].exceptions,
-    };
-
-    // console.log(response);
-
-    res.json({msg: rules});
+    const result = await readCoworkerRule(owner, coworker);
+    res.status(result.status).json({msg: result.msg});
 };
 
 const validateRules = (req, res, next) => {
@@ -72,57 +131,32 @@ const create = async (req, res) => {
     const owner = req.user.username;
     // console.log(req.body.props);
 
-    //-I- check if the coworker exists, better to add coworkers by id and usernames like in discord
-    const userResponse = await User.getUser(req.body.props.coworker);
-
-    if (!userResponse) {
-        return res.sedStatus(500);
+    //-I- check if the potential coworker exists, better to add coworkers by id and usernames like in discord
+    const userExistsResult = await userExists(req.body.props.coworker);
+    if (userExistsResult.status != 200) {
+        return res.status(userExistsResult.status).json({msg: userExistsResult.msg});
     }
 
-    if (!userResponse[0].length) {
-        return res.status(400).json({msg: 'this username does not exist'});
+    //-II- check if the user is already a coworker
+    const usrIsCoworkerResult = await usrIsCoworker(req.body.props.coworker);
+    if (usrIsCoworkerResult?.status == 500) {
+        return res.status(usrIsCoworkerResult.status).json({msg: usrIsCoworkerResult.msg});
     }
 
-    //II- check if the coworker is already there
-    const coworkerResponse = await CoworkerRules.readCoworkerRules(owner, req.body.props.coworker);
-
-    if (!coworkerResponse) {
-        return res.sedStatus(500);
+    if (usrIsCoworkerResult) {
+        return res.status(400).json({msg: 'coworker already exists'});
     }
 
-    if (coworkerResponse[0].length) {
-        return res.status(400).json({msg: 'this coworker already exists'});
-    }
-
-    // create the coworker rule
-    const response = await CoworkerRules.create(owner, req.body.props);
-    // console.log(response);
-
-    if (!response) {
-        return res.status(500).json({msg: 'could not add a coworker rule, try again later'});
-    }
-
-    if (!response[0]?.affectedRows) {
-        return res.status(500).json({msg: 'could not add a coworker rule, try again later'});
-    }
-
-    res.json({msg: 'a coworker rule has been created successfully'});
+    //-III- ceating the coworker rule
+    const createCoworkerResult = await createCoworker(owner, req.body.props);
+    return res.status(createCoworkerResult.status).json({msg: createCoworkerResult.msg});
 };
 
 const update = async (req, res) => {
     const owner = req.user.username;
 
-    const response = await CoworkerRules.update(owner, req.body.props);
-
-    if (!response) {
-        return res.sedStatus(500);
-    }
-
-    if (!response[0]?.affectedRows) {
-        return res.status(400).json({msg: 'could not update a coworker rule'});
-    }
-
-    res.json({msg: 'a coworker rule has been updated successfully'});
+    const updateCoworkerResult = await updateCoworker(owner, req.body.props);
+    res.status(updateCoworkerResult.status).json({msg: updateCoworkerResult.msg});
 };
 
 const remove = async (req, res) => {
@@ -141,4 +175,11 @@ const remove = async (req, res) => {
     res.json({msg: 'a coworker rule has been deleted successfully'});
 };
 
-module.exports = {readAll, readCoworker, validateRules, create, update, remove};
+module.exports = {
+    readAll,
+    readCoworker,
+    validateRules,
+    create,
+    update,
+    remove,
+};

@@ -88,7 +88,7 @@ export default function Snippet(props) {
     };
 
     const updateEditedSnippet = async () => {
-        const response = await read(`${whoami}/${snipInfoState.snippet.id}`);
+        const response = await read(`${snipInfoState.snippet.user}/${snipInfoState.snippet.id}`);
         if (response?.status == 200) {
             console.log('reading new version');
 
@@ -116,7 +116,7 @@ export default function Snippet(props) {
     // console.log(Object.values(formFieldsState.current.fields)[2].attr);
     return (
         <>
-            <div data-key={snipInfoState.snippet.id} draggable="false" className={`bg-[#292929] `}>
+            <div data-key={snipInfoState.snippet.id} className={`bg-[#292929] `}>
                 <div className={`snippet flex flex-col max-w-[600px]  p-8`}>
                     {/* Owner and Author and Privacy*/}
                     <div className="flex justify-between mb-4">

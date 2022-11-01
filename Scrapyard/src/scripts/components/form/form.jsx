@@ -15,7 +15,7 @@ export default function Form(props) {
     };
 
     const handleClose = (e) => {
-        e.stopPropagation();
+        if (e) e.stopPropagation();
         // unmount form
         props.hidePopUp('form');
     };
@@ -58,40 +58,49 @@ export default function Form(props) {
     };
 
     const handleCreate = async () => {
-        console.log(props.owner);
+        // console.log(props.owner);
         const response = await create(`${props.owner}/snippet`, createRequestBody());
         console.log(response);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.stopPropagation();
         e.preventDefault();
 
-        props.hidePopUp('form');
+        handleClose(); // unmount form
 
         if (props.action == 'edit') {
             return handleEdit();
         }
-        handleCreate();
+
+        await handleCreate();
+
+        handleClose(); //- hacky solution for refetching after form action
     };
 
     // console.log(Object.values(props.fields)[2].attr);
     // listing form fields
     const listInputs = (fields = []) => {
+        // console.log(fields);
         return fields.map((input) => {
             const Component = fieldsMap(input.type);
             if (input.attr.key == 'descr') {
-                const descrHeight = input.attr.defaultValue.split(/\r\n|\r|\n/).length * 42;
+                let descrHeight = 10 * 42;
+                if (input.attr?.defaultValue) {
+                    descrHeight = input.attr.defaultValue.split(/\r\n|\r|\n/).length * 42;
+                }
                 // console.log(descrHeight);
                 return (
                     <Component
                         ref={refs[input?.attr?.key]}
+                        key={input.attr.key}
                         {...input.attr}
                         style={{height: `min(${descrHeight}px, 100px)`}}
                     />
                 );
             }
-            return <Component ref={refs[input?.attr?.key]} {...input.attr} />;
+
+            return <Component ref={refs[input?.attr?.key]} {...input.attr} key={input.attr.key} />;
         });
     };
 

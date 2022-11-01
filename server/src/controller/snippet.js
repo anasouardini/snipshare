@@ -2,6 +2,7 @@ const Snippet = require('../model/snippet.js');
 const CoworkerRules = require('../model/coworkersRules.js');
 const User = require('../model/user.js');
 const Z = require('zod');
+const {v4: uuid} = require('uuid');
 
 const authAction = async (req, action) => {
     const owner = req.params.user;
@@ -19,7 +20,7 @@ const authAction = async (req, action) => {
     let rulesResponse = null;
 
     if (action == 'read') {
-        const snippetResponse = await Snippet.getSnippet(usr, snippetID);
+        const snippetResponse = await Snippet.getSnippet(owner, snippetID);
         if (!snippetResponse[0].length) return defaultResponse;
 
         let access = {};
@@ -28,12 +29,21 @@ const authAction = async (req, action) => {
             access = {read: true, update: true, delete: true};
         } else {
             rulesResponse = await CoworkerRules.readCoworkerRules(owner, usr);
-            if (rulesResponse[0].length) {
+
+            if (snippetResponse[0][0].isPrivate) {
+                // console.log(rulesResponse[0]?.[0]?.exceptions);
+                let hasReadAccess =
+                    rulesResponse[0]?.[0]?.exceptions?.[snippetID]?.[action] ||
+                    rulesResponse[0]?.[0]?.generic?.[action] ||
+                    false;
+
+                if (!hasReadAccess) return defaultResponse;
+
                 access =
-                    rulesResponse[0][0].exceptions?.[snippetID] ??
-                    rulesResponse[0][0].generic?.[action];
+                    rulesResponse[0][0].exceptions?.[snippetID] || rulesResponse[0][0]?.generic;
             } else {
-                return defaultResponse;
+                access = rulesResponse[0]?.[0]?.exceptions?.[snippetID] ||
+                    rulesResponse[0]?.[0]?.generic || {read: true, update: false, delete: false};
             }
         }
 
@@ -112,13 +122,34 @@ const remove = async (req, res) => {
         return res.status(result.status).json({msg: result.msg});
     }
 
+    const user = req.user.username;
     const owner = req.params.user;
     const snippetID = req.params.snippetID;
     const response = await Snippet.deleteSnippet(owner, snippetID);
     // console.log('remove snippet', response);
-    return response[0]?.affectedRows
-        ? res.json({status: 200, msg: `snippet has been deleted`})
-        : res.json({status: 500, msg: `something happend while deleting the snippet`});
+    if (response[0]?.affectedRows) {
+        // read coworker rules
+        const rulesResponse = await CoworkerRules.readCoworkerRules(owner, user);
+        // console.log(owner);
+        // if the use is not a coworker
+        // console.log(rulesResponse);
+        if (rulesResponse[0].length) {
+            const rules = rulesResponse[0][0];
+            rules.coworker = user;
+            // update rules
+            delete rules.exceptions[snippetID];
+            const updateCoworkerRuleResult = await CoworkerRules.update(owner, rules);
+            if (updateCoworkerRuleResult?.[0].length) {
+                return res.status(500).json({
+                    msg: 'snippet was deleted, but you do not have access to it explicitly',
+                });
+            }
+        }
+
+        return res.json({msg: `snippet has been deleted successfully`});
+    }
+
+    return res.status(500).json({msg: `something happend while deleting the snippet`});
 };
 
 // ____________________________
@@ -272,7 +303,8 @@ const readAll = async (req, res) => {
 };
 
 const create = async (req, res) => {
-    // console.log(req.body.props);
+    const owner = req.params.user;
+    const coworker = req.user.username;
 
     // input validation
     const schema = Z.object({
@@ -285,33 +317,53 @@ const create = async (req, res) => {
         return res.status(400).json({msg: 'request format is not valid'});
     }
 
-    let authorized = false;
-    if (req.user.username == req.params.user) {
-        authorized = true;
+    let rulesResponse = undefined;
+    let authorized = 0;
+    if (coworker == owner) {
+        authorized = 1;
     } else {
-        // console.log(req.params.user, req.user.username);
-        const rulesResponse = await CoworkerRules.readCoworkerRules(
-            req.params.user,
-            req.user.username
-        );
-        // console.log(req.params.user);
+        // console.log(owner, coworker);
+        rulesResponse = await CoworkerRules.readCoworkerRules(owner, coworker);
+        // console.log(owner);
         // if the use is not a coworker
         if (rulesResponse[0].length) {
             // check if user has the creation access
             if (rulesResponse[0][0].generic?.create) {
-                authorized = true;
+                authorized = 2;
             }
         }
     }
 
     if (authorized) {
+        const snippetRandomID = uuid();
+        // console.log('uuid', snippetRandomID);
         const response = await Snippet.createSnippet({
-            owner: req.params.user,
+            id: snippetRandomID,
+            owner: owner,
             ...req.body.props,
-            author: req.user.username,
+            author: coworker,
         });
         // console.log(response);
         if (response && response[0]?.affectedRows) {
+            // if the author is a coworker
+            // giving the coworker access to the snippet they've created
+            if (authorized == 2) {
+                // read coworker rules
+                const rules = rulesResponse[0][0];
+                rules.coworker = coworker;
+                // update rules
+                rules.exceptions[snippetRandomID] = {
+                    read: true,
+                    update: true,
+                    delete: true,
+                };
+                const updateCoworkerRuleResult = await CoworkerRules.update(owner, rules);
+                if (updateCoworkerRuleResult?.[0].length) {
+                    return res.status(500).json({
+                        msg: 'snippet was created, but you do not have access to it explicitly',
+                    });
+                }
+            }
             return res.json({msg: 'snippet created successfully'});
         }
 

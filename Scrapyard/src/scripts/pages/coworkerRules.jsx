@@ -4,7 +4,6 @@ import {useState} from 'react';
 import {useRef} from 'react';
 import ExceptionsPopUp from '../components/exceptionsPopUp';
 import AccessControl from '../components/accessControl';
-import {useEffect} from 'react';
 import {readCoworkerRules, getSnippets} from '../tools/snipStore';
 
 import {create, remove, update} from '../tools/bridge';
@@ -101,7 +100,7 @@ export default function AddRules() {
         const coworker = exceptionAccessRefs.current.new.coworkerUsername.value;
 
         const Excpts = exceptionAccessRefs.current.new?.old;
-        const exceptions = popUpState.oldOrNew == 'new' ? Excpts ?? {} : Excpts[coworker] ?? {};
+        const exceptions = popUpState.oldOrNew == 'new' ? Excpts ?? {} : Excpts?.[coworker] ?? {};
 
         //-I- check if the coworker exists, better to add coworkers by id and usernames like in discord
         if (coworkersRulesData.generic[coworker]) {
