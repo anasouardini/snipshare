@@ -20,12 +20,14 @@ app.use(express.urlencoded({extended: true}));
 
 //check auth
 app.use(async (req, res, next) => {
+    console.log('sdlfkj');
     // console.log('res.cookie', res?.cookie);
     const token = req?.cookies?.[process.env.COOKIENAME];
     if (token) {
-        // console.log(token);
+        console.log(token);
         try {
             const usr = jwt.verify(token, await fs.readFile(process.cwd() + '/rsa/pub.pem'));
+
             req.user = usr;
         } catch (e) {
             // console.log(e);

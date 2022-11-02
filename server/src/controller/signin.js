@@ -61,18 +61,39 @@ const signinUser = async (req, res, next) => {
     next();
 };
 
-const signinOAuth = (req, res) => {
+const signinOAuth = async (req, res) => {
     if (req.query?.idToken) {
-        console.log('got the JWT');
-        return res.json({msg: 'processing the the user profile'});
+        const {email, email_verified} = jwt.decode(req.query?.idToken);
+
+        // UPSERTING EMAIL AS THE USERNAME
+        const userResponse = await User.getUser(email);
+        if (!userResponse)
+            return res.status(500).json({msg: 'something bad happened while authenticating you'});
+        if (!userResponse[0].length) {
+            console.log('user does not exist');
+            // creating the user
+            const createUserResponse = await User.createUser(email, 'OAuth2.0 user');
+            if (!createUserResponse[0]?.affectedRows) {
+                return res.status(500).json({msg: 'something went bad while signing up'});
+            }
+        }
+
+        const options = {algorithm: 'RS256', expiresIn: '24h'};
+        const privateKey = await fs.readFile(process.cwd() + '/rsa/priv.pem');
+        const body = {username: email};
+        const token = jwt.sign(body, privateKey, options);
+
+        console.log('setting the cookie');
+        res.cookie(process.env.COOKIENAME, token, {httpOnly: true});
+
+        return res.json({msg: 'sign in successful with google OAuth2.0'});
     }
 
-    console.log('redirecting to the consent');
-
-    const toUrlEncoded = (obj) =>
-        Object.keys(obj)
-            .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
-            .join('&');
+    // NO ID TOKEN, REDIRECTING TO THE CONSENT SCREEN
+    // const toUrlEncoded = (obj) =>
+    //     Object.keys(obj)
+    //         .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
+    //         .join('&');
 
     const consentData = {
         endPoint: 'https://accounts.google.com/o/oauth2/v2/auth',
@@ -87,7 +108,7 @@ const signinOAuth = (req, res) => {
         },
     };
 
-    res.redirect(`${consentData.endPoint}?${toUrlEncoded(consentData.query)}`);
+    res.redirect(`${consentData.endPoint}?${new URLSearchParams(consentData.query)}`);
 };
 
 module.exports = {signinUser, signinMod, signinOAuth};

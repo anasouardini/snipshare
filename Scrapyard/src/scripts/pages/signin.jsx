@@ -12,15 +12,21 @@ export default function Signin() {
         keepSignIn: useRef('keepSignIn'),
     };
 
-    useEffect(() => {
+    const sendIdToken = async () => {
         const fragId = window.location.hash;
         if (fragId != '') {
             const idToken = fragId.split('&')[0].split('=')[1];
             // console.log('idToken', idToken);
 
-            read(`api/auth/google?idToken=${idToken}`);
+            const response = await read(`api/auth/google?idToken=${idToken}`);
+            if (response.status == 200) {
+                navigate('/', {replace: true});
+            }
         }
-        navigate('/login', {replace: true});
+    };
+
+    useEffect(() => {
+        sendIdToken();
     }, []);
 
     const handleOAuth = (e) => {
