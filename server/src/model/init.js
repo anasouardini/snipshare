@@ -29,7 +29,8 @@ const queries = {
         descr varchar(1000) NOT NULL,
         snippet varchar(5000) NOT NULL,
         isPrivate tinyint NOT NULL,
-        author varchar(100) NOT NULL
+        author varchar(100) NOT NULL,
+        INDEX title_index (title)
     );`,
 
     insertMods: `

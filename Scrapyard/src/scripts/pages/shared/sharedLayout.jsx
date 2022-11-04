@@ -28,7 +28,7 @@ export default function SharedLayout(props) {
 
     const classes = {
         navLink:
-            'cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200',
+            'cursor-pointer pb-2 border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200',
     };
 
     if (whoami.msg && whoami?.status == 200 && location.pathname.includes('login')) {
@@ -54,7 +54,7 @@ export default function SharedLayout(props) {
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink className={classes.navLink} to={`${whoami.msg}/snippets`}>
+                        <NavLink className={classes.navLink} to={`${whoami.msg}`}>
                             Me
                         </NavLink>
                     </li>

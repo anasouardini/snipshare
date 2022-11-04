@@ -12,7 +12,7 @@ const AccessControl = forwardRef((props, ref) => {
             // console.log(accessObj);
             setAccessState(accessObj);
         } else {
-            setAccessState({read: false, read: false, update: false, delete: false});
+            setAccessState({read: false, update: false, delete: false});
         }
     }, []);
 

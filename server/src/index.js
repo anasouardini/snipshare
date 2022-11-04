@@ -20,7 +20,6 @@ app.use(express.urlencoded({extended: true}));
 
 //check auth
 app.use(async (req, res, next) => {
-    console.log('sdlfkj');
     // console.log('res.cookie', res?.cookie);
     const token = req?.cookies?.[process.env.COOKIENAME];
     if (token) {

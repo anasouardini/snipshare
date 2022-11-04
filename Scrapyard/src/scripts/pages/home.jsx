@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useQuery} from 'react-query';
 import {useNavigate, useOutletContext, useParams} from 'react-router';
 import Form from '../components/form/form';
-import Snippet from '../components/snippet';
+import Snippets from '../components/snippets';
 
 import {commonSnippetFields, getSnippets, getUsers} from '../tools/snipStore';
 
@@ -36,19 +36,6 @@ export default function Home() {
         return navigate('/login', {replace: true});
     }
 
-    const {
-        refetch: snippetsRefetch,
-        data: snippets,
-        status: snippetsStatus,
-        error: snippetsErr,
-    } = useQuery(['snippets'], () => {
-        return getSnippets();
-    });
-    if (snippetsErr?.req?.status == 401) {
-        return navigate('/login', {replace: true});
-    }
-    console.log(snippets);
-
     const listUsers = () =>
         users.map((user) => (
             <li
@@ -62,8 +49,6 @@ export default function Home() {
             </li>
         ));
 
-    const update = async () => {};
-
     const hidePopUp = (popUp) => {
         let newState = {...popUpState};
         if (popUp == 'form') {
@@ -74,39 +59,34 @@ export default function Home() {
 
         //- this renders twice
         setPopUpState(newState);
-        snippetsRefetch();
-    };
-
-    const listSnippets = (snippets) => {
-        return snippets.map((snippet) => (
-            <Snippet
-                updateSnippetsCB={update}
-                key={snippet.id}
-                snippet={snippet}
-                update={snippetsRefetch}
-            />
-        ));
     };
 
     const handleCreate = (e) => {
         e.stopPropagation();
         e.preventDefault();
-        //mount form
 
         setPopUpState({...popUpState, showForm: true});
     };
 
     // console.log(users, getUsersStatus, getUsersErr);
-    return snippets && users ? (
-        <div>
-            <h2 className="text-center my-[3rem] text-2xl font-bold">
-                Check what others are doning
-            </h2>
-            <ul className="flex justify-center">{listUsers()}</ul>
+    return users ? (
+        <div className='mt-12'>
+            {/*
+<h2 className="text-center my-[3rem] text-2xl font-bold">
+Check what others are doing
+</h2>
+<ul className="flex justify-center">{listUsers()}</ul>
+<h2 className="text-center mt-[5rem] mb-[3rem] text-2xl font-bold">Other Snippets</h2>
+            */}
 
-            <h2 className="text-center mt-[5rem] mb-[3rem] text-2xl font-bold">Other Snippets</h2>
             <div className="flex flex-col mx-auto items-center justify-center gap-7">
-                {listSnippets(snippets.snippets)}
+                <div className='mb-12 w-full flex justify-center'>
+          <label>
+            <input type='text' placeholder='find your sippet' 
+              className='w-[400px] px-3 py-2 border-[1px] border-primary rounded-md'/>
+          </label>
+        </div>
+                <Snippets />
                 {/* add a snippet button */}
 
                 <button

@@ -71,6 +71,7 @@ export default function Signin() {
         checkbox: 'w-xl mr-3',
         label: 'max-w-[300px] mx-auto',
         submit: 'w-full border-b-2 border-b-primary mt-4 pb-2',
+        oauth: 'w-[200px] border-2 border-primary mt-4 p-2'
     };
 
     return (
@@ -118,9 +119,11 @@ export default function Signin() {
                         Log In
                     </button>
                 </label>
-                <button className={classes.submit} onClick={handleOAuth}>
-                    Oauth
-                </button>
+                <label className={classes.label}>
+                  <button className={classes.oauth} onClick={handleOAuth}>
+                      Login With Google
+                  </button>
+                </label> 
             </form>
         </div>
     );

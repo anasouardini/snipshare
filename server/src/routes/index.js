@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const controller = require('../controller');
 // const passport = require('../passport/local');
-const url = require('url');
 
 const gotoLogin = (req, res, next) => {
     // console.log(req.user);
@@ -32,13 +31,13 @@ router.post('/signin', gotoHome, controller.signin.signinUser, controller.signin
 router.post('/signup', gotoHome, controller.signup);
 router.post('/logout', controller.logout);
 router.get('/whoami', controller.whoami);
-// snippets
 router.get('/users', gotoLogin, controller.user.readAll);
-router.get('/snippets', gotoLogin, controller.snippet.readMiddleware, controller.snippet.readAll);
+// snippets
+router.get('/snippets/search',  controller.snippet.searchAll);
+router.get('/snippets', gotoLogin,  controller.snippet.readAll);
 router.get(
     '/:user/snippets',
     gotoLogin,
-    controller.snippet.readMiddleware,
     controller.snippet.readUserAll
 );
 
