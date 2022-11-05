@@ -90,10 +90,6 @@ const signinOAuth = async (req, res) => {
     }
 
     // NO ID TOKEN, REDIRECTING TO THE CONSENT SCREEN
-    // const toUrlEncoded = (obj) =>
-    //     Object.keys(obj)
-    //         .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
-    //         .join('&');
 
     const consentData = {
         endPoint: 'https://accounts.google.com/o/oauth2/v2/auth',

@@ -12,12 +12,12 @@ export default function Home() {
         showPreview: false,
     });
 
-    const [formFieldsState, setFormFieldsState] = useState({
+    const [formFieldsState, _] = useState({
         fields: [...commonSnippetFields],
     });
 
-    const navigate = useNavigate();
-    const {user: userParam} = useParams();
+    // const navigate = useNavigate();
+    // const {user: userParam} = useParams();
 
     const whoami = useOutletContext();
     // if (whoami == '' || whoami == 'unauthorized') {
@@ -25,29 +25,17 @@ export default function Home() {
     //     return navigate('/login', {replace: true});
     // }
 
-    const {
-        data: users,
-        status: getUsersStatus,
-        error: getUsersErr,
-    } = useQuery(['users'], () => {
-        return getUsers();
-    });
-    if (getUsersErr?.req?.status == 401) {
-        return navigate('/login', {replace: true});
-    }
-
-    const listUsers = () =>
-        users.map((user) => (
-            <li
-                className="ml-4 py-1 px-3 border-b-[2px] border-b-primary cursor-pointer"
-                onClick={(e) => {
-                    e.stopPropagation(), navigate(`/${user}/snippets`);
-                }}
-                key={user}
-            >
-                {user}
-            </li>
-        ));
+    // const {
+    //     data: users,
+    //     status: getUsersStatus,
+    //     error: getUsersErr,
+    // } = useQuery(['users'], () => {
+    //     return getUsers();
+    // });
+    // if (getUsersErr?.req?.status == 401) {
+    //     return navigate('/login', {replace: true});
+    // }
+    // console.log(users);
 
     const hidePopUp = (popUp) => {
         let newState = {...popUpState};
@@ -69,32 +57,19 @@ export default function Home() {
     };
 
     // console.log(users, getUsersStatus, getUsersErr);
-    return users ? (
-        <div className='mt-12'>
+    return true ? (
+        <div className="mt-12">
             {/*
-<h2 className="text-center my-[3rem] text-2xl font-bold">
-Check what others are doing
-</h2>
-<ul className="flex justify-center">{listUsers()}</ul>
-<h2 className="text-center mt-[5rem] mb-[3rem] text-2xl font-bold">Other Snippets</h2>
+                <h2 className="text-center my-[3rem] text-2xl font-bold">
+                Check what others are doing
+                </h2>
+                <ul className="flex justify-center">{listUsers()}</ul>
+                <h2 className="text-center mt-[5rem] mb-[3rem] text-2xl font-bold">Other Snippets</h2>
             */}
 
             <div className="flex flex-col mx-auto items-center justify-center gap-7">
-                <div className='mb-12 w-full flex justify-center'>
-          <label>
-            <input type='text' placeholder='find your sippet' 
-              className='w-[400px] px-3 py-2 border-[1px] border-primary rounded-md'/>
-          </label>
-        </div>
                 <Snippets />
                 {/* add a snippet button */}
-
-                <button
-                    onClick={handleCreate}
-                    className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}
-                >
-                    +
-                </button>
 
                 {popUpState.showForm ? (
                     <Form

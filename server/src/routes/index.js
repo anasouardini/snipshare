@@ -33,13 +33,8 @@ router.post('/logout', controller.logout);
 router.get('/whoami', controller.whoami);
 router.get('/users', gotoLogin, controller.user.readAll);
 // snippets
-router.get('/snippets/search',  controller.snippet.searchAll);
-router.get('/snippets', gotoLogin,  controller.snippet.readAll);
-router.get(
-    '/:user/snippets',
-    gotoLogin,
-    controller.snippet.readUserAll
-);
+router.get('/snippets', gotoLogin, controller.snippet.readAll);
+router.get('/:user/snippets', gotoLogin, controller.snippet.readUserAll);
 
 router.get('/:user/:snippetID', gotoLogin, controller.snippet.read);
 router.post('/:user/snippet', gotoLogin, controller.snippet.create);

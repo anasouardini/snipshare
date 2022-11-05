@@ -4,7 +4,6 @@ const User = require('../model/user.js');
 const Z = require('zod');
 const {v4: uuid} = require('uuid');
 
-
 const authAction = async (req, action) => {
     const owner = req.params.user;
     const usr = req.user.username;
@@ -156,15 +155,15 @@ const remove = async (req, res) => {
 // ____________________________
 
 const readMiddleware = async (req, res) => {
-    const snippetsOwner = req.params.user; // if  this is not specified, the user is requesting all of the snippets
+    const snippetsOwner = req.params?.user; // if  this is not specified, the user is requesting all of the snippets
     const user = req.user.username;
-
-    // console.log(snippetsOwner);
-    // console.log(user);
+    // console.log('owner ', snippetsOwner);
+    // console.log('query ', req.query);
+    // console.log('snippetOwner', snippetsOwner);
 
     const snippetsResponse = snippetsOwner
-        ? await Snippet.getUserSnippets({snippetsOwner, title: req.query?.title})
-        : await Snippet.getAllSnippets({title: req.query?.title});
+        ? await Snippet.getUserSnippets({user: snippetsOwner}) // check if includes after fetching
+        : await Snippet.getAllSnippets();
 
     // console.log(snippetsResponse);
     // if empty
@@ -173,7 +172,17 @@ const readMiddleware = async (req, res) => {
         return false;
     }
 
-    req.snippets = snippetsResponse[0];
+    let filteredSnippets = snippetsResponse[0];
+    if (req.query.title) {
+        filteredSnippets = filteredSnippets.reduce((acc, snippet) => {
+            if (snippet.title.includes(req.query.title)) {
+                acc.push(snippet);
+            }
+            return acc;
+        }, []);
+    }
+
+    req.snippets = filteredSnippets;
 
     // get coworkers rules
     let rulesResponse = {};
@@ -182,6 +191,7 @@ const readMiddleware = async (req, res) => {
         // if the use is not a coworker
         if (!rulesResponse[0].length) {
             req.rules = [];
+            return;
         }
 
         // get owner specific rules
@@ -232,7 +242,7 @@ const appendSnippetToResponse = (req, filteredSnippets, snippetObj, access) => {
 
 const readUserAll = async (req, res) => {
     //- needs to be exactly false
-    if(false == readMiddleware(req, res)) return;
+    if (false == (await readMiddleware(req, res))) return;
 
     const genericAccess = req.rules.generic;
     // console.log(req.snippets);
@@ -257,7 +267,12 @@ const readUserAll = async (req, res) => {
                         appendSnippetToResponse(req, filteredSnippets, snippetObj, exceptionRule);
                     } else {
                         // if there is no exception, then apply the generic acess rule
-                        appendSnippetToResponse(req, filteredSnippets, snippetObj, req.rules.generic);
+                        appendSnippetToResponse(
+                            req,
+                            filteredSnippets,
+                            snippetObj,
+                            req.rules.generic
+                        );
                     }
                 }
             }
@@ -270,7 +285,7 @@ const readUserAll = async (req, res) => {
 
 const readAll = async (req, res) => {
     //- needs to be exactly false
-    if(false == readMiddleware(req, res)) return;
+    if (false == (await readMiddleware(req, res))) return;
 
     const user = req.user.username;
     const isUserMod = Boolean((await User.getMod(user))[0].length);
@@ -383,21 +398,4 @@ const create = async (req, res) => {
     res.status(401).json({msg: 'guess what? you can not create a snippets on others accounts'});
 };
 
-const searchAll = async (req, res)=>{
-  //- needs to be exactly false
-  if(false == readMiddleware(req, res)) return;
-
-  const title = req.body.props.title;
-  const id = req.body.props.id;
-  const owner = req.user.username;
-
-  const snippetResponse = await Snippet.getSnippet(owner, id, title);
-  if (!snippetResponse[0].length) {
-    return res.status(500).json({msg: 'something bad happened while searching for a snippet'});
-  } 
-  
-
-  return res.json({msg: 'not yet'})
-}
-
-module.exports = {readMiddleware, readAll, readUserAll, read, create, edit, remove,searchAll};
+module.exports = {readMiddleware, readAll, readUserAll, read, create, edit, remove};

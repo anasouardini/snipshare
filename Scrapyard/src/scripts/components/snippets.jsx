@@ -7,11 +7,10 @@ import Form from '../components/form/form';
 import {commonSnippetFields, getSnippets} from '../tools/snipStore';
 import {useNavigate} from 'react-router-dom';
 import {useQuery} from 'react-query';
+import debouncer from '../tools/debouncer';
 
 export default function Snippets() {
-
     const navigate = useNavigate();
-
 
     const whoami = useOutletContext();
     // if (whoami == '' || whoami == 'unauthorized') {
@@ -20,6 +19,8 @@ export default function Snippets() {
     // }
 
     const {user: userParam} = useParams();
+
+    const [searchState, setSearchState] = useState({title: ''});
 
     const [popUpState, setPopUpState] = useState({
         showForm: false,
@@ -31,13 +32,33 @@ export default function Snippets() {
         status,
         error,
     } = useQuery(['snippets'], () => {
-        return getSnippets(userParam);
+        return getSnippets({user: userParam, title: searchState.title});
     });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+
+        debouncer.run('snippetsSearch', e.target.value);
+    };
+
+    useEffect(() => {
+        debouncer.init(
+            'snippetsSearch',
+            (title) => {
+                setSearchState({title: title});
+            },
+            500
+        );
+
+        return () => {
+            debouncer.clear('snippetsSearch');
+        };
+    }, []);
 
     useEffect(() => {
         // console.log('refetching');
         snippetsRefetch();
-    }, [userParam]);
+    }, [userParam, searchState.title]);
 
     // console.log(snippets);
     if (error?.req?.status == 401) {
@@ -90,14 +111,22 @@ export default function Snippets() {
         setPopUpState(newState);
     };
 
-    // console.log(snippets);
-
     return status == 'success' ? (
         <div>
             <div className="flex flex-col mx-auto items-center justify-center gap-7">
+                <div className="mb-12 w-full flex justify-center">
+                    <label>
+                        <input
+                            type="text"
+                            onChange={handleSearch}
+                            placeholder="find your sippet"
+                            className="w-[400px] px-3 py-2 border-[1px] border-primary rounded-md"
+                        />
+                    </label>
+                </div>
 
                 {/* add a snippet button */}
-                {whoami == userParam || snippets.genericAccess?.create ? (
+                {whoami == userParam || snippets.genericAccess?.create || !userParam ? (
                     <button
                         onClick={handleCreate}
                         className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}
@@ -109,6 +138,7 @@ export default function Snippets() {
                 )}
 
                 {listSnippets(snippets.snippets)}
+
                 {popUpState.showForm ? (
                     <Form
                         action="create"

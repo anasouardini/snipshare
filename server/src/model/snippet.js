@@ -1,20 +1,20 @@
 const poolPromise = require('./db');
 
-const getAllSnippets = ({title}) => {
+const getAllSnippets = () => {
     let query = `select * from snippets`;
-    if(title) query += ` title=?`; 
-    return poolPromise(query, [title]);
+    // if (title) query += ` title=?`;
+
+    return poolPromise(query);
 };
-const getUserSnippets = ({user, title}) => {
+const getUserSnippets = ({user}) => {
     let query = `select * from snippets where user = ?`;
-    if(title) query += ` title=?`; 
-    return poolPromise(query, [user, title]);
+    // if (title) query += ` title=?`;
+    return poolPromise(query, [user]);
 };
-const getSnippet = (usr, snipID, title) =>{
-  let query = `select * from snippets where user=? and id=?`;
-  if(title) query += ` title=?`;
-  return poolPromise(query, [usr, snipID, title]);
-}
+const getSnippet = (usr, snipID) => {
+    let query = `select * from snippets where user=? and id=?`;
+    return poolPromise(query, [usr, snipID]);
+};
 
 const deleteSnippet = (usr, snipID) =>
     poolPromise(`delete from snippets where user = ? and id = ?`, [usr, snipID]);
