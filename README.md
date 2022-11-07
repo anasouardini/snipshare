@@ -15,14 +15,7 @@ the reason behind this little project is to practice using Authentication and at
 ## Things I've learned throughout the process
 
 the main Benifit obviously is to learn how to do Authentication and Authorization.
-but I've also changed a few thing in my workflow. so I also learned other things in the process as well.
-
-- Vite (comming from webpack)
-As long as I ditch webpack, anything is good at this stage.
-
-- NeoVim
-I'm still stuck with the overhead of setting it up. autocomletion, smart tabulation, jsx highlighting and other stuff are very annoying to setup.
-But I feel like I'm going fast when it comes to the text/code editting phase.
+but I've also changed a few thing in my workflow, so I also learned other things in the process as well.
 
 - Tailwind (comming from Sass)
 Other than the very long line that's trying to break out of my monitor... Tailwind is so clean and makes me style things faster.
@@ -47,3 +40,15 @@ Faced some issues implementing this one, and still havn't figured out how to mak
 
 - debouncing
 Debouncing is one way to evade wasting cpu cycles for intermediate iterations that are not really that neccessary.
+
+- react-query
+When I imported react-query I realized that I was doing many things from scratch.
+
+- Vite (comming from webpack)
+As long as I ditch webpack, anything is good at this stage.
+
+- NeoVim
+I'm still stuck with the overhead of setting it up. autocomletion, smart tabulation, jsx highlighting and other stuff are very annoying to setup.
+But I feel like I'm going fast when it comes to the text/code editting phase.
+
+

@@ -157,15 +157,16 @@ const remove = async (req, res) => {
 const readMiddleware = async (req, res) => {
     const snippetsOwner = req.params?.user; // if  this is not specified, the user is requesting all of the snippets
     const user = req.user.username;
+
     // console.log('owner ', snippetsOwner);
     // console.log('query ', req.query);
     // console.log('snippetOwner', snippetsOwner);
 
     const snippetsResponse = snippetsOwner
-        ? await Snippet.getUserSnippets({user: snippetsOwner}) // check if includes after fetching
-        : await Snippet.getAllSnippets();
+        ? await Snippet.getUserSnippets({user: snippetsOwner, title: `%${req.query?.title}%`}) // check if includes after fetching
+        : await Snippet.getAllSnippets({title: `%${req.query?.title}%`});
 
-    // console.log(snippetsResponse);
+    //console.log(snippetsResponse);
     // if empty
     if (!snippetsResponse[0]?.length) {
         res.json({msg: {snippets: []}});
@@ -173,15 +174,14 @@ const readMiddleware = async (req, res) => {
     }
 
     let filteredSnippets = snippetsResponse[0];
-    if (req.query.title) {
-        filteredSnippets = filteredSnippets.reduce((acc, snippet) => {
-            if (snippet.title.includes(req.query.title)) {
-                acc.push(snippet);
-            }
-            return acc;
-        }, []);
-    }
-
+    //if (req.query.title) {
+    //    filteredSnippets = filteredSnippets.reduce((acc, snippet) => {
+    //        if (snippet.title.includes(req.query.title)) {
+    //            acc.push(snippet);
+    //        }
+    //        return acc;
+    //    }, []);
+    //}
     req.snippets = filteredSnippets;
 
     // get coworkers rules
@@ -243,7 +243,8 @@ const appendSnippetToResponse = (req, filteredSnippets, snippetObj, access) => {
 const readUserAll = async (req, res) => {
     //- needs to be exactly false
     if (false == (await readMiddleware(req, res))) return;
-
+    const pageParam = req.query.pageParam;
+    const perPage = req.query.perPage;
     const genericAccess = req.rules.generic;
     // console.log(req.snippets);
     // filter snippets according to rules
@@ -280,13 +281,19 @@ const readUserAll = async (req, res) => {
     });
     // console.log(filteredSnippets);
 
-    res.json({msg: {snippets: filteredSnippets, genericAccess}});
+    console.log(pageParam, perPage)
+    res.json({msg: {
+        nextPage: filteredSnippets.length/perPage <= pageParam ? undefined : pageParam+1, 
+        snippets: filteredSnippets.slice((pageParam-1)*perPage, pageParam*perPage), 
+        genericAccess}});
 };
 
 const readAll = async (req, res) => {
     //- needs to be exactly false
     if (false == (await readMiddleware(req, res))) return;
 
+    const pageParam = Number(req.query.pageParam);
+    const perPage = Number(req.query.perPage);
     const user = req.user.username;
     const isUserMod = Boolean((await User.getMod(user))[0].length);
 
@@ -321,7 +328,8 @@ const readAll = async (req, res) => {
         }
     });
 
-    res.json({msg: {snippets: filteredSnippets}});
+    console.log(pageParam, perPage)
+    res.json({msg: {nextPage: filteredSnippets.length/perPage <= pageParam ? undefined : pageParam+1, snippets: filteredSnippets.slice((pageParam-1)*perPage, pageParam*perPage)}});
 };
 
 const create = async (req, res) => {

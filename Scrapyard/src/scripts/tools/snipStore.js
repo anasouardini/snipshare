@@ -1,8 +1,8 @@
 import {read} from './bridge';
 import toUrlEncoded from './toUrlEncoded';
 
-const getSnippets = async ({user, title, meta}) => {
-    const urlParams = toUrlEncoded({title, meta});
+const getSnippets = async ({user, title, meta, pageParam, perPage}) => {
+    const urlParams = toUrlEncoded({title, meta, pageParam, perPage});
     // console.log('urlParams', urlParams);
     const response = await read(`${user ? `${user}/` : ''}snippets${urlParams}`);
 

@@ -38,7 +38,7 @@ export default function Snippet(props) {
                 field.attr.defaultValue = snipInfoState.snippet[field.attr.key];
             }
         });
-        console.log(formFieldsState.current.fields);
+        //console.log(formFieldsState.current.fields);
     };
 
     // I fixed useEffect()

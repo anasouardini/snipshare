@@ -1,15 +1,18 @@
 const poolPromise = require('./db');
 
-const getAllSnippets = () => {
+const getAllSnippets = ({title}) => {
     let query = `select * from snippets`;
-    // if (title) query += ` title=?`;
-
-    return poolPromise(query);
+    if(title != '%undefined%'){
+      query += ` WHERE title LIKE ?`
+    }
+    return poolPromise(query, [title]);
 };
-const getUserSnippets = ({user}) => {
+const getUserSnippets = ({user, title}) => {
     let query = `select * from snippets where user = ?`;
-    // if (title) query += ` title=?`;
-    return poolPromise(query, [user]);
+    if(title != '%undefined%'){
+      query += ` AND title LIKE ?`
+    }
+    return poolPromise(query, [user, title]);
 };
 const getSnippet = (usr, snipID) => {
     let query = `select * from snippets where user=? and id=?`;
