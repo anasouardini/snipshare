@@ -5,7 +5,7 @@ import {create, update} from '../../tools/bridge';
 import fieldsMap from './fieldsMap';
 
 export default function Form(props) {
-    // const whoami = useOutletContext();
+    // const {whoami} = useOutletContext();
 
     const refs = {
         title: useRef(''),

@@ -19,7 +19,7 @@ export default function Home() {
     // const navigate = useNavigate();
     // const {user: userParam} = useParams();
 
-    const whoami = useOutletContext();
+    const {whoami} = useOutletContext();
     // if (whoami == '' || whoami == 'unauthorized') {
     //     console.log('redirecting');
     //     return navigate('/login', {replace: true});
@@ -49,41 +49,21 @@ export default function Home() {
         setPopUpState(newState);
     };
 
-    const handleCreate = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-
-        setPopUpState({...popUpState, showForm: true});
-    };
-
     // console.log(users, getUsersStatus, getUsersErr);
-    return true ? (
-        <div className="mt-12">
-            {/*
-                <h2 className="text-center my-[3rem] text-2xl font-bold">
-                Check what others are doing
-                </h2>
-                <ul className="flex justify-center">{listUsers()}</ul>
-                <h2 className="text-center mt-[5rem] mb-[3rem] text-2xl font-bold">Other Snippets</h2>
-            */}
+    return (
+        <div className="mt-12 w-full">
+            <Snippets />
 
-            <div className="flex flex-col mx-auto items-center justify-center gap-7">
-                <Snippets />
-                {/* add a snippet button */}
-
-                {popUpState.showForm ? (
-                    <Form
-                        action="create"
-                        fields={formFieldsState.fields}
-                        hidePopUp={hidePopUp}
-                        owner={whoami}
-                    />
-                ) : (
-                    <></>
-                )}
-            </div>
+            {popUpState.showForm ? (
+                <Form
+                    action="create"
+                    fields={formFieldsState.fields}
+                    hidePopUp={hidePopUp}
+                    owner={whoami}
+                />
+            ) : (
+                <></>
+            )}
         </div>
-    ) : (
-        <></>
-    );
+    ) ;
 }

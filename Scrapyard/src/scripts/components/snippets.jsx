@@ -12,7 +12,7 @@ import debouncer from '../tools/debouncer';
 export default function Snippets() {
     const navigate = useNavigate();
 
-    const whoami = useOutletContext();
+    const {whoami} = useOutletContext();
     // if (whoami == '' || whoami == 'unauthorized') {
     //     console.log(whoami);
     //     return navigate('/login', {replace: true});
@@ -112,44 +112,45 @@ export default function Snippets() {
     };
 
     return status == 'success' ? (
-        <div>
-            <div className="flex flex-col mx-auto items-center justify-center gap-7">
-                <div className="mb-12 w-full flex justify-center">
-                    <label>
-                        <input
-                            type="text"
-                            onChange={handleSearch}
-                            placeholder="find your sippet"
-                            className="w-[400px] px-3 py-2 border-[1px] border-primary rounded-md"
-                        />
-                    </label>
-                </div>
+        <div className="flex flex-col items-center justify-stretch px-3 gap-7 mx-auto">
+          <div className='w-full max-w-[600px] flex justify-between flex-wrap my-5 gap-4'>
 
-                {/* add a snippet button */}
-                {whoami == userParam || snippets.genericAccess?.create || !userParam ? (
-                    <button
-                        onClick={handleCreate}
-                        className={`border-[1px] border-lime-300 w-[360px]  text-[3rem] text-lime-300`}
-                    >
-                        +
-                    </button>
-                ) : (
-                    <></>
-                )}
+            {
+              whoami == userParam || snippets.genericAccess?.create || !userParam ? (
+                <button
+                    onClick={handleCreate}
+                    className={`border-[1px] border-lime-300 px-2 py-2 text-[1rem] text-lime-300 rounded-md`}
+                >
+                    Add Snippet
+                </button>
+              ) : (
+                  <></>
+              )
+            }
 
-                {listSnippets(snippets.snippets)}
 
-                {popUpState.showForm ? (
-                    <Form
-                        action="create"
-                        fields={formFieldsState.fields}
-                        hidePopUp={hidePopUp}
-                        owner={userParam}
-                    />
-                ) : (
-                    <></>
-                )}
-            </div>
+            <label className=''>
+                <input
+                    type="text"
+                    onChange={handleSearch}
+                    placeholder="find your sippet"
+                    className="w-full max-w-[260px] px-3 py-2 border-[1px] border-primary rounded-md"
+                />
+            </label>
+
+          </div>
+            {listSnippets(snippets.snippets)}
+
+            {popUpState.showForm ? (
+                <Form
+                    action="create"
+                    fields={formFieldsState.fields}
+                    hidePopUp={hidePopUp}
+                    owner={userParam}
+                />
+            ) : (
+                <></>
+            )}
         </div>
     ) : (
         <></>

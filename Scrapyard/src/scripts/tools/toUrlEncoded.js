@@ -9,7 +9,7 @@ const parseParams = (obj) =>
         .join('&');
 
 export default function toUrlEncoded(obj) {
-    console.log('obj params', obj);
+    // console.log('obj params', obj);
     const params = parseParams(obj);
     return params ? '?' + params : '';
 }

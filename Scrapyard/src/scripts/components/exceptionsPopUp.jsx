@@ -2,8 +2,11 @@ import React, {forwardRef, useState, useRef, useEffect} from 'react';
 import AccessControl from '../components/accessControl';
 import {deepClone} from '../tools/deepClone';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa';
+import {useOutletContext} from 'react-router';
 
 const ExceptionsPopUp = forwardRef((props, ref) => {
+    const {notify} = useOutletContext();
+
     const [_, setForceRenderState] = useState(true);
     const forceRerender = () => {
         setForceRenderState((old) => !old);
@@ -64,7 +67,8 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
         const exceptionID = parentRef.new.exceptionID.value;
 
         if (coworkerExceptionsRef.current?.[exceptionID]) {
-            return console.log('snippet already exists');
+            notify({type: 'error', msg: 'this exception already exists'});
+            return;
         }
 
         // this passes the access intermediate values to <accessControl/>
@@ -114,7 +118,6 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
         // unmount pop-up
         // forceRerender();
         props.hidePopUp();
-        console.log();
     };
 
     // console.log(ref.current);

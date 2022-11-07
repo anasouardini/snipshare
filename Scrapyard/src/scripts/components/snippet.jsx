@@ -10,8 +10,7 @@ import CodeSnippet from './form/fields/snippet';
 import {useRef} from 'react';
 
 export default function Snippet(props) {
-    // const whoami = useContext(GlobalContext);
-    const whoami = useOutletContext();
+    const {whoami} = useOutletContext();
 
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,
@@ -19,6 +18,9 @@ export default function Snippet(props) {
     // console.log(snipInfoState.snippet);
 
     const [popUpState, setPopUpState] = useState({showForm: false, showPreview: false});
+
+    const descriptionRef = useRef();
+    const descriptionCollapseRef = useRef();
 
     const formFieldsState = useRef({
         fields: Object.values(structuredClone({commonSnippetFields}))[0],
@@ -108,6 +110,12 @@ export default function Snippet(props) {
 
         setPopUpState(newState);
     };
+  
+    const expandCollapseDescription = (e)=>{
+      e.preventDefault();
+      descriptionRef.current.classList.toggle('hidden');
+      descriptionCollapseRef.current.classList.toggle('rotate-90');
+    }
 
     // console.log(
     //     formFieldsState.current.fields.filter((field) => field.type == 'CodeSnippet')[0].attr
@@ -116,7 +124,7 @@ export default function Snippet(props) {
     // console.log(Object.values(formFieldsState.current.fields)[2].attr);
     return (
         <>
-            <div data-key={snipInfoState.snippet.id} className={`bg-[#292929] `}>
+            <div data-key={snipInfoState.snippet.id} className={`bg-[#292929] rounded-md w-full max-w-[600px]`}>
                 <div className={`snippet flex flex-col max-w-[600px]  p-8`}>
                     {/* Owner and Author and Privacy*/}
                     <div className="flex justify-between mb-4">
@@ -147,11 +155,13 @@ export default function Snippet(props) {
                         </p>
                     </div>
                     {/* Title */}
-                    <h3 className="text-xl text-gray-300 mb-3">{snipInfoState.snippet.title}</h3>
+                    <h2 className="text-xl text-gray-300 mb-3">{snipInfoState.snippet.title}</h2>
                     {/* Description */}
-                    <p className="overflow-hidden text-ellipsis whitespace-nowrap mb-3 text-gray-500">
+                    <h3 className="text-md text-gray-300 mb-3">Description: <button ref={descriptionCollapseRef} className='rotate-90' onClick={expandCollapseDescription}>➤</button></h3>
+                    <p ref={descriptionRef} className="hidden mb-3 text-gray-500">
                         {snipInfoState.snippet.descr}
                     </p>
+                    <h3 className="text-md text-gray-300 mb-3">Snippet:</h3>
                     {/* Snippet */}
                     <CodeSnippet
                         {...formFieldsState.current.fields.filter(

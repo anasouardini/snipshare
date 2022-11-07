@@ -25,7 +25,7 @@ import {
 export default function AddRules() {
     const navigate = useNavigate();
 
-    const whoami = useOutletContext();
+    const {whoami, notify} = useOutletContext();
     // if (whoami == '' || whoami == 'unauthorized') {
     //     console.log('redirecting');
     //     return navigate('/login', {replace: true});
@@ -69,7 +69,7 @@ export default function AddRules() {
         status: snippetsStatus,
         error: snippetsErr,
     } = useQuery(['snippetsMeta'], () => {
-        return getSnippets(whoami, 'meta');
+        return getSnippets({user: whoami, meta: 'meta'});
     });
 
     if (snippetsErr?.req?.status == 401) {
@@ -104,7 +104,8 @@ export default function AddRules() {
 
         //-I- check if the coworker exists, better to add coworkers by id and usernames like in discord
         if (coworkersRulesData.generic[coworker]) {
-            return console.log('this coworker already exists');
+            notify({type: 'error', msg: 'this coworker already exists'});
+            return;
         }
 
         // console.log('add new', exceptionAccessRefs.current.new?.old);
@@ -116,7 +117,8 @@ export default function AddRules() {
         //wait fot the changes before getting the new data
         const response = await create(`coworkerRules`, {props});
 
-        console.log(response);
+        notify({type: 'info', msg: response.msg});
+
         if (response.status == 200) {
             // clear the new coworker so there will be only one new coworker object
             exceptionAccessRefs.current.new.old = {};

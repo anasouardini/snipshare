@@ -3,7 +3,7 @@ import toUrlEncoded from './toUrlEncoded';
 
 const getSnippets = async ({user, title, meta}) => {
     const urlParams = toUrlEncoded({title, meta});
-    console.log('urlParams', urlParams);
+    // console.log('urlParams', urlParams);
     const response = await read(`${user ? `${user}/` : ''}snippets${urlParams}`);
 
     if (response.status == 200) {

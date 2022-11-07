@@ -1,10 +1,19 @@
 import React from 'react';
-import {Outlet, useLocation, useNavigate, useOutletContext} from 'react-router-dom';
+import {
+    Outlet,
+    useAsyncError,
+    useLocation,
+    useNavigate,
+    useOutlet,
+    useOutletContext,
+} from 'react-router-dom';
 import {useQuery} from 'react-query';
 import {create, read} from '../../tools/bridge';
 import {Link, NavLink} from 'react-router-dom';
 import {useEffect} from 'react';
 import {useState} from 'react';
+import Notify from '../../components/notify';
+import {v4 as uuid} from 'uuid';
 
 export default function SharedLayout(props) {
     // const [_, setForceRenderState] = useState(false);
@@ -17,6 +26,7 @@ export default function SharedLayout(props) {
     // react-query sucks at this
     // const {data: whoami, status, error} = useQuery(['whoami'], updateWhoami);
     const [whoami, setWhoami] = useState('');
+    const [notifyState, setNotifyState] = useState({});
 
     // console.log('whoami', whoami);
     const navigate = useNavigate();
@@ -41,7 +51,28 @@ export default function SharedLayout(props) {
         navigate('/login', {replace: true});
     }
 
-    // console.log(typeof whoami);
+    const listNotifications = () => {
+        return Object.keys(notifyState).map((notiKey) => (
+            <Notify key={notiKey} type={notifyState[notiKey].type} msg={notifyState[notiKey].msg} />
+        ));
+    };
+
+    const notify = (notication) => {
+        const randomKey = uuid();
+
+        setTimeout(() => {
+            setNotifyState((notificationsList) => {
+                delete notificationsList[randomKey];
+                return {...notificationsList};
+            });
+        }, 2000);
+
+        setNotifyState((notificationsList) => {
+            notificationsList[randomKey] = notication;
+            return {...notificationsList}; // changing the memeory refrence for react
+        });
+        // console.log('timedout', notifyState);
+    };
 
     return (
         <div className="font-roboto">
@@ -61,7 +92,7 @@ export default function SharedLayout(props) {
 
                     <li className={`ml-auto`}>
                         <NavLink className={classes.navLink} to="/addRules">
-                            Add Rules
+                            Coworkers
                         </NavLink>
                     </li>
                     {whoami.status == 401 ? (
@@ -105,11 +136,17 @@ export default function SharedLayout(props) {
             {/* {props.children} */}
             {whoami && (whoami?.status == 200 || location.pathname.includes('login')) ? (
                 // <GlobalContext.Provider value={whoami}>
-                <Outlet context={whoami.msg} />
+                <Outlet context={{whoami: whoami.msg, notify}} />
             ) : (
                 // </GlobalContext.Provider>
                 <></>
             )}
+
+            {/* notifications */}
+            <div className="fixed top-[30px] right-[50%] translate-x-[50%] flex-row">
+                {listNotifications(notifyState)}
+            </div>
+            {/* <Notify key={'notiKey'} type={'warning'} msg={'empty'} /> */}
         </div>
     );
 }
