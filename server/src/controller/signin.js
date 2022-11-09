@@ -84,14 +84,20 @@ const signinOAuth = async (req, res) => {
             return res.redirect(`http://127.0.0.1:3000/login?error=oauth2 error`);
         }
 
-        const {email, email_verified} = jwt.decode(response.id_token);
+        // this step is not needed
+        //const userInfoResponse = await axios.get(
+        //    `${process.env.AUTH_GOOGLE_INFO_ENDPOINT}?alt=json&access_token=${response.access_token}`,
+        //    {header: {Authorization: `Bearer ${id_token}`}}
+        //);
+
+        const {email, email_verified, ...rest} = jwt.decode(response.id_token);
+        //console.log(rest);
 
         // UPSERTING EMAIL AS THE USERNAME
         const userResponse = await User.getUser(email);
         if (!userResponse)
             return res.status(500).json({msg: 'something bad happened while authenticating you'});
         if (!userResponse[0].length) {
-            console.log('user does not exist');
             // creating the user
             const createUserResponse = await User.createUser(email, 'OAuth2.0 user');
             if (!createUserResponse[0]?.affectedRows) {
@@ -104,7 +110,6 @@ const signinOAuth = async (req, res) => {
         const body = {username: email};
         const token = jwt.sign(body, privateKey, options);
 
-        console.log('setting the cookie');
         res.cookie(process.env.COOKIENAME, token, {httpOnly: true});
 
         return res.redirect(`http://127.0.0.1:3000/login`);
@@ -115,7 +120,7 @@ const signinOAuth = async (req, res) => {
         client_id: process.env.AUTH_GOOGLE_ID,
         response_type: 'code',
         redirect_uri: process.env.AUTH_GOOGLE_REDIRECT_URI,
-        scope: 'email',
+        scope: 'email profile',
         nonce: '161581761691-3tjdu1rca5q35h60qcgrd7eb0tb2ulmpakonamatata',
     };
 
