@@ -29,13 +29,20 @@ export default function Snippets() {
 
     // when incSearch: clear cached pages
     // when refetching: getNextPageParam() with the old page index
-    const {data: snippetsPages, fetchNextPage, status, error, refetch: refetchSnippets} = 
-      useInfiniteQuery(['snippets'], 
-      ({pageParam = 1})=> getSnippets({user: userParam, title: searchState.title, pageParam, perPage: 3}),
-      {
-        getNextPageParam: (lastPage)=> lastPage.nextPage
-      }
-    )
+    const {
+        data: snippetsPages,
+        fetchNextPage,
+        status,
+        error,
+        refetch: refetchSnippets,
+    } = useInfiniteQuery(
+        ['snippets'],
+        ({pageParam = 1}) =>
+            getSnippets({user: userParam, title: searchState.title, pageParam, perPage: 3}),
+        {
+            getNextPageParam: (lastPage) => lastPage.nextPage,
+        }
+    );
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -44,39 +51,39 @@ export default function Snippets() {
     };
 
     useEffect(() => {
-      const onScroll = ()=>{
-          let fetching = false;
-          if(!fetching){
-            fetching = true;
-            const documentHeight = document.body.scrollHeight;
-            const viewedContentHeight = document.documentElement.scrollTop;
-            const viewportHeight = document.body.clientHeight;
+        const onScroll = () => {
+            let fetching = false;
+            if (!fetching) {
+                fetching = true;
+                const documentHeight = document.body.scrollHeight;
+                const viewedContentHeight = document.documentElement.scrollTop;
+                const viewportHeight = document.body.clientHeight;
 
-            //console.log(documentHeight - viewedContentHeight <= viewportHeight+400)
-            if(documentHeight - viewedContentHeight <= viewportHeight*1.5){
-              fetchNextPage();
+                //console.log(documentHeight - viewedContentHeight <= viewportHeight+400)
+                if (documentHeight - viewedContentHeight <= viewportHeight * 1.5) {
+                    fetchNextPage();
+                }
             }
-          }
-      }
-      window.addEventListener('scroll', onScroll) 
+        };
+        window.addEventListener('scroll', onScroll);
 
-      debouncer.init(
-          'snippetsSearch',
-          (title) => {
-              setSearchState({title: title});
-          },
-          500
-      );
+        debouncer.init(
+            'snippetsSearch',
+            (title) => {
+                setSearchState({title: title});
+            },
+            500
+        );
 
-      return () => {
-          debouncer.clear('snippetsSearch');
-          window.removeEventListener('scroll', onScroll);
-      };
+        return () => {
+            debouncer.clear('snippetsSearch');
+            window.removeEventListener('scroll', onScroll);
+        };
     }, []);
 
     useEffect(() => {
-        if(status == 'success'){
-          refetchSnippets();
+        if (status == 'success') {
+            refetchSnippets();
         }
     }, [userParam, searchState.title]);
 
@@ -87,7 +94,6 @@ export default function Snippets() {
     const [formFieldsState] = useState({
         fields: Object.values(structuredClone({commonSnippetFields}))[0],
     });
-
 
     // console.log(commonSnippetFields);
 
@@ -102,18 +108,18 @@ export default function Snippets() {
     const listSnippets = (snippetsPages) => {
         // console.log(status);
         return snippetsPages.pages.map((page) => {
-            return page.snippets.map((snippet)=>{
-              return (
-                  <Snippet
-                      whoami={whoami}
-                      key={snippet.id}
-                      snippet={snippet}
-                      update={() => {
-                      refetchSnippets();
-                      }}
-                  />
+            return page.snippets.map((snippet) => {
+                return (
+                    <Snippet
+                        whoami={whoami}
+                        key={snippet.id}
+                        snippet={snippet}
+                        update={() => {
+                            refetchSnippets();
+                        }}
+                    />
                 );
-            })
+            });
         });
     };
 
@@ -127,43 +133,39 @@ export default function Snippets() {
 
         setPopUpState(newState);
     };
-if(status == 'success'){
-    console.log('sdfsd', snippetsPages.pages[0])
-
-  }
+    if (status == 'success') {
+        console.log('sdfsd', snippetsPages.pages[0]);
+    }
     return status == 'success' ? (
-        <div className="flex flex-col items-center justify-stretch px-3 gap-7 mx-auto">
-          <div className='w-full max-w-[600px] flex justify-between flex-wrap my-5 gap-4'>
-            {
-              whoami == userParam || snippetsPages.pages?.[0]?.snippets?.[0]?.genericAccess?.create || !userParam ? (
-                <button
-                    onClick={handleCreate}
-                    className={`border-[1px] border-lime-300 px-2 py-2 text-[1rem] text-lime-300 rounded-md`}
-                >
-                    Add Snippet
-                </button>
+        <div className='flex flex-col items-center justify-stretch px-3 gap-7 mx-auto'>
+            <div className='w-full max-w-[600px] flex justify-between flex-wrap my-5 gap-4'>
+                {whoami == userParam ||
+                snippetsPages.pages?.[0]?.snippets?.[0]?.genericAccess?.create ||
+                !userParam ? (
+                    <button
+                        onClick={handleCreate}
+                        className={`border-[1px] border-lime-300 px-2 py-2 text-[1rem] text-lime-300 rounded-md`}
+                    >
+                        Add Snippet
+                    </button>
+                ) : (
+                    <></>
+                )}
 
-              ) : (
-                  <></>
-              )
-            }
-
-
-            <label className=''>
-                <input
-                    type="text"
-                    onChange={handleSearch}
-                    placeholder="find your sippet"
-                    className="w-full max-w-[260px] px-3 py-2 border-[1px] border-primary rounded-md"
-                />
-            </label>
-
-          </div>
+                <label className=''>
+                    <input
+                        type='text'
+                        onChange={handleSearch}
+                        placeholder='find your sippet'
+                        className='w-full max-w-[260px] px-3 py-2 border-[1px] border-primary rounded-md'
+                    />
+                </label>
+            </div>
             {listSnippets(snippetsPages)}
 
             {popUpState.showForm ? (
                 <Form
-                    action="create"
+                    action='create'
                     fields={formFieldsState.fields}
                     hidePopUp={hidePopUp}
                     owner={userParam}

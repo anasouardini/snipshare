@@ -158,9 +158,10 @@ const readMiddleware = async (req, res) => {
     const snippetsOwner = req.params?.user; // if  this is not specified, the user is requesting all of the snippets
     const user = req.user.username;
 
-    // console.log('owner ', snippetsOwner);
-    // console.log('query ', req.query);
-    // console.log('snippetOwner', snippetsOwner);
+    //console.log('owner ', snippetsOwner);
+    //console.log('query ', req.query);
+    //console.log('snippetOwner', snippetsOwner);
+    //console.log('title readmiddleware', req.query.title)
 
     const snippetsResponse = snippetsOwner
         ? await Snippet.getUserSnippets({user: snippetsOwner, title: `%${req.query?.title}%`}) // check if includes after fetching
@@ -174,14 +175,7 @@ const readMiddleware = async (req, res) => {
     }
 
     let filteredSnippets = snippetsResponse[0];
-    //if (req.query.title) {
-    //    filteredSnippets = filteredSnippets.reduce((acc, snippet) => {
-    //        if (snippet.title.includes(req.query.title)) {
-    //            acc.push(snippet);
-    //        }
-    //        return acc;
-    //    }, []);
-    //}
+
     req.snippets = filteredSnippets;
 
     // get coworkers rules
@@ -281,11 +275,14 @@ const readUserAll = async (req, res) => {
     });
     // console.log(filteredSnippets);
 
-    console.log(pageParam, perPage)
-    res.json({msg: {
-        nextPage: filteredSnippets.length/perPage <= pageParam ? undefined : pageParam+1, 
-        snippets: filteredSnippets.slice((pageParam-1)*perPage, pageParam*perPage), 
-        genericAccess}});
+    //console.log(pageParam, perPage);
+    res.json({
+        msg: {
+            nextPage: filteredSnippets.length / perPage <= pageParam ? undefined : pageParam + 1,
+            snippets: filteredSnippets.slice((pageParam - 1) * perPage, pageParam * perPage),
+            genericAccess,
+        },
+    });
 };
 
 const readAll = async (req, res) => {
@@ -328,8 +325,13 @@ const readAll = async (req, res) => {
         }
     });
 
-    console.log(pageParam, perPage)
-    res.json({msg: {nextPage: filteredSnippets.length/perPage <= pageParam ? undefined : pageParam+1, snippets: filteredSnippets.slice((pageParam-1)*perPage, pageParam*perPage)}});
+    console.log(pageParam, perPage);
+    res.json({
+        msg: {
+            nextPage: filteredSnippets.length / perPage <= pageParam ? undefined : pageParam + 1,
+            snippets: filteredSnippets.slice((pageParam - 1) * perPage, pageParam * perPage),
+        },
+    });
 };
 
 const create = async (req, res) => {

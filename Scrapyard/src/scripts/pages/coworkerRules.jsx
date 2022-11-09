@@ -63,18 +63,6 @@ export default function AddRules() {
     }
     // console.log('query coworkers', coworkersRulesData);
 
-    // get snippets list
-    const {
-        data: snippetsData,
-        status: snippetsStatus,
-        error: snippetsErr,
-    } = useQuery(['snippetsMeta'], () => {
-        return getSnippets({user: whoami, meta: 'meta'});
-    });
-
-    if (snippetsErr?.req?.status == 401) {
-        return navigate('/login', {replace: true});
-    }
 
     const eventDefaults = (e) => {
         e.stopPropagation();
@@ -252,7 +240,7 @@ export default function AddRules() {
             <></>
         );
 
-    return coworkersRulesStatus == 'success' && snippetsStatus == 'success' ? (
+    return coworkersRulesStatus == 'success' ? (
         <div className="container mt-[4rem]">
             <div className={classes.inputs}>
                 <input
@@ -293,7 +281,6 @@ export default function AddRules() {
                     coworker={popUpState.coworker}
                     oldOrNew={popUpState.oldOrNew}
                     coworkerUsername={popUpState.coworkerUsername}
-                    snippets={snippetsData.snippets}
                     markChangedCoworker={markChangedCoworker}
                 />
             ) : (

@@ -10,7 +10,7 @@ const CodeSnippet = forwardRef((props, ref) => {
     if (props?.defaultValue) {
         linesNumber.current =
             Math.min(props.defaultValue.split(/\r\n|\r|\n/).length * lineHeight, 10 * lineHeight) +
-            lineHeight; //last line (+lineHeight) to remove the scroll bar
+            (lineHeight * 3); //last line (+lineHeight) to remove the scroll bar
     }
 
     const handleOnMount = (editor, monaco) => {

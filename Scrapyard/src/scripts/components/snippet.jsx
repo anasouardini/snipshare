@@ -19,9 +19,6 @@ export default function Snippet(props) {
 
     const [popUpState, setPopUpState] = useState({showForm: false, showPreview: false});
 
-    const descriptionRef = useRef();
-    const descriptionCollapseRef = useRef();
-
     const formFieldsState = useRef({
         fields: Object.values(structuredClone({commonSnippetFields}))[0],
     });
@@ -41,7 +38,8 @@ export default function Snippet(props) {
         //console.log(formFieldsState.current.fields);
     };
 
-    // I fixed useEffect()
+    // useEffect() would be better with this
+    // I need to to modify some data before even running the jsx functions
     const firstRender = useRef(true);
     if (firstRender.current) {
         updateFields();
@@ -77,7 +75,7 @@ export default function Snippet(props) {
     // console.log(snipInfoState.snippet);
     const classes = {
         buttons: 'flex justify-around mt-[20px]',
-        button: 'w-[100px] leading-8 rounded-md text-white',
+        button: 'w-[100px] leserdeading-8 rounded-md text-white',
         btnPreview: `${
             snipInfoState.snippet.access?.read ? 'bg-cyan-600' : 'bg-gray-400 cursor-not-allowed'
         }`,
@@ -110,16 +108,6 @@ export default function Snippet(props) {
 
         setPopUpState(newState);
     };
-  
-    const expandCollapseDescription = (e)=>{
-      e.preventDefault();
-      descriptionRef.current.classList.toggle('hidden');
-      descriptionCollapseRef.current.classList.toggle('rotate-90');
-    }
-
-    // console.log(
-    //     formFieldsState.current.fields.filter((field) => field.type == 'CodeSnippet')[0].attr
-    // );
 
     // console.log(Object.values(formFieldsState.current.fields)[2].attr);
     return (
@@ -155,12 +143,14 @@ export default function Snippet(props) {
                         </p>
                     </div>
                     {/* Title */}
-                    <h2 className="text-xl text-gray-300 mb-3">{snipInfoState.snippet.title}</h2>
+                    <h2 className="text-xl text-gray-300 mb-4">{snipInfoState.snippet.title}</h2>
+
                     {/* Description */}
-                    <h3 className="text-md text-gray-300 mb-3">Description: <button ref={descriptionCollapseRef} className='rotate-90' onClick={expandCollapseDescription}>➤</button></h3>
-                    <p ref={descriptionRef} className="hidden mb-3 text-gray-500">
-                        {snipInfoState.snippet.descr}
-                    </p>
+                    <details className='mb-4'>
+                      <summary className='mb-2'>Description</summary>
+                      <p className='text-gray-500'>{snipInfoState.snippet.descr}</p>
+                    </details>
+
                     <h3 className="text-md text-gray-300 mb-3">Snippet:</h3>
                     {/* Snippet */}
                     <CodeSnippet

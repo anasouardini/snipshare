@@ -26,7 +26,7 @@ const gotoHome = (req, res, next) => {
 router.post('/restart', gotoLogin, controller.init.restart);
 // auth
 //! mods and users login routes should be separates
-router.get('/api/auth/google', controller.signin.signinOAuth);
+router.get('/auth/google', controller.signin.signinOAuth);
 router.post('/signin', gotoHome, controller.signin.signinUser, controller.signin.signinMod);
 router.post('/signup', gotoHome, controller.signup);
 router.post('/logout', controller.logout);

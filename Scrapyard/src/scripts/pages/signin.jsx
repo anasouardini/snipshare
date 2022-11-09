@@ -32,7 +32,7 @@ export default function Signin() {
     const handleOAuth = (e) => {
         e.preventDefault();
 
-        window.open('http://127.0.0.1:2000/api/auth/google', '_self');
+        window.open('http://127.0.0.1:2000/auth/google', '_self');
     };
 
     const handleSubmit = (e) => {

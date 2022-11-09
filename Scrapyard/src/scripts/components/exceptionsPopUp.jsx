@@ -3,9 +3,12 @@ import AccessControl from '../components/accessControl';
 import {deepClone} from '../tools/deepClone';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa';
 import {useOutletContext} from 'react-router';
+import {useQuery} from 'react-query';
+import {getSnippets} from '../tools/snipStore';
+import debouncer from '../tools/debouncer';
 
 const ExceptionsPopUp = forwardRef((props, ref) => {
-    const {notify} = useOutletContext();
+    const {notify, whoami} = useOutletContext();
 
     const [_, setForceRenderState] = useState(true);
     const forceRerender = () => {
@@ -136,11 +139,11 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                 return (
                     <li key={exceptionID} className={classes.li}>
                         <div className={classes.ruleItem}>
-                            <div className="truncate w-[10rem]">{exceptionID}</div>
+                            <div className='truncate w-[10rem]'>{exceptionID}</div>
                             <AccessControl
                                 ref={coworkerExceptionsRef.current[exceptionID]}
                                 coworkerAccess={coworkerExceptionsRef.current[exceptionID]}
-                                type="exceptions"
+                                type='exceptions'
                                 markChangedCoworker={(e) => {
                                     props.markChangedCoworker(props.coworkerUsername);
                                 }}
@@ -155,7 +158,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                                     forceRerender();
                                 }}
                             >
-                                <div className="tooltiptext">Delete Exception</div>
+                                <div className='tooltiptext'>Delete Exception</div>
                                 <FaMinusSquare />
                             </button>
                         </div>
@@ -166,25 +169,53 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
             <></>
         );
 
+    // get snippets list
+    const {
+        data: snippetsData,
+        status: snippetsStatus,
+        refetch: refetchSnippets,
+    } = useQuery(['snippetsMeta'], () => {
+        return getSnippets({
+            user: whoami,
+            meta: 'meta',
+            title: ref.current[props.oldOrNew].new.exceptionID.value,
+            pageParam: 1,
+            perPage: 6,
+        });
+    });
+
+    useEffect(() => {
+        debouncer.init('exceptionsSearch', () => {
+            refetchSnippets();
+        }, 500);
+    }, []);
+
+    const handleSnippetSearch = () => {
+        debouncer.run('exceptionsSearch');
+    };
+
     const snippetsDataList = () => {
+        console.log(snippetsData);
         return (
-            // <datalis id="snippets">
-            <select
-                className="bg-[#282828]"
-                id="snippets"
-                ref={(el) => {
-                    ref.current[props.oldOrNew].new.exceptionID = el;
-                }}
-            >
-                {props.snippets.map((snippet) => {
-                    return (
-                        <option key={snippet.id} value={snippet.id}>
-                            {snippet.title}
-                        </option>
-                    );
-                })}
-            </select>
-            // </datalis>
+            <>
+                <input
+                    onChange={handleSnippetSearch}
+                    list='snippets'
+                    type='text'
+                    ref={(el) => {
+                        ref.current[props.oldOrNew].new.exceptionID = el;
+                    }}
+                />
+                <datalist id='snippets'>
+                    {snippetsData.snippets.map((snippet) => {
+                        return (
+                            <option key={snippet.id} value={snippet.id}>
+                                {snippet.title}
+                            </option>
+                        );
+                    })}
+                </datalist>
+            </>
         );
     };
 
@@ -195,7 +226,7 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                 className={`fixed content-[""] top-0 left-0
                 w-full h-full bg-primary opacity-20`}
             ></div>
-            <form className="flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative">
+            <form className='flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative'>
                 <span
                     onClick={handleClose}
                     className='text-primary absolute content-["X"] top-2 right-2 text-xl cursor-pointer'
@@ -204,16 +235,16 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                 </span>
 
                 <div>
-                    <h1 className="mb-[4rem] text-2xl text-center">
+                    <h1 className='mb-[4rem] text-2xl text-center'>
                         Managing {props.coworkerUsername}'s Rules
                     </h1>
                     <div className={classes.inputs}>
-                        {ref.current[props.oldOrNew].new ? (
+                        {ref.current[props.oldOrNew].new && snippetsStatus == 'success' ? (
                             <>
                                 {snippetsDataList()}
                                 <AccessControl
                                     ref={ref.current[props.oldOrNew].new.exceptionAccess}
-                                    type="exceptions"
+                                    type='exceptions'
                                 />
                             </>
                         ) : (
@@ -221,8 +252,8 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
                         )}
 
                         <button className={classes.iconButton} onClick={addNewException}>
-                            <FaPlusSquare className="" />
-                            <div className="tooltiptext">Add Exception</div>
+                            <FaPlusSquare className='' />
+                            <div className='tooltiptext'>Add Exception</div>
                         </button>
                     </div>
                     <div>

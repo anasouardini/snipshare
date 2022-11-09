@@ -78,166 +78,144 @@ const queries = {
             '${uuid()}',
             'venego',
             0,
-            'venego snippet 1',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'Debouncer Model',
+            'This is a debouncer model where you can initialize multiple debounced actions, and they are going to be stored in a list untill you decide to run or delete them',
+            'const debouncedActionsList = {};\n\nconst init = (key, func, delay = 500) => {\n\tlet timer;\n\tdebouncedActionsList[key] = (...args) => {\n\t\tif (timer) {\n\t\t\tclearTimeout(timer);\n\t\t}\n\t\ttimer = setTimeout(() => {\n\t\t\tfunc(...args);\n\t\t}, delay);\n\t};\n};\nconst clear = (key) => {\n\tdelete debouncedActionsList[key];\n};\nconst run = (key, ...args) => {\n\tdebouncedActionsList[key](...args);\n};\n\nexport default {init, run, clear};',
             'venego'
         ),
         (
             '${uuid()}',
             'venego',
             1,
-            'venego snippet 4',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
+           'venego'
+        ),
+        (
+            '${uuid()}',
+            'venego',
+            1,
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             'venego'
         ),
         (
             '${uuid()}',
             'venego',
             1,
-            'venego snippet 2',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'react functional component',
+            'use this to create a react functional component',
+            'import react from "react";\nexport default function Component(props){\n\treturn (<p>Component</p>);\n}',
             'venego'
         ),
         (
             '${uuid()}',
-            'venego',
-            1,
-            'venego snippet 3',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
-            'venego'
-        ),
-
-
-        (
-            '${uuid()}',
             '3sila',
             0,
-            '3sila snippet 1',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             '3sila'
         ),
         (
             '${uuid()}',
             '3sila',
             1,
-            '3sila snippet 4',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             '3sila'
         ),
         (
             '${uuid()}',
             '3sila',
             1,
-            '3sila snippet 2',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             '3sila'
         ),
         (
             '${uuid()}',
             '3sila',
             1,
-            '3sila snippet 3',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             '3sila'
         ),
-
-
         (
             '${uuid()}',
             'm9ila',
             0,
-            'm9ila snippet 1',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             'm9ila'
         ),
         (
             '${uuid()}',
             'm9ila',
             1,
-            'm9ila snippet 4',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             'm9ila'
         ),
         (
             '${uuid()}',
             'm9ila',
             1,
-            'm9ila snippet 2',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             'm9ila'
         ),
         (
             '${uuid()}',
             'm9ila',
             1,
-            'm9ila snippet 3',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             'm9ila'
         ),
-
-
         (
             '${uuid()}',
             '3disa',
             0,
-            '3disa snippet 1',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             '3disa'
         ),
         (
             '${uuid()}',
             '3disa',
             1,
-            '3disa snippet 4',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             '3disa'
         ),
         (
             '${uuid()}',
             '3disa',
             1,
-            '3disa snippet 2',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             '3disa'
         ),
         (
             '${uuid()}',
             '3disa',
             1,
-            '3disa snippet 3',
-            'I am planning to add a feature where you can have a snippet in your workflow, and have an option to share it with a co-worker.
-            or keep it private which is the default value.',
-            'const variable="this is the coolest snippet ever"\nconsole.log("msg: ", variable)',
+            'snippet for reversing a string',
+            'just a little snippet for reversing a string in js',
+            'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             '3disa'
         );`,
 };
@@ -257,7 +235,7 @@ const restart = async () => {
     if (!response) return false;
 
     response = await poolPromise(queries.createSnippets);
-    // console.log(response);
+    //console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.insertSnippets);

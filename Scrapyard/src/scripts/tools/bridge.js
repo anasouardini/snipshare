@@ -28,7 +28,7 @@ export const create = (route, body) =>
                 status: res.status,
             };
         })
-        .catch((err) => false);
+        .catch(() => false);
 
 export const read = (route) =>
     fetch(server.url + route, server.options('get'))
