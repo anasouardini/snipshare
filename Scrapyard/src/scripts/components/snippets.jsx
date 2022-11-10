@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import Snippet from '../components/snippet';
 // import {useNavigate, useMatch} from 'react-location';
 import {useParams, useOutletContext} from 'react-router-dom';
@@ -27,8 +27,6 @@ export default function Snippets() {
         showPreview: false,
     });
 
-    // when incSearch: clear cached pages
-    // when refetching: getNextPageParam() with the old page index
     const {
         data: snippetsPages,
         fetchNextPage,
@@ -105,20 +103,12 @@ export default function Snippets() {
         setPopUpState({...popUpState, showForm: true});
     };
 
+    const refetchSnippetsCB = useCallback(refetchSnippets);
     const listSnippets = (snippetsPages) => {
         // console.log(status);
         return snippetsPages.pages.map((page) => {
             return page.snippets.map((snippet) => {
-                return (
-                    <Snippet
-                        whoami={whoami}
-                        key={snippet.id}
-                        snippet={snippet}
-                        update={() => {
-                            refetchSnippets();
-                        }}
-                    />
-                );
+                return <Snippet key={snippet.id} snippet={snippet} update={refetchSnippetsCB} />;
             });
         });
     };
@@ -133,6 +123,8 @@ export default function Snippets() {
 
         setPopUpState(newState);
     };
+
+    console.log('rendering snippets');
     if (status == 'success') {
         console.log('sdfsd', snippetsPages.pages[0]);
     }
@@ -168,7 +160,7 @@ export default function Snippets() {
                     action='create'
                     fields={formFieldsState.fields}
                     hidePopUp={hidePopUp}
-                    owner={userParam}
+                    owner={userParam ? userParam : whoami}
                 />
             ) : (
                 <></>

@@ -12,9 +12,6 @@ export default function Home() {
         showPreview: false,
     });
 
-    const [formFieldsState, _] = useState({
-        fields: [...commonSnippetFields],
-    });
 
     // const navigate = useNavigate();
     // const {user: userParam} = useParams();
@@ -37,33 +34,10 @@ export default function Home() {
     // }
     // console.log(users);
 
-    const hidePopUp = (popUp) => {
-        let newState = {...popUpState};
-        if (popUp == 'form') {
-            newState.showForm = false;
-        } else {
-            newState.showPreview = false;
-        }
-
-        //- this renders twice
-        setPopUpState(newState);
-    };
-
     // console.log(users, getUsersStatus, getUsersErr);
     return (
         <div className="mt-12 w-full">
             <Snippets />
-
-            {popUpState.showForm ? (
-                <Form
-                    action="create"
-                    fields={formFieldsState.fields}
-                    hidePopUp={hidePopUp}
-                    owner={whoami}
-                />
-            ) : (
-                <></>
-            )}
         </div>
     ) ;
 }

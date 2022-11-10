@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {useOutletContext} from 'react-router-dom';
+import React, {useState, memo} from 'react';
+//import {useOutletContext} from 'react-router-dom';
 
 import {commonSnippetFields} from '../tools/snipStore';
 import {read, remove} from '../tools/bridge';
@@ -9,8 +9,8 @@ import {FaLock, FaLockOpen} from 'react-icons/fa';
 import CodeSnippet from './form/fields/snippet';
 import {useRef} from 'react';
 
-export default function Snippet(props) {
-    const {whoami} = useOutletContext();
+const Snippet = (props) => {
+    //const {whoami} = useOutletContext();
 
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,
@@ -75,7 +75,7 @@ export default function Snippet(props) {
     // console.log(snipInfoState.snippet);
     const classes = {
         buttons: 'flex justify-around mt-[20px]',
-        button: 'w-[100px] leserdeading-8 rounded-md text-white',
+        button: 'w-[100px] py-[4px] leserdeading-8 rounded-md text-white',
         btnPreview: `${
             snipInfoState.snippet.access?.read ? 'bg-cyan-600' : 'bg-gray-400 cursor-not-allowed'
         }`,
@@ -112,46 +112,49 @@ export default function Snippet(props) {
     // console.log(Object.values(formFieldsState.current.fields)[2].attr);
     return (
         <>
-            <div data-key={snipInfoState.snippet.id} className={`bg-[#292929] rounded-md w-full max-w-[600px]`}>
+            <div
+                data-key={snipInfoState.snippet.id}
+                className={`bg-[#292929] rounded-md w-full max-w-[600px]`}
+            >
                 <div className={`snippet flex flex-col max-w-[600px]  p-8`}>
                     {/* Owner and Author and Privacy*/}
-                    <div className="flex justify-between mb-4">
+                    <div className='flex justify-between mb-4'>
                         {/* Owner */}
-                        <div className="flex flex-row gap-3">
-                            <div className="w-[50px] h-[50px] border-[1px] border-primary rounded-full"></div>
+                        <div className='flex flex-row gap-3'>
+                            <div className='w-[50px] h-[50px] border-[1px] border-primary rounded-full'></div>
                             <p>
                                 <span>{snipInfoState.snippet.user}</span>
                                 <br />
-                                <span className="text-gray-500 text-sm">
+                                <span className='text-gray-500 text-sm'>
                                     @{snipInfoState.snippet.user}
                                 </span>
                             </p>
                         </div>
                         {/* Author */}
                         {snipInfoState.snippet.author != snipInfoState.snippet.user ? (
-                            <div className="grow-2">Author: @{snipInfoState.snippet.author}</div>
+                            <div className='grow-2'>Author: @{snipInfoState.snippet.author}</div>
                         ) : (
                             <></>
                         )}
                         {/* is Private */}
                         <p>
                             {snipInfoState.snippet.isPrivate ? (
-                                <FaLock className="text-orange-500" />
+                                <FaLock className='text-orange-500' />
                             ) : (
-                                <FaLockOpen className="text-primary" />
+                                <FaLockOpen className='text-primary' />
                             )}
                         </p>
                     </div>
                     {/* Title */}
-                    <h2 className="text-xl text-gray-300 mb-4">{snipInfoState.snippet.title}</h2>
+                    <h2 className='text-xl text-gray-300 mb-4'>{snipInfoState.snippet.title}</h2>
 
                     {/* Description */}
                     <details className='mb-4'>
-                      <summary className='mb-2'>Description</summary>
-                      <p className='text-gray-500'>{snipInfoState.snippet.descr}</p>
+                        <summary className='mb-2'>Description</summary>
+                        <p className='text-gray-500'>{snipInfoState.snippet.descr}</p>
                     </details>
 
-                    <h3 className="text-md text-gray-300 mb-3">Snippet:</h3>
+                    <h3 className='text-md text-gray-300 mb-3'>Snippet:</h3>
                     {/* Snippet */}
                     <CodeSnippet
                         {...formFieldsState.current.fields.filter(
@@ -191,7 +194,7 @@ export default function Snippet(props) {
             </div>
             {popUpState.showForm ? (
                 <Form
-                    action="edit"
+                    action='edit'
                     fields={formFieldsState.current.fields}
                     hidePopUp={hidePopUp}
                     snipId={snipInfoState.snippet.id}
@@ -215,4 +218,5 @@ export default function Snippet(props) {
             )}
         </>
     );
-}
+};
+export default memo(Snippet);
