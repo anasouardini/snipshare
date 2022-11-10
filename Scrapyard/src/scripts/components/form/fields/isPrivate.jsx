@@ -1,7 +1,7 @@
 import React from 'react';
 import {forwardRef} from 'react';
 
-const IsPrivate = forwardRef((props, ref) => {
+const IsPrivate = (props, ref) => {
     // console.log(props);
     return (
         <label>
@@ -14,6 +14,6 @@ const IsPrivate = forwardRef((props, ref) => {
             &nbsp; private
         </label>
     );
-});
+};
 
-export default IsPrivate;
+export default forwardRef(IsPrivate);

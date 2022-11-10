@@ -3,7 +3,7 @@ import {forwardRef} from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import {useRef} from 'react';
 
-const CodeSnippet = forwardRef((props, ref) => {
+const CodeSnippet = (props, ref) => {
     // console.log(props);
     const lineHeight = 19;
     const linesNumber = useRef(5 * lineHeight);
@@ -51,6 +51,6 @@ const CodeSnippet = forwardRef((props, ref) => {
             </div>
         </>
     );
-});
+};
 
-export default CodeSnippet;
+export default forwardRef(CodeSnippet);

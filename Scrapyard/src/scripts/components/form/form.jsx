@@ -1,10 +1,10 @@
-import React, {useRef} from 'react';
+import React, {useRef, memo} from 'react';
 // import {useOutletContext} from 'react-router-dom';
 
 import {create, update} from '../../tools/bridge';
 import fieldsMap from './fieldsMap';
 
-export default function Form(props) {
+const Form = (props)=> {
     // const {whoami} = useOutletContext();
 
     const refs = {
@@ -130,3 +130,4 @@ export default function Form(props) {
         </div>
     );
 }
+export default Form
