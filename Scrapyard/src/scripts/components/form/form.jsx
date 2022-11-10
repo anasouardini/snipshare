@@ -1,11 +1,11 @@
 import React, {useRef, memo} from 'react';
-// import {useOutletContext} from 'react-router-dom';
+import {useOutletContext} from 'react-router-dom';
 
 import {create, update} from '../../tools/bridge';
 import fieldsMap from './fieldsMap';
 
-const Form = (props)=> {
-    // const {whoami} = useOutletContext();
+const Form = (props) => {
+    const {notify} = useOutletContext();
 
     const refs = {
         title: useRef(''),
@@ -52,7 +52,7 @@ const Form = (props)=> {
             user: props.snipUser,
             ...createRequestBody(),
         });
-        console.log(response);
+        notify({type:'info', msg: response.msg});
 
         props.updateEditedSnippet();
     };
@@ -60,7 +60,8 @@ const Form = (props)=> {
     const handleCreate = async () => {
         // console.log(props.owner);
         const response = await create(`${props.owner}/snippet`, createRequestBody());
-        console.log(response);
+        notify({type:'info', msg: response.msg});
+        props.refetch();
     };
 
     const handleSubmit = async (e) => {
@@ -111,7 +112,7 @@ const Form = (props)=> {
                 className={`fixed content-[""] top-0 left-0
                         w-full h-full bg-primary opacity-20`}
             ></div>
-            <form className="flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative">
+            <form className='flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative'>
                 <span
                     onClick={handleClose}
                     className='absolute content-["X"] top-2 right-2 text-xl cursor-pointer text-gray-700'
@@ -121,7 +122,7 @@ const Form = (props)=> {
                 {listInputs(props.fields)}
 
                 <button
-                    className="w-[100px] bg-primary leading-8 rounded-md text-white mx-auto z-10"
+                    className='w-[100px] bg-primary leading-8 rounded-md text-white mx-auto z-10'
                     onClick={handleSubmit}
                 >
                     {props.action == 'edit' ? 'Edit' : 'Create'}
@@ -129,5 +130,5 @@ const Form = (props)=> {
             </form>
         </div>
     );
-}
-export default Form
+};
+export default Form;

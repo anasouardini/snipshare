@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useMemo} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import Snippet from '../components/snippet';
 // import {useNavigate, useMatch} from 'react-location';
 import {useParams, useOutletContext} from 'react-router-dom';
@@ -8,15 +8,18 @@ import {commonSnippetFields, getSnippets} from '../tools/snipStore';
 import {useNavigate} from 'react-router-dom';
 import {useInfiniteQuery} from 'react-query';
 import debouncer from '../tools/debouncer';
+import autoAnimate from '@formkit/auto-animate';
 
 export default function Snippets() {
     const navigate = useNavigate();
 
+    const parentRef = useRef();
+    useEffect(() => {
+        // don't attach to the dom if the reference in null
+        parentRef.current && autoAnimate(parentRef.current);
+    }, [parentRef.current]);
+
     const {whoami} = useOutletContext();
-    // if (whoami == '' || whoami == 'unauthorized') {
-    //     console.log(whoami);
-    //     return navigate('/login', {replace: true});
-    // }
 
     const {user: userParam} = useParams();
 
@@ -129,7 +132,10 @@ export default function Snippets() {
         console.log('sdfsd', snippetsPages.pages[0]);
     }
     return status == 'success' ? (
-        <div className='flex flex-col items-center justify-stretch px-3 gap-7 mx-auto'>
+        <div
+            ref={parentRef}
+            className='flex flex-col items-center justify-stretch px-3 gap-7 mx-auto'
+        >
             <div className='w-full max-w-[600px] flex justify-between flex-wrap my-5 gap-4'>
                 {whoami == userParam ||
                 snippetsPages.pages?.[0]?.snippets?.[0]?.genericAccess?.create ||
@@ -161,6 +167,7 @@ export default function Snippets() {
                     fields={formFieldsState.fields}
                     hidePopUp={hidePopUp}
                     owner={userParam ? userParam : whoami}
+                    refetch={refetchSnippets}
                 />
             ) : (
                 <></>

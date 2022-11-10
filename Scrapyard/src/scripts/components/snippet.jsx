@@ -1,5 +1,5 @@
 import React, {useState, memo} from 'react';
-//import {useOutletContext} from 'react-router-dom';
+import {useOutletContext} from 'react-router-dom';
 
 import {commonSnippetFields} from '../tools/snipStore';
 import {read, remove} from '../tools/bridge';
@@ -10,7 +10,7 @@ import CodeSnippet from './form/fields/snippet';
 import {useRef} from 'react';
 
 const Snippet = (props) => {
-    //const {whoami} = useOutletContext();
+    const { notify} = useOutletContext();
 
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,
@@ -69,7 +69,7 @@ const Snippet = (props) => {
                 snipInfoState.snippet.user + '/' + snipInfoState.snippet.id
             );
             props.update();
-            console.log(response.msg);
+            notify({type:'info', msg: response.msg});
         }
     };
     // console.log(snipInfoState.snippet);

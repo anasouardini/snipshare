@@ -65,7 +65,7 @@ export default function SharedLayout(props) {
                 delete notificationsList[randomKey];
                 return {...notificationsList};
             });
-        }, 2000);
+        }, 3000);
 
         setNotifyState((notificationsList) => {
             notificationsList[randomKey] = notication;
@@ -75,12 +75,12 @@ export default function SharedLayout(props) {
     };
 
     return (
-        <div className="font-roboto">
+        <div className='font-roboto'>
             {/* {whoami.msg} */}
             <nav>
-                <ul className="flex gap-3">
+                <ul className='flex gap-3'>
                     <li>
-                        <NavLink className={classes.navLink} end to="/">
+                        <NavLink className={classes.navLink} end to='/'>
                             Home
                         </NavLink>
                     </li>
@@ -91,19 +91,19 @@ export default function SharedLayout(props) {
                     </li>
 
                     <li className={`ml-auto`}>
-                        <NavLink className={classes.navLink} to="/addRules">
+                        <NavLink className={classes.navLink} to='/addRules'>
                             Coworkers
                         </NavLink>
                     </li>
                     {whoami.status == 401 ? (
                         <>
                             <li>
-                                <NavLink className={classes.navLink} to="/login" replace>
+                                <NavLink className={classes.navLink} to='/login' replace>
                                     Login
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink className={classes.navLink} to="/signup" replace>
+                                <NavLink className={classes.navLink} to='/signup' replace>
                                     Create Account
                                 </NavLink>
                             </li>
@@ -112,21 +112,21 @@ export default function SharedLayout(props) {
                         <></>
                     )}
                     <li
-                        className="cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200"
+                        className='cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200'
                         onClick={async () => {
                             const response = await create('logout');
-                            console.log(response);
+                            notify({type: 'info', msg: response.msg});
                             return navigate('/login', {replace: true});
                         }}
                     >
                         Logout
                     </li>
                     <li
-                        className="cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200"
+                        className='cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200'
                         onClick={async () => {
                             const response = await create('restart');
                             // setForceRenderState((st) => !st);
-                            console.log(response);
+                            notify({type: 'info', msg: response.msg});
                         }}
                     >
                         reinitDB
@@ -143,7 +143,7 @@ export default function SharedLayout(props) {
             )}
 
             {/* notifications */}
-            <div className="fixed top-[30px] right-[50%] translate-x-[50%] flex-row">
+            <div className='fixed top-[30px] right-[50%] translate-x-[50%] flex-row'>
                 {listNotifications(notifyState)}
             </div>
             {/* <Notify key={'notiKey'} type={'warning'} msg={'empty'} /> */}
