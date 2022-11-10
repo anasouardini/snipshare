@@ -237,8 +237,8 @@ const appendSnippetToResponse = (req, filteredSnippets, snippetObj, access) => {
 const readUserAll = async (req, res) => {
     //- needs to be exactly false
     if (false == (await readMiddleware(req, res))) return;
-    const pageParam = req.query.pageParam;
-    const perPage = req.query.perPage;
+    const pageParam = Number(req.query.pageParam);
+    const perPage = Number(req.query.perPage);
     const genericAccess = req.rules.generic;
     // console.log(req.snippets);
     // filter snippets according to rules
