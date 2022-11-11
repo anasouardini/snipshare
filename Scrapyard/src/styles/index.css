@@ -44,10 +44,6 @@ input[type=checkbox]{
     visibility: visible;
 }
 
-nav{
-    @apply px-[5%] py-2
-}
-
 .chopLongText{
     overflow: hidden;
     text-overflow: ellipsis;

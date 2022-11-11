@@ -10,7 +10,7 @@ import CodeSnippet from './form/fields/snippet';
 import {useRef} from 'react';
 
 const Snippet = (props) => {
-    const { notify} = useOutletContext();
+    const {notify} = useOutletContext();
 
     const [snipInfoState, setSnipInfoState] = useState({
         snippet: props.snippet,
@@ -69,7 +69,7 @@ const Snippet = (props) => {
                 snipInfoState.snippet.user + '/' + snipInfoState.snippet.id
             );
             props.update();
-            notify({type:'info', msg: response.msg});
+            notify({type: 'info', msg: response.msg});
         }
     };
     // console.log(snipInfoState.snippet);

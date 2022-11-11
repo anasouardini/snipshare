@@ -157,7 +157,7 @@ export default function AddRules() {
     };
 
     const classes = {
-        inputs: 'flex justify-between items-center mb-[2rem]',
+        inputs: 'border-[1px] border-[#424242] p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
         buttons: 'flex gap-5',
         button: 'border-2 border-primary px-2 py-1',
         iconButton: 'text-2xl text-primary tooltip',
@@ -174,7 +174,7 @@ export default function AddRules() {
                 };
                 return (
                     <li key={coworkerUsername} className={classes.li}>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center flex-wrap gap-10">
                             <div>
                                 <img src="" alt="" />
                                 <span>{coworkerUsername}</span>
@@ -244,6 +244,7 @@ export default function AddRules() {
         <div className="container mt-[4rem]">
             <div className={classes.inputs}>
                 <input
+          className='border-[1px] border-primary rounded-md p-1 px-3'
                     type="text"
                     placeholder="new Coworker"
                     ref={(el) => {

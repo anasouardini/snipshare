@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
     Outlet,
     useAsyncError,
@@ -14,6 +14,7 @@ import {useEffect} from 'react';
 import {useState} from 'react';
 import Notify from '../../components/notify';
 import {v4 as uuid} from 'uuid';
+import {FaBars} from 'react-icons/fa';
 
 export default function SharedLayout(props) {
     // const [_, setForceRenderState] = useState(false);
@@ -37,8 +38,8 @@ export default function SharedLayout(props) {
     }, [location.pathname]);
 
     const classes = {
-        navLink:
-            'cursor-pointer pb-2 border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200',
+        navLink: `cursor-pointer pb-2 border-b-[3px] border-b-transparent 
+              hover:border-b-primary text-gray-200`,
     };
 
     if (whoami.msg && whoami?.status == 200 && location.pathname.includes('login')) {
@@ -74,65 +75,105 @@ export default function SharedLayout(props) {
         // console.log('timedout', notifyState);
     };
 
+    const menuOverlayRef = useRef();
+    const navRef = useRef();
+    const showMenu = (e) => {
+        e.stopPropagation();
+        // THIS IS A HUGE MESS BUT IT'S A CHANCE TO EXPERIMENT WITH TAILWIND SOME MORE
+
+        menuOverlayRef.current.className = `
+              navigationOverlay sm>:fixed sm>:top-0 sm>:left-0 sm>:right-0 sm>:bottom-0
+              sm>:z-20 sm>:flex sm>:justify-center sm>:items-center bg-dark/75`;
+        navRef.current.className = `sm<:px-[5%] sm<:py-2
+                                    sm>:flex-row sm>:bg-dark
+                                    sm>:border-2 sm>:border-primary sm>:p-4 rounded-md 
+                                    `;
+        navRef.current.children[0].className = `sm<:flex sm<:gap-3
+                                               flex sm>:flex-col sm>:gap-5 px-4`;
+    };
+    const hideMenu = (e) => {
+
+        const isOverlayVisible =
+            e.currentTarget.classList.contains('navigationOverlay');
+        console.log(e.currentTarget.tagName)
+        if (!isOverlayVisible && e.currentTarget.tagName != 'NAV') {
+            return;
+        }
+        menuOverlayRef.current.className = `sm>:block`;
+        navRef.current.className = `sm>:hidden sm<:px-[5%] sm<:py-2`;
+    };
+
     return (
         <div className='font-roboto'>
             {/* {whoami.msg} */}
-            <nav>
-                <ul className='flex gap-3'>
-                    <li>
-                        <NavLink className={classes.navLink} end to='/'>
-                            Home
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink className={classes.navLink} to={`${whoami.msg}`}>
-                            Me
-                        </NavLink>
-                    </li>
+            <div
+                onClick={hideMenu}
+                ref={menuOverlayRef}
+                className={`sm>:flex sm>:justify-center sm>:align-center sm<:px-[5%] sm<:py-2`}
+            >
+                <button onClick={showMenu} className='sm<:hidden absolute top-3 left-3 text-2xl'>
+                    <FaBars />
+                </button>
 
-                    <li className={`ml-auto`}>
-                        <NavLink className={classes.navLink} to='/addRules'>
-                            Coworkers
-                        </NavLink>
-                    </li>
-                    {whoami.status == 401 ? (
-                        <>
-                            <li>
-                                <NavLink className={classes.navLink} to='/login' replace>
-                                    Login
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink className={classes.navLink} to='/signup' replace>
-                                    Create Account
-                                </NavLink>
-                            </li>
-                        </>
-                    ) : (
-                        <></>
-                    )}
-                    <li
-                        className='cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200'
-                        onClick={async () => {
-                            const response = await create('logout');
-                            notify({type: 'info', msg: response.msg});
-                            return navigate('/login', {replace: true});
-                        }}
-                    >
-                        Logout
-                    </li>
-                    <li
-                        className='cursor-pointer border-b-[3px] border-b-transparent hover:border-b-primary text-gray-200'
-                        onClick={async () => {
-                            const response = await create('restart');
-                            // setForceRenderState((st) => !st);
-                            notify({type: 'info', msg: response.msg});
-                        }}
-                    >
-                        reinitDB
-                    </li>
-                </ul>
-            </nav>
+                <nav onClick={hideMenu} ref={navRef} className='sm>:hidden'>
+                    <ul className='sm<:flex sm<:gap-3'>
+                        <li>
+                            <NavLink className={classes.navLink} end to='/'>
+                                Home
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink className={classes.navLink} to={`${whoami.msg}`}>
+                                Me
+                            </NavLink>
+                        </li>
+
+                        <li className={`ml-auto`}>
+                            <NavLink className={classes.navLink} to='/addRules'>
+                                Coworkers
+                            </NavLink>
+                        </li>
+                        {whoami.status == 401 ? (
+                            <>
+                                <li>
+                                    <NavLink className={classes.navLink} to='/login' replace>
+                                        Login
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink className={classes.navLink} to='/signup' replace>
+                                        Create Account
+                                    </NavLink>
+                                </li>
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                        <li
+                            className={`cursor-pointer border-b-[3px] border-b-transparent
+                                    hover:border-b-primary text-gray-200`}
+                            onClick={async () => {
+                                const response = await create('logout');
+                                notify({type: 'info', msg: response.msg});
+                                return navigate('/login', {replace: true});
+                            }}
+                        >
+                            Logout
+                        </li>
+                        <li
+                            className={`cursor-pointer border-b-[3px] border-b-transparent 
+                                  hover:border-b-primary text-gray-200`}
+                            onClick={async () => {
+                                const response = await create('restart');
+                                // setForceRenderState((st) => !st);
+                                notify({type: 'info', msg: response.msg});
+                            }}
+                        >
+                            reinitDB
+                        </li>
+                    </ul>
+                </nav>
+            </div>
             {/* {props.children} */}
             {whoami && (whoami?.status == 200 || location.pathname.includes('login')) ? (
                 // <GlobalContext.Provider value={whoami}>

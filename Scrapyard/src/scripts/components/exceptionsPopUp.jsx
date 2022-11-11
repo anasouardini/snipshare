@@ -7,7 +7,7 @@ import {useQuery} from 'react-query';
 import {getSnippets} from '../tools/snipStore';
 import debouncer from '../tools/debouncer';
 
-const ExceptionsPopUp = forwardRef((props, ref) => {
+const ExceptionsPopUp = (props, ref) => {
     const {notify, whoami} = useOutletContext();
 
     const [_, setForceRenderState] = useState(true);
@@ -185,9 +185,13 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
     });
 
     useEffect(() => {
-        debouncer.init('exceptionsSearch', () => {
-            refetchSnippets();
-        }, 500);
+        debouncer.init(
+            'exceptionsSearch',
+            () => {
+                refetchSnippets();
+            },
+            500
+        );
     }, []);
 
     const handleSnippetSearch = () => {
@@ -270,6 +274,6 @@ const ExceptionsPopUp = forwardRef((props, ref) => {
             </form>
         </div>
     );
-});
+};
 
-export default ExceptionsPopUp;
+export default forwardRef(ExceptionsPopUp);
