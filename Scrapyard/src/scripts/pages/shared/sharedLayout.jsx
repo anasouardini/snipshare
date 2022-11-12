@@ -15,6 +15,7 @@ import {useState} from 'react';
 import Notify from '../../components/notify';
 import {v4 as uuid} from 'uuid';
 import {FaBars} from 'react-icons/fa';
+import SSE from '../../components/sse.jsx';
 
 export default function SharedLayout(props) {
     // const [_, setForceRenderState] = useState(false);
@@ -92,9 +93,7 @@ export default function SharedLayout(props) {
                                                flex sm>:flex-col sm>:gap-5 px-4`;
     };
     const hideMenu = (e) => {
-
-        const isOverlayVisible =
-            e.currentTarget.classList.contains('navigationOverlay');
+        const isOverlayVisible = e.currentTarget.classList.contains('navigationOverlay');
         //console.log(e.currentTarget.tagName)
         if (!isOverlayVisible && e.currentTarget.tagName != 'NAV') {
             return;
@@ -188,6 +187,8 @@ export default function SharedLayout(props) {
                 {listNotifications(notifyState)}
             </div>
             {/* <Notify key={'notiKey'} type={'warning'} msg={'empty'} /> */}
+            {/* SSE */}
+            <SSE />
         </div>
     );
 }

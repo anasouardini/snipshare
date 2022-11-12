@@ -22,16 +22,35 @@ const gotoHome = (req, res, next) => {
     next();
 };
 
+router.get('/event', (req, res) => {
+    console.log('/evnet: username', req.user);
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Connection', 'Keep-alive');
+    res.setHeader('Cache-Control', 'no-cache');
+
+    // who's connected
+    // write to the stream from another method based on the event
+    setInterval(() => {
+        res.write('hello\r\n\r\n');
+    }, 1000);
+
+    res.on('close', () => {
+        console.log('sse connection closed');
+    });
+});
+
 // premade db structure
 router.post('/restart', gotoLogin, controller.init.restart);
 // auth
-//! mods and users login routes should be separates
 router.get('/auth/google', controller.signin.signinOAuth);
+
+//! mods and users login routes should be separate
 router.post('/signin', gotoHome, controller.signin.signinUser, controller.signin.signinMod);
 router.post('/signup', gotoHome, controller.signup);
 router.post('/logout', controller.logout);
 router.get('/whoami', controller.whoami);
 router.get('/users', gotoLogin, controller.user.readAll);
+
 // snippets
 router.get('/snippets', gotoLogin, controller.snippet.readAll);
 router.get('/:user/snippets', gotoLogin, controller.snippet.readUserAll);
