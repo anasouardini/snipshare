@@ -95,7 +95,7 @@ export default function SharedLayout(props) {
 
         const isOverlayVisible =
             e.currentTarget.classList.contains('navigationOverlay');
-        console.log(e.currentTarget.tagName)
+        //console.log(e.currentTarget.tagName)
         if (!isOverlayVisible && e.currentTarget.tagName != 'NAV') {
             return;
         }

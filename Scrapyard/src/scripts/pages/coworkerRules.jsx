@@ -63,7 +63,6 @@ export default function AddRules() {
     }
     // console.log('query coworkers', coworkersRulesData);
 
-
     const eventDefaults = (e) => {
         e.stopPropagation();
         e.preventDefault();
@@ -157,7 +156,7 @@ export default function AddRules() {
     };
 
     const classes = {
-        inputs: 'border-[1px] border-[#424242] p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
+        inputs: 'border-[1px] border-[#323232] p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
         buttons: 'flex gap-5',
         button: 'border-2 border-primary px-2 py-1',
         iconButton: 'text-2xl text-primary tooltip',
@@ -174,15 +173,15 @@ export default function AddRules() {
                 };
                 return (
                     <li key={coworkerUsername} className={classes.li}>
-                        <div className="flex justify-between items-center flex-wrap gap-10">
+                        <div className='flex justify-between items-center flex-wrap gap-10'>
                             <div>
-                                <img src="" alt="" />
+                                <img src='' alt='' />
                                 <span>{coworkerUsername}</span>
                             </div>
                             <AccessControl
                                 ref={genericAccessRefs.current.old[coworkerUsername]}
                                 coworkerAccess={coworkersRulesData.generic[coworkerUsername]}
-                                type="generic"
+                                type='generic'
                                 markChangedCoworker={(e) => {
                                     markChangedCoworker(coworkerUsername);
                                 }}
@@ -200,7 +199,7 @@ export default function AddRules() {
                                         updateCoworker(coworkerUsername);
                                     }}
                                 >
-                                    <div className="tooltiptext">Update rule</div>
+                                    <div className='tooltiptext'>Update rule</div>
                                     <FaRetweet />
                                 </button>
                                 <button
@@ -214,7 +213,7 @@ export default function AddRules() {
                                         );
                                     }}
                                 >
-                                    <div className="tooltiptext">Exceptions</div>
+                                    <div className='tooltiptext'>Exceptions</div>
                                     <FaFolderPlus />
                                     {/* <FaPuzzlePiece />
                                     <FaHistory /> */}
@@ -226,7 +225,7 @@ export default function AddRules() {
                                         deleteCoworker(coworkerUsername);
                                     }}
                                 >
-                                    <div className="tooltiptext">Delete rule</div>
+                                    <div className='tooltiptext'>Delete rule</div>
                                     <FaMinusSquare />
                                     {/* <FaMinusCircle />
                                     <FaRegMinusSquare /> */}
@@ -241,17 +240,17 @@ export default function AddRules() {
         );
 
     return coworkersRulesStatus == 'success' ? (
-        <div className="container mt-[4rem]">
+        <div className='container mt-[4rem]'>
             <div className={classes.inputs}>
                 <input
-          className='border-[1px] border-primary rounded-md p-1 px-3'
-                    type="text"
-                    placeholder="new Coworker"
+                    className='border-[1px] border-primary rounded-md p-1 px-3 w-[150px]'
+                    type='text'
+                    placeholder='new Coworker'
                     ref={(el) => {
                         exceptionAccessRefs.current.new.coworkerUsername = el;
                     }}
                 />
-                <AccessControl ref={genericAccessRefs.current.new} type="generic" />
+                <AccessControl ref={genericAccessRefs.current.new} type='generic' />
                 <div className={classes.buttons}>
                     <button
                         className={classes.iconButton}
@@ -263,16 +262,16 @@ export default function AddRules() {
                             showExceptionsPopUp({}, 'new', coworkerUsername);
                         }}
                     >
-                        <div className="tooltiptext">Exceptions</div>
+                        <div className='tooltiptext'>Exceptions</div>
                         <FaFolderPlus />
                     </button>
                     <button className={classes.iconButton} onClick={addNewCoworker}>
-                        <div className="tooltiptext">Add Rule</div>
+                        <div className='tooltiptext'>Add Rule</div>
                         <FaPlusSquare />
                     </button>
                 </div>
             </div>
-            <div className="mt-[4rem]">
+            <div className='mt-[4rem]'>
                 <ul>{listCoworkers()}</ul>
             </div>
             {popUpState.showExceptions ? (
