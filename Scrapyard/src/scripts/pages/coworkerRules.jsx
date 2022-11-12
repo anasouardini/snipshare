@@ -158,9 +158,9 @@ export default function AddRules() {
     const classes = {
         inputs: 'border-[1px] border-[#323232] p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
         buttons: 'flex gap-5',
-        button: 'border-2 border-primary px-2 py-1',
+        button: 'border-[1px] border-primary px-2 py-1',
         iconButton: 'text-2xl text-primary tooltip',
-        li: 'mb-2 px-3 py-2 border-2 border-[#323232] rounded-md hover:bg-[#262626]',
+        li: 'mb-3 px-3 py-2 border-[1px] border-[#323232] rounded-md hover:bg-[#262626]',
     };
 
     const listCoworkers = () =>
