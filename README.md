@@ -1,4 +1,4 @@
-# Scrapyard project
+# SnipShare project
 
 ## The Idea of It
 
@@ -28,7 +28,10 @@ React-location is not easy to work with, I sill prefer the jsx syntax of react-r
 I still think that Prisma is the best thing that has happened to Sql. But in this project... I think it's overkill, especially with the 100ms overhead for each query.
 
 - google OAuth2.0 manually 
-turns out passportjs is nothing but an overhead in the authentication implementation.
+Turns out passportjs is nothing but an overhead in the authentication implementation.
+
+- notification system with SSE
+Real time notification is really fun and interactive. I probably would do more of these.
 
 - ZOD
 I still need more time using this tool, but it's a good way to get the job done with minimal keystrokes.
@@ -48,5 +51,4 @@ As long as I ditch Webpack, anything is good at this stage.
 - NeoVim
 I'm still stuck with the overhead of setting it up. auto completion, smart tabulation, jsx highlighting and other stuff are very annoying to setup.
 But I feel like I'm going fast when it comes to the text/code editing phase.
-
 

@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const fs = require('fs/promises');
 const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -11,7 +12,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 2000;
 
 // midleware
-
+app.use(helmet());
 app.use(cors({origin: ['http://127.0.0.1:3000'], credentials: true}));
 
 app.use(cookieParser());

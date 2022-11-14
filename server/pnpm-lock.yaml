@@ -11,6 +11,7 @@ specifiers:
   express: ^4.18.1
   express-session: ^1.17.3
   express-sse: ^0.5.3
+  helmet: ^6.0.0
   jsonwebtoken: ^8.5.1
   mysql2: ^2.3.3
   passport: ^0.6.0
@@ -27,6 +28,7 @@ dependencies:
   express: 4.18.1
   express-session: 1.17.3
   express-sse: 0.5.3
+  helmet: 6.0.0
   jsonwebtoken: 8.5.1
   mysql2: 2.3.3
   passport: 0.6.0
@@ -952,6 +954,11 @@ packages:
     engines: {node: '>= 0.4.0'}
     dependencies:
       function-bind: 1.1.1
+
+  /helmet/6.0.0:
+    resolution: {integrity: sha512-FO9RpR1wNJepH/GbLPQVtkE2eESglXL641p7SdyoT4LngHFJcZheHMoyUcjCZF4qpuMMO1u5q6RK0l9Ux8JBcg==}
+    engines: {node: '>=14.0.0'}
+    dev: false
 
   /http-errors/2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}

@@ -1,6 +1,7 @@
 const CoworkerRules = require('../model/coworkersRules');
 const User = require('../model/user');
 const Z = require('zod');
+const notifyQueue = require('../tools/notifyQueue');
 
 // ================ separating these so I can use then outside of this model
 
@@ -131,7 +132,8 @@ const create = async (req, res) => {
     const owner = req.user.username;
     // console.log(req.body.props);
 
-    //-I- check if the potential coworker exists, better to add coworkers by id and usernames like in discord
+    // -I- check if the potential coworker exists,
+    // better to add coworkers by id and usernames like in discord
     const userExistsResult = await userExists(req.body.props.coworker);
     if (userExistsResult.status != 200) {
         return res.status(userExistsResult.status).json({msg: userExistsResult.msg});
@@ -149,12 +151,26 @@ const create = async (req, res) => {
 
     //-III- ceating the coworker rule
     const createCoworkerResult = await createCoworker(owner, req.body.props);
+
+    // todo: add notification to db, marked as unread
+    notifyQueue.queueAdd(req.body.props.coworker, {
+        event: 'message',
+        id: 0,
+        data: `${owner} gave you access to his account`,
+    });
+
     return res.status(createCoworkerResult.status).json({msg: createCoworkerResult.msg});
 };
 
 const update = async (req, res) => {
     const owner = req.user.username;
 
+    // todo: add notification to db, marked as unread
+    notifyQueue.queueAdd(req.body.props.coworker, {
+        event: 'message',
+        id: 0,
+        data: `${owner} has modified your permissions on his account`,
+    });
     const updateCoworkerResult = await updateCoworker(owner, req.body.props);
     res.status(updateCoworkerResult.status).json({msg: updateCoworkerResult.msg});
 };
@@ -172,6 +188,12 @@ const remove = async (req, res) => {
         return res.status(400).json({msg: 'could not delete a coworker rule'});
     }
 
+    // todo: add notification to db, marked as unread
+    notifyQueue.queueAdd(req.body.props.coworker, {
+        event: 'message',
+        id: 0,
+        data: `you are no longer have access to ${owner}'s account`,
+    });
     res.json({msg: 'a coworker rule has been deleted successfully'});
 };
 

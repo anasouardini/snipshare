@@ -59,6 +59,8 @@ export default function SharedLayout(props) {
         ));
     };
 
+    // passed as react-router-context to the outlet
+    // and as a prop to the SSE component
     const notify = (notication) => {
         const randomKey = uuid();
 
@@ -188,7 +190,7 @@ export default function SharedLayout(props) {
             </div>
             {/* <Notify key={'notiKey'} type={'warning'} msg={'empty'} /> */}
             {/* SSE */}
-            <SSE />
+            <SSE notify={notify} />
         </div>
     );
 }

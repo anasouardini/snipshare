@@ -2,6 +2,8 @@ const router = require('express').Router();
 const controller = require('../controller');
 // const passport = require('../passport/local');
 
+const notifyQueue = require('../tools/notifyQueue');
+
 const gotoLogin = (req, res, next) => {
     // console.log(req.user);
     // if not logged in
@@ -22,20 +24,26 @@ const gotoHome = (req, res, next) => {
     next();
 };
 
+// todo: move this to the controller directory
 router.get('/event', (req, res) => {
-    console.log('/evnet: username', req.user);
+    const username = req.user.username;
+
+    // console.log(username)
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Connection', 'Keep-alive');
     res.setHeader('Cache-Control', 'no-cache');
 
-    // who's connected
-    // write to the stream from another method based on the event
-    setInterval(() => {
-        res.write('hello\r\n\r\n');
-    }, 1000);
+    notifyQueue[username] = {
+        write: (payload) => {
+            res.write(`event: ${payload.event}\nid:${payload.id}\ndata: ${payload.data}\r\n\r\n`);
+        },
+    };
+    // console.log('streams', streams);
 
     res.on('close', () => {
-        console.log('sse connection closed');
+        delete notifyQueue.streams[username];
+        delete notifyQueue.queu?.[username];
+        console.log('sse connection closed: ', username);
     });
 });
 
