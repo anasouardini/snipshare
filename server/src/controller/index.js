@@ -7,4 +7,5 @@ module.exports = {
     whoami: require('./whoami'),
     snippet: require('./snippet'),
     coworkerRules: require('./coworkerRules'),
+    events: require('./events')
 };

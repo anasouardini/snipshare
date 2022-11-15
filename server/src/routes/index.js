@@ -2,8 +2,6 @@ const router = require('express').Router();
 const controller = require('../controller');
 // const passport = require('../passport/local');
 
-const notifyQueue = require('../tools/notifyQueue');
-
 const gotoLogin = (req, res, next) => {
     // console.log(req.user);
     // if not logged in
@@ -24,28 +22,10 @@ const gotoHome = (req, res, next) => {
     next();
 };
 
-// todo: move this to the controller directory
-router.get('/event', (req, res) => {
-    const username = req.user.username;
-
-    // console.log(username)
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Connection', 'Keep-alive');
-    res.setHeader('Cache-Control', 'no-cache');
-
-    notifyQueue[username] = {
-        write: (payload) => {
-            res.write(`event: ${payload.event}\nid:${payload.id}\ndata: ${payload.data}\r\n\r\n`);
-        },
-    };
-    // console.log('streams', streams);
-
-    res.on('close', () => {
-        delete notifyQueue.streams[username];
-        delete notifyQueue.queu?.[username];
-        console.log('sse connection closed: ', username);
-    });
-});
+// initilialize SSE and notification queue
+router.get('/listenEvent', controller.events.listen);
+// get list of notifications
+router.get('/getEvents', controller.events.read);
 
 // premade db structure
 router.post('/restart', gotoLogin, controller.init.restart);

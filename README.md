@@ -1,54 +1,39 @@
-# SnipShare project
+# SnipShare project (this project is barely usable right now)
 
-## The Idea of It
+## The General Idea
 
-The idea of this project is that devs can share snippets of code with each other.
+I started this project just to learn OAuth2.0, and I endedup learning more than that, because the idea have changed in the process of making it and then I liked it and wanted to spend more time building it.
 
-Reading isn't the only option, you can also give others permission to edit your snippet or even delete it.
+The idea of this project is that users can share snippets of code with each other. I see it as npm but for snippets, or if the idea developed further I would describe it as another coding copilot except without a pilot(AI). It would be community driven.
 
-## The Goal Behind It
+## Features
 
-The reason behind this little project is to practice using Authentication and authorization tools and best practices, I though that a project a about sharing code snippets would be ideal for that.
+- Users can create a snippet that is used often
+- The snippet can be categorized by language and purpose
+- Other users may search for a snippet by name and use it
+- other users can be allowed to have access to your account or a specific snippet
 
-## Things I've learned throughout the process
+The back-end is separate from the front-end so it can be used with any client like an IDE.
 
-The main Benefit obviously is to learn how to do Authentication and Authorization.
-But I've also changed a few thing in my workflow, so I also learned other things in the process as well.
-
-- Tailwind (coming from Sass)
-Other than the very long line that's trying to break out of my monitor... Tailwind is so clean and makes me style things faster.
-
-- Passportjs & JWT (coming from no Auth :upside_down_face: )
-I've learned a lot about OAuth, probably more than I need to learn. But I think it's going to help some day.
-
-- React-Location (coming from React-Router)
-React-location is not easy to work with, I sill prefer the jsx syntax of react-router.
-
-- Mysql2 (coming from Prisma)
-I still think that Prisma is the best thing that has happened to Sql. But in this project... I think it's overkill, especially with the 100ms overhead for each query.
-
-- google OAuth2.0 manually 
-Turns out passportjs is nothing but an overhead in the authentication implementation.
-
-- notification system with SSE
-Real time notification is really fun and interactive. I probably would do more of these.
-
-- ZOD
-I still need more time using this tool, but it's a good way to get the job done with minimal keystrokes.
-
-- Monaco Editor 
-Faced some issues implementing this one, and still haven't figured out how to make it behave as I want.
-
-- debouncing
-Debouncing is one way to evade wasting cpu cycles for intermediate iterations that are not really that necessary.
+## Tools Used In This Project
 
 - react-query
-When I imported react-query I realized that I was doing so many things from scratch.
+- React-Location & React-Router
+- react-icons
+- Tailwind
+- Monaco Editor
 
-- Vite (coming from Webpack)
-As long as I ditch Webpack, anything is good at this stage.
+- Passportjs & JWT
+- google OAuth2.0 manually
+- notification system with SSE
+- ZOD
+- Mysql2
 
+- Vite
 - NeoVim
-I'm still stuck with the overhead of setting it up. auto completion, smart tabulation, jsx highlighting and other stuff are very annoying to setup.
-But I feel like I'm going fast when it comes to the text/code editing phase.
 
+## Further Improvements
+
+- add a vscode extension or a neovim plugin to make the process easier
+- option for storing the snippet in the IDE's environment
+- script/config file for downloading snippets automatically when you install/reinstall the IDE

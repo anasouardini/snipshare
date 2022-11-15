@@ -1,15 +1,15 @@
 const poolPromise = require('./db');
 
-const getUser = (usr) => poolPromise(`select * from users where user = ?`, [usr]);
+const getUser = (usr) => poolPromise(`SELECT * FROM users WHERE user = ?`, [usr]);
 
-const getMod = (usr) => poolPromise(`select * from mods where user = ?`, [usr]);
+const getMod = (usr) => poolPromise(`SELECT * FROM mods WHERE user = ?`, [usr]);
 
-const readAll = () => poolPromise(`select user from users;`);
+const readAll = () => poolPromise(`SELECT user FROM users;`);
 
 const createUser = (usr, pass) =>
-    poolPromise(`insert into users (user, passwd) values (?, ?)`, [usr, pass]);
+    poolPromise(`INSERT INTO users (user, passwd) VALUES (?, ?)`, [usr, pass]);
 
-const deleteUser = (usr) => poolPromise(`delete from users where user=?`, [usr]);
+const deleteUser = (usr) => poolPromise(`DELETE FROM users WHERE user=?`, [usr]);
 
 module.exports = {
     readAll,

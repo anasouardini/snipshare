@@ -13,7 +13,6 @@ setInterval(() => {
         if (streams?.[user]) {
             streams[user].write(queue[user]);
             delete queue[user];
-            // todo: mark notification as read
         }
     });
 }, 5000);

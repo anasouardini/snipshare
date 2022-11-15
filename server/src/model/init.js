@@ -2,7 +2,7 @@ const poolPromise = require('./db');
 const {v4: uuid} = require('uuid');
 
 const queries = {
-    cleardb: 'DROP TABLE IF EXISTS admin, users, snippets, coworkersRules;',
+    cleardb: 'DROP TABLE IF EXISTS admin, users, snippets, coworkersRules, notifications;',
 
     createUsers: `CREATE TABLE users (
         user varchar(100) PRIMARY KEY,
@@ -31,6 +31,14 @@ const queries = {
         isPrivate tinyint NOT NULL,
         author varchar(100) NOT NULL,
         INDEX title_index (title)
+    );`,
+    createNotifications: `CREATE TABLE notifications (
+        id varchar(100) PRIMARY KEY,
+        user varchar(100) NOT NULL,
+        type varchar(20) NOT NULL,
+        message varchar(1000) NOT NULL,
+        isRead tinyInt  NOT NULL,
+        creatDate dateTime NOT NULL
     );`,
 
     insertMods: `
@@ -235,7 +243,10 @@ const restart = async () => {
     if (!response) return false;
 
     response = await poolPromise(queries.createSnippets);
-    //console.log(response);
+    if (!response) return false;
+
+    response = await poolPromise(queries.createNotifications);
+    // console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.insertSnippets);

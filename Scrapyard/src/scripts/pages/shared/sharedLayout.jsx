@@ -13,6 +13,7 @@ import {Link, NavLink} from 'react-router-dom';
 import {useEffect} from 'react';
 import {useState} from 'react';
 import Notify from '../../components/notify';
+import Bell from '../../components/bell';
 import {v4 as uuid} from 'uuid';
 import {FaBars} from 'react-icons/fa';
 import SSE from '../../components/sse.jsx';
@@ -151,8 +152,8 @@ export default function SharedLayout(props) {
                             <></>
                         )}
                         <li
-                            className={`cursor-pointer border-b-[3px] border-b-transparent
-                                    hover:border-b-primary text-gray-200`}
+                            className={`cursor-pointer pb-2 border-b-[3px] border-b-transparent 
+              hover:border-b-primary text-gray-200`}
                             onClick={async () => {
                                 const response = await create('logout');
                                 notify({type: 'info', msg: response.msg});
@@ -162,8 +163,8 @@ export default function SharedLayout(props) {
                             Logout
                         </li>
                         <li
-                            className={`cursor-pointer border-b-[3px] border-b-transparent 
-                                  hover:border-b-primary text-gray-200`}
+                            className={`cursor-pointer pb-2 border-b-[3px] border-b-transparent 
+              hover:border-b-primary text-gray-200`}
                             onClick={async () => {
                                 const response = await create('restart');
                                 // setForceRenderState((st) => !st);
@@ -172,6 +173,7 @@ export default function SharedLayout(props) {
                         >
                             reinitDB
                         </li>
+                        <li><Bell/></li>
                     </ul>
                 </nav>
             </div>
@@ -190,7 +192,11 @@ export default function SharedLayout(props) {
             </div>
             {/* <Notify key={'notiKey'} type={'warning'} msg={'empty'} /> */}
             {/* SSE */}
-            <SSE notify={notify} />
+            {whoami && whoami?.status == 200 ? (
+                <SSE notify={notify} />
+            ) : (
+                <></>
+            )}
         </div>
     );
 }

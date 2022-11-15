@@ -2,6 +2,7 @@ const CoworkerRules = require('../model/coworkersRules');
 const User = require('../model/user');
 const Z = require('zod');
 const notifyQueue = require('../tools/notifyQueue');
+const Notifications = require('../model/notifications');
 
 // ================ separating these so I can use then outside of this model
 
@@ -153,6 +154,17 @@ const create = async (req, res) => {
     const createCoworkerResult = await createCoworker(owner, req.body.props);
 
     // todo: add notification to db, marked as unread
+    const notificationsResponse = await Notifications.add({
+        user: owner,
+        type: 'message',
+        message: `${owner} gave you access to his account`,
+        read: false,
+        date: new Date()
+    });
+    // console.log(notificationsResponse[0].affectedRows);
+    if (!notificationsResponse[0].affectedRows) {
+        return res.status(500).json({msg: 'something bad happened while creating a coworker rule'});
+    }
     notifyQueue.queueAdd(req.body.props.coworker, {
         event: 'message',
         id: 0,
@@ -164,14 +176,25 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
     const owner = req.user.username;
+    const updateCoworkerResult = await updateCoworker(owner, req.body.props);
 
     // todo: add notification to db, marked as unread
+    const notificationsResponse = await Notifications.add({
+        user: owner,
+        type: 'message',
+        message: `${owner} has modified your permissions on his account`,
+        read: false,
+        date: new Date()
+    });
+    if (!notificationsResponse[0].affectedRows) {
+        return res.status(500).json({msg: 'something bad happened while updating a coworker rule'});
+    }
     notifyQueue.queueAdd(req.body.props.coworker, {
         event: 'message',
         id: 0,
         data: `${owner} has modified your permissions on his account`,
     });
-    const updateCoworkerResult = await updateCoworker(owner, req.body.props);
+
     res.status(updateCoworkerResult.status).json({msg: updateCoworkerResult.msg});
 };
 
@@ -189,6 +212,16 @@ const remove = async (req, res) => {
     }
 
     // todo: add notification to db, marked as unread
+    const notificationsResponse = await Notifications.add({
+        user: owner,
+        type: 'message',
+        message: `you are no longer have access to ${owner}'s account`,
+        read: false,
+        date: new Date()
+    });
+    if (!notificationsResponse[0].affectedRows) {
+        return res.status(500).json({msg: 'something bad happened while removing a coworker rule'});
+    }
     notifyQueue.queueAdd(req.body.props.coworker, {
         event: 'message',
         id: 0,

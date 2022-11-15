@@ -1,5 +1,6 @@
 const poolPromise = require('./db');
 
+//todo: specify the number of items from the db in the query
 const getAllSnippets = ({title}) => {
     let query = `select * from snippets`;
     if(title != '%undefined%'){
