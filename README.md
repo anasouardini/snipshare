@@ -34,6 +34,4 @@ The back-end is separate from the front-end so it can be used with any client li
 
 ## Further Improvements
 
-- add a vscode extension or a neovim plugin to make the process easier
-- option for storing the snippet in the IDE's environment
-- script/config file for downloading snippets automatically when you install/reinstall the IDE
+- add compatibility with vscode and neovim to make the process easier
