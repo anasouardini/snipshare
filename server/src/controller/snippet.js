@@ -93,9 +93,9 @@ const read = async (req, res) => {
 const edit = async (req, res) => {
     // input validation
     const schema = Z.object({
-        title: Z.string(),
-        descr: Z.string(),
-        snippet: Z.string(),
+        title: Z.string().length(100),
+        descr: Z.string().length(1000),
+        snippet: Z.string().length(1000),
         isPrivate: Z.boolean(),
     });
     if (schema.safeParse(req.body.props).error) {

@@ -173,7 +173,7 @@ export default function SharedLayout(props) {
                         >
                             reinitDB
                         </li>
-                        <li><Bell/></li>
+                        {/* <li><Bell/></li> */}
                     </ul>
                 </nav>
             </div>

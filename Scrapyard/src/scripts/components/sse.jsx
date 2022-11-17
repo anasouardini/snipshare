@@ -5,19 +5,20 @@ export default function SSE(props) {
         const eventSource = new EventSource('http://127.0.0.1:2000/listenEvent', {
             withCredentials: true,
         });
-
-        const messageListener = eventSource.addEventListener('message', (e) => {
+        const messageHandler = (e) => {
             console.log(e.data);
             // todo:
             // make the <Bell/> refetch the notifications
             props.notify({type: 'info', msg: e.data});
-        });
-        const errorListener = eventSource.addEventListener('error', (err) => {
+        };
+        const errorHandler = (err) => {
             console.error('error: ', err);
-        });
+        };
+        const messageListener = eventSource.addEventListener('message', messageHandler);
+        const errorListener = eventSource.addEventListener('error', errorHandler);
         return () => {
-            eventSource.removeEventListener(messageListener);
-            eventSource.removeEventListener(errorListener);
+            eventSource.removeEventListener(messageListener, messageHandler);
+            eventSource.removeEventListener(errorListener, errorHandler);
         };
     }, []);
     return <></>;

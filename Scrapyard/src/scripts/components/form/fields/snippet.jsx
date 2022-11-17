@@ -1,7 +1,5 @@
-import React from 'react';
-import {forwardRef} from 'react';
+import React, {forwardRef, useRef} from 'react';
 import MonacoEditor from '@monaco-editor/react';
-import {useRef} from 'react';
 
 const CodeSnippet = (props, ref) => {
     // console.log(props);
@@ -10,7 +8,7 @@ const CodeSnippet = (props, ref) => {
     if (props?.defaultValue) {
         linesNumber.current =
             Math.min(props.defaultValue.split(/\r\n|\r|\n/).length * lineHeight, 10 * lineHeight) +
-            (lineHeight * 3); //last line (+lineHeight) to remove the scroll bar
+            lineHeight * 3; //last line (+lineHeight) to remove the scroll bar
     }
 
     const handleOnMount = (editor, monaco) => {
@@ -18,7 +16,7 @@ const CodeSnippet = (props, ref) => {
             editor.updateOptions({readOnly: true});
             // monacoEditorAttr.options.readOnly = true;
         } else {
-            ref.current = editor;
+            ref.current.snippet = editor;
         }
         // monacoEditorAttr.height = editor.getModel().getLineCount() * 19;
         // monacoEditorAttr.height = 100;
@@ -46,8 +44,16 @@ const CodeSnippet = (props, ref) => {
     return (
         <>
             {/* <h3>Snippet</h3> */}
-            <div>
+            <div
+                className='relative'
+                ref={(el) => {
+                    if (ref) {
+                        ref.current.parent = el;
+                    }
+                }}
+            >
                 <MonacoEditor {...monacoEditorAttr} />
+                <div className='error text-red-500 p-1 hidden'></div>
             </div>
         </>
     );

@@ -4,15 +4,16 @@ import {forwardRef} from 'react';
 const IsPrivate = (props, ref) => {
     // console.log(props);
     return (
-        <label>
+        <>
             <input
                 ref={ref}
                 // onChange={() => {}}
-                type="checkbox"
+                type='checkbox'
                 {...props}
+                style={{display: 'inline'}}
             />
             &nbsp; private
-        </label>
+        </>
     );
 };
 
