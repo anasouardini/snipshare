@@ -40,12 +40,10 @@ const AccessControl = (props, ref) => {
 
     const onLabelClick = (e) => {
         const checked = Number(e.currentTarget.children[0].checked);
+        console.log(checked);
         e.currentTarget.children[0].checked = !e.currentTarget.children[0].checked;
         // toggle checked effect
-        e.currentTarget.classList.replace(
-            `grayscale-[${Number(!checked)}]`,
-            `grayscale-[${checked}]`
-        );
+        e.currentTarget.style.filter = `grayscale(${checked})`;
 
         markChangedCoworker();
     };
@@ -67,10 +65,11 @@ const AccessControl = (props, ref) => {
                             onKeyPress={handleKeyPress}
                             onClick={onLabelClick}
                             tabIndex={0}
-                            style={styles.tag}
-                            className={`${classes.checkboxLabel} grayscale-[${Number(
-                                !accessState.create
-                            )}]`}
+                            style={{
+                                ...styles.tag,
+                                filter: `grayscale(${Number(!accessState.create)})`,
+                            }}
+                            className={classes.checkboxLabel}
                         >
                             Create
                             <input
@@ -93,10 +92,11 @@ const AccessControl = (props, ref) => {
                         onKeyPress={handleKeyPress}
                         onClick={onLabelClick}
                         tabIndex={0}
-                        style={styles.tag}
-                        className={`${classes.checkboxLabel} grayscale-[${Number(
-                            !accessState.read
-                        )}]`}
+                        style={{
+                            ...styles.tag,
+                            filter: `grayscale(${Number(!accessState.create)})`,
+                        }}
+                        className={classes.checkboxLabel}
                     >
                         Read
                         <input
@@ -116,10 +116,11 @@ const AccessControl = (props, ref) => {
                         onKeyPress={handleKeyPress}
                         onClick={onLabelClick}
                         tabIndex={0}
-                        style={styles.tag}
-                        className={`${classes.checkboxLabel} grayscale-[${Number(
-                            !accessState.update
-                        )}]`}
+                        style={{
+                            ...styles.tag,
+                            filter: `grayscale(${Number(!accessState.create)})`,
+                        }}
+                        className={classes.checkboxLabel}
                     >
                         Update
                         <input
@@ -139,10 +140,11 @@ const AccessControl = (props, ref) => {
                         onKeyPress={handleKeyPress}
                         onClick={onLabelClick}
                         tabIndex={0}
-                        style={styles.tag}
-                        className={`${classes.checkboxLabel} grayscale-[${Number(
-                            !accessState.delete
-                        )}]`}
+                        style={{
+                            ...styles.tag,
+                            filter: `grayscale(${Number(!accessState.create)})`,
+                        }}
+                        className={classes.checkboxLabel}
                     >
                         Delete
                         <input
