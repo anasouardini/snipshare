@@ -161,7 +161,7 @@ const create = async (req, res) => {
         read: false,
         date: new Date()
     });
-    // console.log(notificationsResponse[0].affectedRows);
+    // console.log(notificationsResponse);
     if (!notificationsResponse[0].affectedRows) {
         return res.status(500).json({msg: 'something bad happened while creating a coworker rule'});
     }
@@ -219,6 +219,7 @@ const remove = async (req, res) => {
         read: false,
         date: new Date()
     });
+    // console.log(notificationsResponse);
     if (!notificationsResponse[0].affectedRows) {
         return res.status(500).json({msg: 'something bad happened while removing a coworker rule'});
     }

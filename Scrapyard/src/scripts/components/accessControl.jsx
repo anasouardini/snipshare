@@ -94,7 +94,7 @@ const AccessControl = (props, ref) => {
                         tabIndex={0}
                         style={{
                             ...styles.tag,
-                            filter: `grayscale(${Number(!accessState.create)})`,
+                            filter: `grayscale(${Number(!accessState.read)})`,
                         }}
                         className={classes.checkboxLabel}
                     >
@@ -118,7 +118,7 @@ const AccessControl = (props, ref) => {
                         tabIndex={0}
                         style={{
                             ...styles.tag,
-                            filter: `grayscale(${Number(!accessState.create)})`,
+                            filter: `grayscale(${Number(!accessState.update)})`,
                         }}
                         className={classes.checkboxLabel}
                     >
@@ -142,7 +142,7 @@ const AccessControl = (props, ref) => {
                         tabIndex={0}
                         style={{
                             ...styles.tag,
-                            filter: `grayscale(${Number(!accessState.create)})`,
+                            filter: `grayscale(${Number(!accessState.delete)})`,
                         }}
                         className={classes.checkboxLabel}
                     >

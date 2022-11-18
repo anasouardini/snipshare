@@ -1,22 +1,22 @@
-import React, {useState, useEffect} from 'react';
-import {useQuery} from 'react-query';
-import {useNavigate, useOutletContext, useParams} from 'react-router';
-import Form from '../components/form/form';
+import React from 'react';
+// import {useQuery} from 'react-query';
+// import {useNavigate, useOutletContext, useParams} from 'react-router';
+// import Form from '../components/form/form';
 import Snippets from '../components/snippets';
 
-import {commonSnippetFields, getSnippets, getUsers} from '../tools/snipStore';
+// import {commonSnippetFields, getSnippets, getUsers} from '../tools/snipStore';
 
 export default function Home() {
-    const [popUpState, setPopUpState] = useState({
-        showForm: false,
-        showPreview: false,
-    });
+    // const [popUpState, setPopUpState] = useState({
+    //     showForm: false,
+    //     showPreview: false,
+    // });
 
 
     // const navigate = useNavigate();
     // const {user: userParam} = useParams();
 
-    const {whoami} = useOutletContext();
+    // const {whoami} = useOutletContext();
     // if (whoami == '' || whoami == 'unauthorized') {
     //     console.log('redirecting');
     //     return navigate('/login', {replace: true});

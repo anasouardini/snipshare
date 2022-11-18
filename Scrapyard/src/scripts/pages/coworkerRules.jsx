@@ -61,7 +61,7 @@ export default function AddRules() {
     if (coworkersRulesErr?.req?.status == 401) {
         return navigate('/login', {replace: true});
     }
-    // console.log('query coworkers', coworkersRulesData);
+    console.log('query coworkers', coworkersRulesData);
 
     const eventDefaults = (e) => {
         e.stopPropagation();
@@ -266,7 +266,7 @@ export default function AddRules() {
                         <FaFolderPlus />
                     </button>
                     <button className={classes.iconButton} onClick={addNewCoworker}>
-                        <div className='tooltiptext'>Add Rule</div>
+                        <div className='tooltiptext'>Add Coworker</div>
                         <FaPlusSquare />
                     </button>
                 </div>
