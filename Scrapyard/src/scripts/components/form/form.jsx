@@ -165,6 +165,7 @@ const Form = (props) => {
     // listing form fields
     const listInputs = (fields = []) => {
         // console.log(fields);
+        // TODO: clear this spagetty of conditions, DRY it a little
         return fields.map((input) => {
             const Component = fieldsMap(input.type);
             if (input.attr.key == 'descr') {
@@ -187,7 +188,14 @@ const Form = (props) => {
             }
 
             return (
-                <label key={input.attr.key} className={input.attr.className + 'z-30 relative'}>
+                <label
+                    key={input.attr.key}
+                    className={
+                        input.attr.className + 'z-30 relative' + input.attr.key == 'isPrivate'
+                            ? 'self-start'
+                            : ''
+                    }
+                >
                     <Component
                         ref={refs[input?.attr?.key]}
                         {...input.attr}

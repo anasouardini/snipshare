@@ -241,6 +241,17 @@ export default function AddRules() {
 
     return coworkersRulesStatus == 'success' ? (
         <div className='container mt-[4rem]'>
+            <section aria-label='instructions' className='text-gray-300 mb-11'>
+                <li>The tags in the middle are for generic access to the account.</li>
+                <li>
+                    The <FaFolderPlus className='inline mx-2 text-primary text-xl' /> icon is for
+                    adding exceptions. exceptions allow you to add rules specific to each snippet.
+                </li>
+                <li>
+                    The <FaRetweet className='inline mx-2 text-primary text-xl' /> icon is for
+                    updating the rule after a change.
+                </li>
+            </section>
             <div className={classes.inputs}>
                 <input
                     className='border-[1px] border-primary rounded-md p-1 px-3 w-[150px]'
