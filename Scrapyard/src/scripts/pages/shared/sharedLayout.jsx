@@ -49,7 +49,11 @@ export default function SharedLayout(props) {
         navigate('/');
     }
 
-    if ((!whoami.msg || whoami?.status == 401) && !location.pathname.includes('login')) {
+    if (
+        (!whoami.msg || whoami?.status == 401) &&
+        !location.pathname.includes('login') &&
+        !location.pathname.includes('signup')
+    ) {
         // console.log('redirecting to login');
         navigate('/login', {replace: true});
     }
@@ -178,7 +182,10 @@ export default function SharedLayout(props) {
                 </nav>
             </div>
             {/* {props.children} */}
-            {whoami && (whoami?.status == 200 || location.pathname.includes('login')) ? (
+            {whoami &&
+            (whoami?.status == 200 ||
+                location.pathname.includes('login') ||
+                location.pathname.includes('signup')) ? (
                 // <GlobalContext.Provider value={whoami}>
                 <Outlet context={{whoami: whoami.msg, notify}} />
             ) : (
@@ -192,11 +199,7 @@ export default function SharedLayout(props) {
             </div>
             {/* <Notify key={'notiKey'} type={'warning'} msg={'empty'} /> */}
             {/* SSE */}
-            {whoami && whoami?.status == 200 ? (
-                <SSE notify={notify} />
-            ) : (
-                <></>
-            )}
+            {whoami && whoami?.status == 200 ? <SSE notify={notify} /> : <></>}
         </div>
     );
 }

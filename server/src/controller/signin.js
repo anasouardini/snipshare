@@ -2,6 +2,7 @@ const User = require('../model/user');
 const jwt = require('jsonwebtoken');
 const fs = require('fs/promises');
 const bcrypt = require('bcrypt');
+const {v4: uuid} = require('uuid');
 
 const axios = require('axios');
 const qs = require('qs');
@@ -99,7 +100,11 @@ const signinOAuth = async (req, res) => {
             return res.status(500).json({msg: 'something bad happened while authenticating you'});
         if (!userResponse[0].length) {
             // creating the user
-            const createUserResponse = await User.createUser(email, 'OAuth2.0 user');
+            const createUserResponse = await User.createUser({
+                id: email,
+                usr: email.split('@')[0],
+                pass: 'OAuth2.0 user',
+            });
             if (!createUserResponse[0]?.affectedRows) {
                 return res.status(500).json({msg: 'something went bad while signing up'});
             }

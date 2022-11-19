@@ -2,15 +2,17 @@ const poolPromise = require('./db');
 const {v4: uuid} = require('uuid');
 
 const queries = {
-    cleardb: 'DROP TABLE IF EXISTS admin, users, snippets, coworkersRules, notifications;',
+    cleardb: 'DROP TABLE IF EXISTS mods, users, snippets, coworkersRules, notifications;',
 
     createUsers: `CREATE TABLE users (
-        user varchar(100) PRIMARY KEY,
+        id varchar(100) PRIMARY KEY,
+        user varchar(100) UNIQUE NOT NULL,
         passwd varchar(100) NOT NULL
     );`,
 
     createMods: `CREATE TABLE mods (
-        user varchar(100) PRIMARY KEY,
+        id varchar(100) PRIMARY KEY,
+        user varchar(100) UNIQUE NOT NULL,
         passwd varchar(100) NOT NULL
     );`,
 
@@ -43,30 +45,35 @@ const queries = {
 
     insertMods: `
     INSERT INTO
-        mods (user, passwd)
+        mods (id, user, passwd)
     VALUES
         (
+            '${uuid()}',
             'moderator',
             '$2a$10$L612B2ckWsoZgWRPaYi6JuOgVCC8w6EvGJSL67Qw99yLCDKfIPbW2'
         );`,
 
     insertUsers: `
         INSERT INTO
-            users (user, passwd)
+            users (id, user, passwd)
         VALUES   
             (
+                '${uuid()}',
                 'venego',
                 '$2b$10$ZwjIliPoQ5Exets.CIQbs.MV0ap50GN9vUmTojQuwKJT5oPpkIDVi'
             ),
             (
+                '${uuid()}',
                 '3disa',
                 '$2a$10$j7.gQk2JlsdxIQVGdMeHaO8S6TCcgHn7Z3qvgmk/XwxDzlem7B7Su'
             ),
             (
+                '${uuid()}',
                 'm9ila',
                 '$2a$10$j7.gQk2JlsdxIQVGdMeHaO8S6TCcgHn7Z3qvgmk/XwxDzlem7B7Su'
             ),
             (
+                '${uuid()}',
                 '3sila',
                 '$2a$10$o4Gk9LHIOzuTlNdK2lYQi.yTXHMhXZXbXuLkzVPnhL4Tqf.A6v81m'
             );`,
@@ -240,13 +247,13 @@ const restart = async () => {
     if (!response) return false;
 
     response = await poolPromise(queries.insertUsers);
+    // console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.createSnippets);
     if (!response) return false;
 
     response = await poolPromise(queries.createNotifications);
-    // console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.insertSnippets);

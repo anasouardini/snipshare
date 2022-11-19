@@ -1,5 +1,6 @@
 const User = require('../model/user');
 const bcrypt = require('bcrypt');
+const {v4: uuid} = require('uuid');
 
 const signup = async (req, res) => {
     // check inputs
@@ -31,7 +32,7 @@ const signup = async (req, res) => {
 
     const hash = await bcrypt.hash(req.body.passwd, 10);
     // console.log('hash', hash);
-    const createUserResponse = await User.createUser(req.body.usr, hash);
+    const createUserResponse = await User.createUser({id: uuid(), usr: req.body.usr, pass: hash});
     // console.log(createUserResponse[0].affectedRows);
     if (!createUserResponse[0]?.affectedRows) {
         return res.status(500).json({msg: 'something went bad while signing up'});

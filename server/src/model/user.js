@@ -6,8 +6,8 @@ const getMod = (usr) => poolPromise(`SELECT * FROM mods WHERE user = ?`, [usr]);
 
 const readAll = () => poolPromise(`SELECT user FROM users;`);
 
-const createUser = (usr, pass) =>
-    poolPromise(`INSERT INTO users (user, passwd) VALUES (?, ?)`, [usr, pass]);
+const createUser = ({id, usr, pass}) =>
+    poolPromise(`INSERT INTO users (id, user, passwd) VALUES (?, ?, ?)`, [id, usr, pass]);
 
 const deleteUser = (usr) => poolPromise(`DELETE FROM users WHERE user=?`, [usr]);
 
