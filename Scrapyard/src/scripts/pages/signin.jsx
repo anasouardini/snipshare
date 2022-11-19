@@ -37,10 +37,10 @@ export default function Signin() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        getUser(); //asyn
+        signIn(); //asyn
     };
 
-    const getUser = async () => {
+    const signIn = async () => {
         const response = await create('signin', {
             usr: refs.username.current.value,
             passwd: refs.password.current.value,
@@ -64,7 +64,8 @@ export default function Signin() {
     const classes = {
         parent: 'border-3 w-[500px] mx-auto mt-40',
         title: `text-center text-3xl mb-[50px] relative
-                before:content-[""] before:absolute before:top-[105%] before:w-10 before:h-1 before:bg-primary`,
+                before:content-[""] before:absolute before:top-[105%] 
+                before:w-10 before:h-1 before:bg-primary`,
         form: 'flex flex-col w-lg',
         input: 'p-[5px]',
         textInput: 'border-0 border-b-2 border-b-primary outline-0',
@@ -120,7 +121,7 @@ export default function Signin() {
                     </button>
                 </label>
                 <label className={classes.label}>
-                    <button className={classes.oauth} onClick={handleOAuth}>
+                    <button className={classes.oauth+' rounded-md'} onClick={handleOAuth}>
                         Login With Google
                     </button>
                 </label>

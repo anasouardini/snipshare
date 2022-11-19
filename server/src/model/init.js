@@ -65,7 +65,7 @@ const queries = {
             (
                 '${uuid()}',
                 '3disa',
-                '$2a$10$j7.gQk2JlsdxIQVGdMeHaO8S6TCcgHn7Z3qvgmk/XwxDzlem7B7Su'
+                '$2a$10$2ez/Hwk0h6lVG8m2fQJBU.IcXRBpjKmhCSFCbvbXXl6QL4fqykBLW'
             ),
             (
                 '${uuid()}',

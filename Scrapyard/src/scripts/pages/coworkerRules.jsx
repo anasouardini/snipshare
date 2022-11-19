@@ -244,12 +244,16 @@ export default function AddRules() {
             <section aria-label='instructions' className='text-gray-300 mb-11'>
                 <li>The tags in the middle are for generic access to the account.</li>
                 <li>
-                    The <FaFolderPlus className='inline mx-2 text-primary text-xl' /> icon is for
+                    The <FaFolderPlus className='inline mx-2 text-primary text-xl' /> button is for
                     adding exceptions. exceptions allow you to add rules specific to each snippet.
                 </li>
                 <li>
-                    The <FaRetweet className='inline mx-2 text-primary text-xl' /> icon is for
+                    The <FaRetweet className='inline mx-2 text-primary text-xl' /> button is for
                     updating the rule after a change.
+                </li>
+                <li>
+                    The <FaPlusSquare className='inline mx-2 text-primary text-xl' /> button is for
+                    adding a new coworker.
                 </li>
             </section>
             <div className={classes.inputs}>
