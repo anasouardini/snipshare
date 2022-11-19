@@ -1,12 +1,5 @@
 import React, {useRef} from 'react';
-import {
-    Outlet,
-    useAsyncError,
-    useLocation,
-    useNavigate,
-    useOutlet,
-    useOutletContext,
-} from 'react-router-dom';
+import {Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {useQuery} from 'react-query';
 import {create, read} from '../../tools/bridge';
 import {Link, NavLink} from 'react-router-dom';
@@ -18,7 +11,7 @@ import {v4 as uuid} from 'uuid';
 import {FaBars} from 'react-icons/fa';
 import SSE from '../../components/sse.jsx';
 
-export default function SharedLayout(props) {
+export default function SharedLayout() {
     // const [_, setForceRenderState] = useState(false);
     const updateWhoamiState = async () => {
         const whoamiUsr = await read('whoami');
@@ -105,6 +98,29 @@ export default function SharedLayout(props) {
         navRef.current.className = `sm>:hidden sm<:px-[5%] sm<:py-2`;
     };
 
+    const loginAs = async ({usr, passwd, keepSignIn}) => {
+        await create('logout');
+
+        const response = await create('signin', {
+            usr,
+            passwd,
+            keepSignIn,
+        });
+
+        if (response) {
+            if (response.status == 200) {
+                // console.log('redirect to home');
+                return navigate('/');
+            }
+            // console.log('success');
+            // console.log(response);
+        }
+
+        console.log('not success :)');
+        console.log(response);
+        // console.log(create);
+    };
+
     return (
         <div className='font-roboto'>
             {/* {whoami.msg} */}
@@ -124,20 +140,123 @@ export default function SharedLayout(props) {
                                 Home
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink className={classes.navLink} to={`${whoami.msg}`}>
-                                Me
-                            </NavLink>
-                        </li>
 
-                        <li className={`ml-auto`}>
+                        <li>
                             <NavLink className={classes.navLink} to='/addRules'>
                                 Coworkers
                             </NavLink>
                         </li>
+                        {/*
+                          HACKS MENU 
+                          TODO: DRY
+                        */}
+
+                        <ul
+                            onMouseOver={(e) => {
+                                e.currentTarget
+                                    .querySelector(':scope > ul')
+                                    .classList.remove('hidden');
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget
+                                    .querySelector(':scope > ul')
+                                    .classList.add('hidden');
+                            }}
+                            className={`relative cursor-pointer text-gray-200`}
+                        >
+                            Hacks
+                            <ul
+                                className={`hidden absolute top-[20px] right-0 pt-4`}
+                            >
+                                <ul
+                                    onMouseOver={(e) => {
+                                        e.currentTarget
+                                            .querySelector(':scope > ul')
+                                            .classList.remove('hidden');
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget
+                                            .querySelector(':scope > ul')
+                                            .classList.add('hidden');
+                                    }}
+                                    className={`cursor-pointer pb-2 bg-[#222222] hover:bg-[#282828]
+                                              border-[1px] border-[#353525] border-b-0 text-gray-200 p-2 px-3`}
+                                >
+                                    login as
+                                    <ul
+                                        className={`hidden absolute top-0 right-[100%]
+                                                  bg-gray-200 border-[1px] border-[#353525]`}
+                                    >
+                                        <li
+                                            className={`cursor-pointer pb-2 bg-[#222222]
+                                                        hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                                            onClick={() => {
+                                                loginAs({
+                                                    usr: 'venego',
+                                                    passwd: 'venego',
+                                                    keepSignIn: false,
+                                                });
+                                            }}
+                                        >
+                                            venego
+                                        </li>
+                                        <li
+                                            className={`cursor-pointer pb-2 bg-[#222222]
+                                                      hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                                            onClick={() => {
+                                                loginAs({
+                                                    usr: '3sila',
+                                                    passwd: '3sila',
+                                                    keepSignIn: false,
+                                                });
+                                            }}
+                                        >
+                                            3sila
+                                        </li>
+                                        <li
+                                            className={`cursor-pointer pb-2 bg-[#222222]
+                                                        hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                                            onClick={() => {
+                                                loginAs({
+                                                    usr: 'm9ila',
+                                                    passwd: 'm9ila',
+                                                    keepSignIn: false,
+                                                });
+                                            }}
+                                        >
+                                            m9ila
+                                        </li>
+                                        <li
+                                            className={`cursor-pointer pb-2 bg-[#222222]
+                                                        hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                                            onClick={() => {
+                                                loginAs({
+                                                    usr: '3disa',
+                                                    passwd: '3disa',
+                                                    keepSignIn: false,
+                                                });
+                                            }}
+                                        >
+                                            3disa
+                                        </li>
+                                    </ul>
+                                </ul>
+                                <li
+                                    className={`cursor-pointer pb-2 bg-[#222222] hover:bg-[#282828]
+                                                border-[1px] border-[#353525] border-t-0 text-gray-200 p-2 px-3`}
+                                    onClick={async () => {
+                                        const response = await create('restart');
+                                        // setForceRenderState((st) => !st);
+                                        notify({type: 'info', msg: response.msg});
+                                    }}
+                                >
+                                    reinitDB
+                                </li>
+                            </ul>
+                        </ul>
                         {whoami.status == 401 ? (
                             <>
-                                <li>
+                                <li className='ml-auto'>
                                     <NavLink className={classes.navLink} to='/login' replace>
                                         Login
                                     </NavLink>
@@ -149,31 +268,26 @@ export default function SharedLayout(props) {
                                 </li>
                             </>
                         ) : (
-                            <></>
+                            <>
+                                <li
+                                    className={`ml-auto cursor-pointer pb-2 border-b-[3px] border-b-transparent 
+                                        hover:border-b-primary text-gray-200`}
+                                    onClick={async () => {
+                                        const response = await create('logout');
+                                        notify({type: 'info', msg: response.msg});
+                                        return navigate('/login', {replace: true});
+                                    }}
+                                >
+                                    Logout
+                                </li>
+                                {/* <li><Bell/></li> */}
+                                <li>
+                                    <NavLink className={classes.navLink} to={`${whoami.msg}`}>
+                                        Me
+                                    </NavLink>
+                                </li>
+                            </>
                         )}
-                        <li
-                            className={`cursor-pointer pb-2 border-b-[3px] border-b-transparent 
-              hover:border-b-primary text-gray-200`}
-                            onClick={async () => {
-                                const response = await create('logout');
-                                notify({type: 'info', msg: response.msg});
-                                return navigate('/login', {replace: true});
-                            }}
-                        >
-                            Logout
-                        </li>
-                        <li
-                            className={`cursor-pointer pb-2 border-b-[3px] border-b-transparent 
-              hover:border-b-primary text-gray-200`}
-                            onClick={async () => {
-                                const response = await create('restart');
-                                // setForceRenderState((st) => !st);
-                                notify({type: 'info', msg: response.msg});
-                            }}
-                        >
-                            reinitDB
-                        </li>
-                        {/* <li><Bell/></li> */}
                     </ul>
                 </nav>
             </div>
@@ -192,11 +306,7 @@ export default function SharedLayout(props) {
             </div>
             {/* <Notify key={'notiKey'} type={'warning'} msg={'empty'} /> */}
             {/* SSE */}
-            {whoami && whoami?.status == 200 ? (
-                <SSE notify={notify} />
-            ) : (
-                <></>
-            )}
+            {whoami && whoami?.status == 200 ? <SSE notify={notify} /> : <></>}
         </div>
     );
 }
