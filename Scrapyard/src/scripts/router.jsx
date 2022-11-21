@@ -10,7 +10,7 @@ import AddRules from './pages/coworkerRules';
 import {QueryClient, QueryClientProvider} from 'react-query';
 
 function App() {
-    const client = new QueryClient({defaultOptions: {queries: {refetchOnWindowFocus: true}}});
+    const client = new QueryClient({defaultOptions: {queries: {refetchOnWindowFocus: false}}});
 
     return (
         <QueryClientProvider client={client}>
