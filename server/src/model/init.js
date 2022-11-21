@@ -7,13 +7,15 @@ const queries = {
     createUsers: `CREATE TABLE users (
         id varchar(100) PRIMARY KEY,
         user varchar(100) UNIQUE NOT NULL,
-        passwd varchar(100) NOT NULL
+        passwd varchar(100) NOT NULL,
+        createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
 
     createMods: `CREATE TABLE mods (
         id varchar(100) PRIMARY KEY,
         user varchar(100) UNIQUE NOT NULL,
-        passwd varchar(100) NOT NULL
+        passwd varchar(100) NOT NULL,
+        createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
 
     createCoworkers: `CREATE TABLE coworkersRules (
@@ -21,6 +23,8 @@ const queries = {
         coworker varchar(100) NOT NULL,
         generic json NOT NULL,
         exceptions json NOT NULL,
+        createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        lastModified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         UNIQUE(user, coworker),
         CONSTRAINT fk_coworkerRules_users FOREIGN KEY(user)
         REFERENCES users(id) ON DELETE CASCADE,
@@ -36,6 +40,10 @@ const queries = {
         snippet varchar(5000) NOT NULL,
         isPrivate tinyint NOT NULL,
         author varchar(100) NOT NULL,
+        ceateDate dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        lastModified dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        language varchar(30),
+        categories varchar(1000),
         INDEX title_index (title),
         CONSTRAINT fk_snippets_users FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
     );`,
@@ -45,7 +53,7 @@ const queries = {
         type varchar(20) NOT NULL,
         message varchar(1000) NOT NULL,
         isRead tinyInt  NOT NULL,
-        creatDate dateTime NOT NULL,
+        createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT fk_notifications_users FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
     );`,
 
@@ -92,7 +100,9 @@ const queries = {
             title,
             descr,
             snippet,
-            author
+            author,
+            language,
+            categories
         )
         VALUES
         (
@@ -102,7 +112,9 @@ const queries = {
             'Debouncer Model',
             'This is a debouncer model where you can initialize multiple debounced actions, and they are going to be stored in a list untill you decide to run or delete them',
             'const debouncedActionsList = {};\n\nconst init = (key, func, delay = 500) => {\n\tlet timer;\n\tdebouncedActionsList[key] = (...args) => {\n\t\tif (timer) {\n\t\t\tclearTimeout(timer);\n\t\t}\n\t\ttimer = setTimeout(() => {\n\t\t\tfunc(...args);\n\t\t}, delay);\n\t};\n};\nconst clear = (key) => {\n\tdelete debouncedActionsList[key];\n};\nconst run = (key, ...args) => {\n\tdebouncedActionsList[key](...args);\n};\n\nexport default {init, run, clear};',
-            ?
+            ?,
+            'javascript',
+            'performance'
         ),
         (
             '${uuid()}',
@@ -111,7 +123,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'performance'
         ),
         (
             '${uuid()}',
@@ -120,7 +134,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -129,7 +145,9 @@ const queries = {
             'react functional component',
             'use this to create a react functional component',
             'import react from "react";\nexport default function Component(props){\n\treturn (<p>Component</p>);\n}',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -138,7 +156,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -147,7 +167,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -156,7 +178,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -165,7 +189,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -174,7 +200,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -183,7 +211,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -192,7 +222,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -201,7 +233,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -210,7 +244,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -219,7 +255,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -228,7 +266,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         ),
         (
             '${uuid()}',
@@ -237,7 +277,9 @@ const queries = {
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            ?
+            ?,
+            'javascript',
+            'basicAbstraction'
         );`,
 };
 
@@ -299,7 +341,7 @@ const restart = async () => {
     if (!response) return false;
 
     response = await poolPromise(queries.createCoworkers);
-    // console.log(response);
+  // console.log(response);
     if (!response) return false;
 
     return true;

@@ -4,34 +4,6 @@ const Z = require('zod');
 const notifyQueue = require('../tools/notifyQueue');
 const Notifications = require('../model/notifications');
 
-// ================ separating these so I can use then outside of this model
-
-const readCoworkerRule = async (owner, coworker) => {
-    const rulesResponse = await CoworkerRules.readCoworkerRules(owner, coworker);
-    if (!rulesResponse[0].length) {
-        return {msg: 'there is no such coworker', status: 400};
-    }
-
-    return {
-        status: 200,
-        msg: {
-            generic: rulesResponse[0][0].generic,
-            exceptions: rulesResponse[0][0].exceptions,
-        },
-    };
-};
-
-const updateCoworker = async (owner, props) => {
-    const response = await CoworkerRules.update(owner, props);
-    if (!response?.[0]?.affectedRows) {
-        return {status: 500, msg: 'something bad happened'};
-    }
-
-    return {status: 200, msg: 'coworker updated successfully'};
-};
-
-// ========================
-
 const readAll = async (req, res) => {
     const owner = req.user.username;
 
@@ -60,8 +32,17 @@ const readCoworker = async (req, res) => {
     const owner = req.user.username;
     const coworker = req.query.params.coworker;
 
-    const result = await readCoworkerRule(owner, coworker);
-    res.status(result.status).json({msg: result.msg});
+    const rulesResponse = await CoworkerRules.readCoworkerRules(owner, coworker);
+    if (!rulesResponse[0].length) {
+        return res.status(400).json({msg: 'there is no such coworker'});
+    }
+
+    return res.status(200).json({
+        msg: {
+            generic: rulesResponse[0][0].generic,
+            exceptions: rulesResponse[0][0].exceptions,
+        },
+    });
 };
 
 const validateRules = (req, res, next) => {
@@ -130,7 +111,6 @@ const create = async (req, res) => {
         type: 'message',
         message: `${owner} gave you access to his account`,
         read: false,
-        date: new Date(),
     });
     // console.log(notificationsResponse);
     if (!notificationsResponse[0].affectedRows) {
@@ -158,7 +138,6 @@ const update = async (req, res) => {
         type: 'message',
         message: `${owner} has modified your permissions on his account`,
         read: false,
-        date: new Date(),
     });
     if (!notificationsResponse[0].affectedRows) {
         return res.status(500).json({msg: 'something bad happened while updating a coworker rule'});
@@ -191,7 +170,6 @@ const remove = async (req, res) => {
         type: 'message',
         message: `you are no longer have access to ${owner}'s account`,
         read: false,
-        date: new Date(),
     });
     // console.log(notificationsResponse);
     if (!notificationsResponse[0].affectedRows) {

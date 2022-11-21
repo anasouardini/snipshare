@@ -48,7 +48,8 @@ const authAction = async (req, action) => {
             }
         }
 
-        const {id, user, title, descr, snippet, isPrivate, author} = snippetResponse[0][0];
+        const {id, user, title, descr, snippet, isPrivate, author, language, categories} =
+            snippetResponse[0][0];
         return {
             status: 200,
             msg: {
@@ -59,6 +60,8 @@ const authAction = async (req, action) => {
                 snippet,
                 isPrivate,
                 author,
+                language,
+                categories,
                 access,
             },
         };
@@ -213,9 +216,10 @@ const readMiddleware = async (req, res) => {
 };
 
 const appendSnippetToResponse = (req, filteredSnippets, snippetObj, access) => {
-    // console.log(access);
+    // console.log(snippetObj);
     if (access?.read) {
-        const {id, user, title, descr, snippet, isPrivate, author} = snippetObj;
+        const {id, user, title, descr, snippet, isPrivate, author, language, categories} =
+            snippetObj;
         if (req.query?.meta) {
             filteredSnippets.push({
                 id,
@@ -231,6 +235,8 @@ const appendSnippetToResponse = (req, filteredSnippets, snippetObj, access) => {
             snippet,
             isPrivate,
             author,
+            language,
+            categories,
             access,
         });
     }
@@ -327,7 +333,7 @@ const readAll = async (req, res) => {
         }
     });
 
-    console.log(pageParam, perPage);
+    //console.log(pageParam, perPage);
     res.json({
         msg: {
             nextPage: filteredSnippets.length / perPage <= pageParam ? undefined : pageParam + 1,

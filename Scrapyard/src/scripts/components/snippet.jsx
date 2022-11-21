@@ -153,8 +153,25 @@ const Snippet = (props) => {
                         <summary className='mb-2 cursor-pointer w-maxContent'>Description</summary>
                         <p className='text-gray-500 '>{snipInfoState.snippet.descr}</p>
                     </details>
-
-                    <h3 className='text-md text-gray-300 mb-3'>Snippet:</h3>
+                    <details className='mb-4'>
+                        <summary className='mb-2 cursor-pointer w-maxContent'>Categories:</summary>
+                        <ul className='inline mr-3'>
+                            {snipInfoState.snippet.categories.split(' ').map((category) => (
+                                <li
+                                    key={category}
+                                    className='inline ml-2 border-[1px] border-primary rounded-xl p-1 px-2'
+                                >
+                                    {category}
+                                </li>
+                            ))}
+                        </ul>
+                    </details>
+                    <h3 className='text-md text-gray-300 mb-3'>
+                        Snippet:
+                        <p className='inline ml-2 border-[1px] border-primary rounded-xl p-1 px-2'>
+                            {snipInfoState.snippet.language}
+                        </p>
+                    </h3>
                     {/* Snippet */}
                     <CodeSnippet
                         {...formFieldsState.current.fields.filter(
