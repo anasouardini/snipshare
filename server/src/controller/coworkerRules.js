@@ -30,46 +30,6 @@ const updateCoworker = async (owner, props) => {
     return {status: 200, msg: 'coworker updated successfully'};
 };
 
-//- I probably should spread this back where It is used
-const userExists = async (user) => {
-    const userResponse = await User.getUser(user);
-
-    if (!userResponse) {
-        return {status: 500, msg: 'something bad happened'};
-    }
-
-    if (!userResponse[0].length) {
-        return {status: 400, msg: 'this username does not exist'};
-    }
-
-    return {status: 200, msg: userResponse[0][0]};
-};
-
-const usrIsCoworker = async (owner, coworker) => {
-    const coworkerResponse = await CoworkerRules.readCoworkerRules(owner, coworker);
-
-    if (!coworkerResponse) {
-        return {status: 500, msg: 'something bad happened'};
-    }
-
-    if (coworkerResponse[0].length) {
-        return true;
-    }
-
-    return false;
-};
-
-const createCoworker = async (owner, props) => {
-    const response = await CoworkerRules.create(owner, props);
-    // console.log(response);
-
-    if (!response?.[0]?.affectedRows) {
-        return {status: 500, msg: 'could not add a coworker rule, try again later'};
-    }
-
-    return {status: 200, msg: 'coworker has been created successfully'};
-};
-
 // ========================
 
 const readAll = async (req, res) => {
@@ -77,7 +37,7 @@ const readAll = async (req, res) => {
 
     const response = await CoworkerRules.readAllRules({owner});
 
-    // console.log(response[0][0]);
+    console.log('l80 coworkerrules: ', response[0]);
     let rules = {generic: {}, exceptions: {}};
     if (response[0].length) {
         rules = {
@@ -135,23 +95,34 @@ const create = async (req, res) => {
 
     // -I- check if the potential coworker exists,
     // better to add coworkers by id and usernames like in discord
-    const userExistsResult = await userExists(req.body.props.coworker);
-    if (userExistsResult.status != 200) {
-        return res.status(userExistsResult.status).json({msg: userExistsResult.msg});
+    const userResponse = await User.getUser(req.body.props.coworker);
+    if (!userResponse) {
+        return {status: 500, msg: 'something bad happened'};
+    }
+    if (!userResponse[0].length) {
+        return res.status(400).json({msg: 'this username does not exist'});
     }
 
     //-II- check if the user is already a coworker
-    const usrIsCoworkerResult = await usrIsCoworker(req.body.props.coworker);
-    if (usrIsCoworkerResult?.status == 500) {
-        return res.status(usrIsCoworkerResult.status).json({msg: usrIsCoworkerResult.msg});
+    const coworkerResponse = await CoworkerRules.readCoworkerRules(owner, req.body.props.coworker);
+
+    if (!coworkerResponse) {
+        return res.status(500).json({msg: 'something bad happened'});
     }
 
-    if (usrIsCoworkerResult) {
+    if (coworkerResponse[0].length) {
         return res.status(400).json({msg: 'coworker already exists'});
     }
 
     //-III- ceating the coworker rule
-    const createCoworkerResult = await createCoworker(owner, req.body.props);
+    let createCoworkerResult = await CoworkerRules.create(owner, req.body.props);
+    // console.log('createCoworkerResult l:158', createCoworkerResult);
+
+    if (!createCoworkerResult?.[0]?.affectedRows) {
+        return {status: 500, msg: 'could not add a coworker rule, try again later'};
+    }
+
+    createCoworkerResult = {status: 200, msg: 'coworker has been created successfully'};
 
     // todo: add notification to db, marked as unread
     const notificationsResponse = await Notifications.add({
@@ -159,7 +130,7 @@ const create = async (req, res) => {
         type: 'message',
         message: `${owner} gave you access to his account`,
         read: false,
-        date: new Date()
+        date: new Date(),
     });
     // console.log(notificationsResponse);
     if (!notificationsResponse[0].affectedRows) {
@@ -176,7 +147,10 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
     const owner = req.user.username;
-    const updateCoworkerResult = await updateCoworker(owner, req.body.props);
+    const response = await CoworkerRules.update(owner, req.body.props);
+    if (!response?.[0]?.affectedRows) {
+        return res.status(500).json({msg: 'something bad happened'});
+    }
 
     // todo: add notification to db, marked as unread
     const notificationsResponse = await Notifications.add({
@@ -184,7 +158,7 @@ const update = async (req, res) => {
         type: 'message',
         message: `${owner} has modified your permissions on his account`,
         read: false,
-        date: new Date()
+        date: new Date(),
     });
     if (!notificationsResponse[0].affectedRows) {
         return res.status(500).json({msg: 'something bad happened while updating a coworker rule'});
@@ -195,7 +169,7 @@ const update = async (req, res) => {
         data: `${owner} has modified your permissions on his account`,
     });
 
-    res.status(updateCoworkerResult.status).json({msg: updateCoworkerResult.msg});
+    res.status(200).json({msg: 'coworker updated successfully'});
 };
 
 const remove = async (req, res) => {
@@ -217,7 +191,7 @@ const remove = async (req, res) => {
         type: 'message',
         message: `you are no longer have access to ${owner}'s account`,
         read: false,
-        date: new Date()
+        date: new Date(),
     });
     // console.log(notificationsResponse);
     if (!notificationsResponse[0].affectedRows) {

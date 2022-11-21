@@ -94,25 +94,36 @@ const signinOAuth = async (req, res) => {
         const {email, email_verified, ...rest} = jwt.decode(response.id_token);
         //console.log(rest);
 
+        if (!email_verified) {
+            return res.status(401).json({msg: 'your email address is not verified'});
+        }
+
         // UPSERTING EMAIL AS THE USERNAME
-        const userResponse = await User.getUser(email);
+        const userResponse = await User.getUserById(email);
         if (!userResponse)
             return res.status(500).json({msg: 'something bad happened while authenticating you'});
+
+        // generate a unique username in case the user is signing up
+        let uniqueUsername = email.split('@')[0] + uuid();
         if (!userResponse[0].length) {
             // creating the user
             const createUserResponse = await User.createUser({
                 id: email,
-                usr: email.split('@')[0],
-                pass: 'OAuth2.0 user',
+                user: uniqueUsername,
+                pass: uuid(),
             });
+
             if (!createUserResponse[0]?.affectedRows) {
                 return res.status(500).json({msg: 'something went bad while signing up'});
             }
+        } else {
+            //if the user already exists, get the username form the db
+            uniqueUsername = userResponse[0][0].user;
         }
 
         const options = {algorithm: 'RS256', expiresIn: '24h'};
         const privateKey = await fs.readFile(process.cwd() + '/rsa/priv.pem');
-        const body = {username: email};
+        const body = {username: uniqueUsername};
         const token = jwt.sign(body, privateKey, options);
 
         res.cookie(process.env.COOKIENAME, token, {httpOnly: true});

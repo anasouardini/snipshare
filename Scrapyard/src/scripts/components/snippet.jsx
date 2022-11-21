@@ -150,7 +150,7 @@ const Snippet = (props) => {
 
                     {/* Description */}
                     <details className='mb-4'>
-                        <summary className='mb-2 cursor-pointer inline'>Description</summary>
+                        <summary className='mb-2 cursor-pointer w-maxContent'>Description</summary>
                         <p className='text-gray-500 '>{snipInfoState.snippet.descr}</p>
                     </details>
 

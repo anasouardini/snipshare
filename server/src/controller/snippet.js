@@ -21,6 +21,7 @@ const authAction = async (req, action) => {
 
     if (action == 'read') {
         const snippetResponse = await Snippet.getSnippet(owner, snippetID);
+        //console.log('l24 ',snippetResponse)
         if (!snippetResponse[0].length) return defaultResponse;
 
         let access = {};
@@ -86,18 +87,19 @@ const read = async (req, res) => {
     // if has access authAction will return the snippet props
     // - I should probably separate the concerns,
     //- but I have to figure out how to do this using one db request
-    // console.log(result);
     res.status(result.status).json({msg: result.msg});
 };
 
 const edit = async (req, res) => {
     // input validation
     const schema = Z.object({
-        title: Z.string().length(100),
-        descr: Z.string().length(1000),
-        snippet: Z.string().length(1000),
+        title: Z.string().max(100),
+        descr: Z.string().max(1000),
+        snippet: Z.string().max(1000),
         isPrivate: Z.boolean(),
     });
+
+    //console.log(req.body.props)
     if (schema.safeParse(req.body.props).error) {
         // console.log(schema.safeParse(req.body.props).error);
         return res.status(400).json({msg: 'request format is not valid'});
@@ -167,7 +169,7 @@ const readMiddleware = async (req, res) => {
         ? await Snippet.getUserSnippets({user: snippetsOwner, title: `%${req.query?.title}%`}) // check if includes after fetching
         : await Snippet.getAllSnippets({title: `%${req.query?.title}%`});
 
-    //console.log(snippetsResponse);
+    // console.log(snippetsResponse);
     // if empty
     if (!snippetsResponse[0]?.length) {
         res.json({msg: {snippets: []}});

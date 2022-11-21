@@ -4,8 +4,9 @@ const {v4: uuid} = require('uuid');
 const add = ({user, type, message, read, date}) => {
     return poolPromise(
         `INSERT INTO notifications (id, user, type, message, isRead, creatDate)
-        VALUES (?, ?, ?, ?, ?, ?)`,
-        [uuid(), user, type, message, Number(read), date]
+        select ?, id, ?, ?, ?, ? from users
+        where user=?;`,
+        [uuid(), type, message, Number(read), date, user]
     );
 };
 

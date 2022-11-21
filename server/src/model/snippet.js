@@ -2,40 +2,59 @@ const poolPromise = require('./db');
 
 //todo: specify the number of items from the db in the query
 const getAllSnippets = ({title}) => {
-    let query = `select * from snippets`;
-    if(title != '%undefined%'){
-      query += ` WHERE title LIKE ?`
+  // console.log(title)
+    let query = `SELECT s.*, u.user AS user, uu.user AS author
+                FROM snippets s
+                INNER JOIN users u ON s.user=u.id
+                INNER JOIN users uu ON s.author=uu.id`;
+    if (title != '%undefined%') {
+        query += ` WHERE s.title LIKE ?`;
     }
     return poolPromise(query, [title]);
 };
 const getUserSnippets = ({user, title}) => {
-    let query = `select * from snippets where user = ?`;
-    if(title != '%undefined%'){
-      query += ` AND title LIKE ?`
+    let query = `SELECT s.*, u.user AS user, uu.user AS author
+                FROM snippets s
+                INNER JOIN users u ON s.user=u.id
+                INNER JOIN users uu ON s.author=uu.id
+                WHERE u.user = ?`;
+    if (title != '%undefined%') {
+        query += ` AND s.title LIKE ?`;
     }
     return poolPromise(query, [user, title]);
 };
-const getSnippet = (usr, snipID) => {
-    let query = `select * from snippets where user=? and id=?`;
-    return poolPromise(query, [usr, snipID]);
+
+// individual snippet
+const getSnippet = (user, snipID) => {
+    let query = `SELECT s.*, u.user AS user, uu.user AS author
+                FROM snippets s 
+                INNER JOIN users u ON s.user=u.id
+                INNER JOIN users uu ON s.author=uu.id
+                WHERE u.user=? AND s.id=?`;
+    return poolPromise(query, [user, snipID]);
 };
 
-const deleteSnippet = (usr, snipID) =>
-    poolPromise(`delete from snippets where user = ? and id = ?`, [usr, snipID]);
+const deleteSnippet = (user, snipID) =>
+    poolPromise(
+        `DELETE FROM snippets WHERE user IN (SELECT id FROM users WHERE user=?) AND id=?`,
+        [user, snipID]
+    );
 
 const createSnippet = (props) => {
-    // console.log(props);
     return poolPromise(
         `INSERT INTO
         snippets (id, user, isPrivate, title, descr, snippet, author)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        SELECT ?, u.id, ?, ?, ?, ?, uu.id
+        FROM users u
+        INNER JOIN users uu ON u.user=? AND uu.user=?
+        `,
         [
             props.id,
-            props.owner,
             Number(props.isPrivate),
             props.title,
             props.descr,
             props.snippet,
+            props.owner,
             props.author,
         ]
     );
@@ -44,7 +63,7 @@ const editSnippet = (owner, props, snippetID) =>
     poolPromise(
         `UPDATE
             snippets SET title=?, descr=?, snippet=?, isPrivate=?
-            WHERE user=? AND id=?;`,
+              WHERE user IN (SELECT id FROM users WHERE user=?) AND id=?;`,
         [props.title, props.descr, props.snippet, Number(props.isPrivate), owner, snippetID]
     );
 

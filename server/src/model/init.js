@@ -21,7 +21,11 @@ const queries = {
         coworker varchar(100) NOT NULL,
         generic json NOT NULL,
         exceptions json NOT NULL,
-        PRIMARY KEY(user, coworker)
+        UNIQUE(user, coworker),
+        CONSTRAINT fk_coworkerRules_users FOREIGN KEY(user)
+        REFERENCES users(id) ON DELETE CASCADE,
+        CONSTRAINT fk_coworkerRules_coworkers FOREIGN KEY(coworker)
+        REFERENCES users(id) ON DELETE CASCADE
     );`,
 
     createSnippets: `CREATE TABLE snippets (
@@ -32,7 +36,8 @@ const queries = {
         snippet varchar(5000) NOT NULL,
         isPrivate tinyint NOT NULL,
         author varchar(100) NOT NULL,
-        INDEX title_index (title)
+        INDEX title_index (title),
+        CONSTRAINT fk_snippets_users FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
     );`,
     createNotifications: `CREATE TABLE notifications (
         id varchar(100) PRIMARY KEY,
@@ -40,7 +45,8 @@ const queries = {
         type varchar(20) NOT NULL,
         message varchar(1000) NOT NULL,
         isRead tinyInt  NOT NULL,
-        creatDate dateTime NOT NULL
+        creatDate dateTime NOT NULL,
+        CONSTRAINT fk_notifications_users FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
     );`,
 
     insertMods: `
@@ -58,22 +64,22 @@ const queries = {
             users (id, user, passwd)
         VALUES   
             (
-                '${uuid()}',
+                ?,
                 'venego',
                 '$2b$10$ZwjIliPoQ5Exets.CIQbs.MV0ap50GN9vUmTojQuwKJT5oPpkIDVi'
             ),
             (
-                '${uuid()}',
+                ?,
                 '3disa',
                 '$2a$10$2ez/Hwk0h6lVG8m2fQJBU.IcXRBpjKmhCSFCbvbXXl6QL4fqykBLW'
             ),
             (
-                '${uuid()}',
+                ?,
                 'm9ila',
                 '$2a$10$j7.gQk2JlsdxIQVGdMeHaO8S6TCcgHn7Z3qvgmk/XwxDzlem7B7Su'
             ),
             (
-                '${uuid()}',
+                ?,
                 '3sila',
                 '$2a$10$o4Gk9LHIOzuTlNdK2lYQi.yTXHMhXZXbXuLkzVPnhL4Tqf.A6v81m'
             );`,
@@ -91,147 +97,147 @@ const queries = {
         VALUES
         (
             '${uuid()}',
-            'venego',
+            ?,
             0,
             'Debouncer Model',
             'This is a debouncer model where you can initialize multiple debounced actions, and they are going to be stored in a list untill you decide to run or delete them',
             'const debouncedActionsList = {};\n\nconst init = (key, func, delay = 500) => {\n\tlet timer;\n\tdebouncedActionsList[key] = (...args) => {\n\t\tif (timer) {\n\t\t\tclearTimeout(timer);\n\t\t}\n\t\ttimer = setTimeout(() => {\n\t\t\tfunc(...args);\n\t\t}, delay);\n\t};\n};\nconst clear = (key) => {\n\tdelete debouncedActionsList[key];\n};\nconst run = (key, ...args) => {\n\tdebouncedActionsList[key](...args);\n};\n\nexport default {init, run, clear};',
-            'venego'
+            ?
         ),
         (
             '${uuid()}',
-            'venego',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-           'venego'
+            ?
         ),
         (
             '${uuid()}',
-            'venego',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            'venego'
+            ?
         ),
         (
             '${uuid()}',
-            'venego',
+            ?,
             1,
             'react functional component',
             'use this to create a react functional component',
             'import react from "react";\nexport default function Component(props){\n\treturn (<p>Component</p>);\n}',
-            'venego'
+            ?
         ),
         (
             '${uuid()}',
-            '3sila',
+            ?,
             0,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            '3sila'
+            ?
         ),
         (
             '${uuid()}',
-            '3sila',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            '3sila'
+            ?
         ),
         (
             '${uuid()}',
-            '3sila',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            '3sila'
+            ?
         ),
         (
             '${uuid()}',
-            '3sila',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            '3sila'
+            ?
         ),
         (
             '${uuid()}',
-            'm9ila',
+            ?,
             0,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            'm9ila'
+            ?
         ),
         (
             '${uuid()}',
-            'm9ila',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            'm9ila'
+            ?
         ),
         (
             '${uuid()}',
-            'm9ila',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            'm9ila'
+            ?
         ),
         (
             '${uuid()}',
-            'm9ila',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            'm9ila'
+            ?
         ),
         (
             '${uuid()}',
-            '3disa',
+            ?,
             0,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            '3disa'
+            ?
         ),
         (
             '${uuid()}',
-            '3disa',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            '3disa'
+            ?
         ),
         (
             '${uuid()}',
-            '3disa',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            '3disa'
+            ?
         ),
         (
             '${uuid()}',
-            '3disa',
+            ?,
             1,
             'snippet for reversing a string',
             'just a little snippet for reversing a string in js',
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
-            '3disa'
+            ?
         );`,
 };
 
@@ -246,20 +252,54 @@ const restart = async () => {
     response = await poolPromise(queries.createUsers);
     if (!response) return false;
 
-    response = await poolPromise(queries.insertUsers);
+    // order matters
+    const usersIds = [uuid(), uuid(), uuid(), uuid()];
+    response = await poolPromise(queries.insertUsers, usersIds);
     // console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.createSnippets);
+    // console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.createNotifications);
     if (!response) return false;
 
-    response = await poolPromise(queries.insertSnippets);
+    // order matters
+    /*   for each snippet, there is an author and an owner.
+     *   4 snippets for each owner(and author in this case)
+     *   there for the Array(8)*/
+    response = await poolPromise(queries.insertSnippets, [
+        ...[
+            usersIds[0],
+            usersIds[1],
+
+            usersIds[0],
+            usersIds[2],
+
+            usersIds[0],
+            usersIds[0],
+
+            usersIds[0],
+            usersIds[3],
+        ],
+        // ...Array(8)
+        //     .fill('')
+        //     .map(() => usersIds[0]),
+        ...Array(8)
+            .fill('')
+            .map(() => usersIds[1]),
+        ...Array(8)
+            .fill('')
+            .map(() => usersIds[2]),
+        ...Array(8)
+            .fill('')
+            .map(() => usersIds[3]),
+    ]);
     if (!response) return false;
 
     response = await poolPromise(queries.createCoworkers);
+    // console.log(response);
     if (!response) return false;
 
     return true;
