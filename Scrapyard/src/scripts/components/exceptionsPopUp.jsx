@@ -107,13 +107,16 @@ const ExceptionsPopUp = (props, ref) => {
 
         //! not knowing how this works is dangerous
         if (props.oldOrNew == 'new') {
-            ref.current[props.oldOrNew].old = deepClone(coworkerExceptionsRef.current); //- this works
+            //- this works
+            ref.current[props.oldOrNew].old = deepClone(coworkerExceptionsRef.current);
         } else {
             ref.current[props.oldOrNew].old[props.coworkerUsername] = deepClone(
                 coworkerExceptionsRef.current
             ); //- this works
         }
-        // coworkerExceptionsRef.current = deepClone(coworkerExceptionsRef.current); //- this doesn't
+
+        //- this doesn't
+        // coworkerExceptionsRef.current = deepClone(coworkerExceptionsRef.current);
 
         // console.log(coworkerExceptionsRef.current);
         // console.log('handle close', ref.current[props.oldOrNew].old);
@@ -144,7 +147,7 @@ const ExceptionsPopUp = (props, ref) => {
                                 ref={coworkerExceptionsRef.current[exceptionID]}
                                 coworkerAccess={coworkerExceptionsRef.current[exceptionID]}
                                 type='exceptions'
-                                markChangedCoworker={(e) => {
+                                markChangedCoworker={() => {
                                     props.markChangedCoworker(props.coworkerUsername);
                                 }}
                             />
@@ -224,16 +227,23 @@ const ExceptionsPopUp = (props, ref) => {
     };
 
     return (
-        <div className={`z-10 fixed top-0 left-0 w-full h-full flex items-center justify-center`}>
+        <div
+            className={`z-10 fixed top-0 left-0 w-full h-full
+                      flex items-center justify-center`}
+        >
             <div
                 onClick={handleClose}
                 className={`fixed content-[""] top-0 left-0
                 w-full h-full bg-primary opacity-20`}
             ></div>
-            <form className='flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative'>
+            <form
+                className='flex flex-col w-[600px] gap-6 p-6 pt-8
+                        bg-[#181818] z-30 drop-shadow-2xl relative'
+            >
                 <span
                     onClick={handleClose}
-                    className='text-primary absolute content-["X"] top-2 right-2 text-xl cursor-pointer'
+                    className='text-primary absolute content-["X"] top-2
+                              right-2 text-xl cursor-pointer'
                 >
                     X
                 </span>

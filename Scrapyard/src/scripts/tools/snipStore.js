@@ -1,9 +1,9 @@
 import {read} from './bridge';
 import toUrlEncoded from './toUrlEncoded';
 
-const getSnippets = async ({user, title, meta, pageParam, perPage}) => {
-    const urlParams = toUrlEncoded({title, meta, pageParam, perPage});
-    // console.log('urlParams', urlParams);
+const getSnippets = async ({user, title, language, categories, meta, pageParam, perPage}) => {
+    const urlParams = toUrlEncoded({title, language, categories, meta, pageParam, perPage});
+    console.log('urlParams', urlParams);
     const response = await read(`${user ? `${user}/` : ''}snippets${urlParams}`);
 
     if (response.status == 200) {
@@ -31,6 +31,15 @@ const readCoworkerRules = async () => {
     }
     return response;
 };
+
+const getCategories = async ()=>{
+    const response = await read(`categories`);
+
+    if (response.status == 200) {
+        return response.msg;
+    }
+    return response;
+}
 
 const commonSnippetFields = [
     //- the attr.key is used as Ref and snippet prop
@@ -74,4 +83,4 @@ const commonSnippetFields = [
     // },
 ];
 
-export {getSnippets, getUsers, readCoworkerRules, commonSnippetFields};
+export {getSnippets, getUsers, readCoworkerRules, commonSnippetFields, getCategories};

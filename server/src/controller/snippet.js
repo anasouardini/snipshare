@@ -162,15 +162,22 @@ const remove = async (req, res) => {
 const readMiddleware = async (req, res) => {
     const snippetsOwner = req.params?.user; // if  this is not specified, the user is requesting all of the snippets
     const user = req.user.username;
-
-    //console.log('owner ', snippetsOwner);
-    //console.log('query ', req.query);
-    //console.log('snippetOwner', snippetsOwner);
-    //console.log('title readmiddleware', req.query.title)
+    const filters = {
+        title: req.query?.title,
+        language: req.query?.language,
+        categories: (() => {
+            if(!req.query?.categories) {return undefined}
+            const categories = req.query?.categories?.trim();
+            if (categories[categories.length - 1] == ',') {
+                return categories.slice(0, categories.length-1);
+            }
+        })(),
+    };
+    console.log(filters);
 
     const snippetsResponse = snippetsOwner
-        ? await Snippet.getUserSnippets({user: snippetsOwner, title: `%${req.query?.title}%`}) // check if includes after fetching
-        : await Snippet.getAllSnippets({title: `%${req.query?.title}%`});
+        ? await Snippet.getUserSnippets({user: snippetsOwner, ...filters})
+        : await Snippet.getAllSnippets({...filters});
 
     // console.log(snippetsResponse);
     // if empty

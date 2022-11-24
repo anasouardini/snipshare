@@ -1,27 +1,51 @@
 const poolPromise = require('./db');
 
 //todo: specify the number of items from the db in the query
-const getAllSnippets = ({title}) => {
-  // console.log(title)
+const getAllSnippets = ({title, language, categories}) => {
+    // console.log(title)
     let query = `SELECT s.*, u.user AS user, uu.user AS author
                 FROM snippets s
                 INNER JOIN users u ON s.user=u.id
-                INNER JOIN users uu ON s.author=uu.id`;
-    if (title != '%undefined%') {
-        query += ` WHERE s.title LIKE ?`;
+                INNER JOIN users uu ON s.author=uu.id
+                WHERE 1=1`;
+
+    let variables = [];
+    if (title) {
+        query += ` AND s.title LIKE ?`;
+        variables.push(`%${title}%`);
     }
-    return poolPromise(query, [title]);
+    if (language) {
+        query += ` AND s.language=?`;
+        variables.push(language);
+    }
+    if (categories) {
+        query += ` AND s.categories LIKE ?`;
+        variables.push(`%${categories}%`);
+    }
+
+    return poolPromise(query, variables);
 };
-const getUserSnippets = ({user, title}) => {
+const getUserSnippets = ({user, title, language, categories}) => {
     let query = `SELECT s.*, u.user AS user, uu.user AS author
                 FROM snippets s
                 INNER JOIN users u ON s.user=u.id
                 INNER JOIN users uu ON s.author=uu.id
                 WHERE u.user = ?`;
-    if (title != '%undefined%') {
+    let variables = [user];
+    if (title) {
         query += ` AND s.title LIKE ?`;
+        variables.push(`%${title}%`);
     }
-    return poolPromise(query, [user, title]);
+    if (language) {
+        query += ` AND s.language=?`;
+        variables.push(language);
+    }
+    if (categories) {
+        query += ` AND s.categories LIKE ?`;
+        variables.push(`%${categories}%`);
+    }
+
+    return poolPromise(query, variables);
 };
 
 // individual snippet
@@ -35,10 +59,10 @@ const getSnippet = (user, snipID) => {
 };
 
 const deleteSnippet = (user, snipID) =>
-    poolPromise(
-        `DELETE FROM snippets WHERE user IN (SELECT id FROM users WHERE user=?) AND id=?`,
-        [user, snipID]
-    );
+    poolPromise(`DELETE FROM snippets WHERE user IN (SELECT id FROM users WHERE user=?) AND id=?`, [
+        user,
+        snipID,
+    ]);
 
 const createSnippet = (props) => {
     return poolPromise(

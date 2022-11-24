@@ -48,6 +48,8 @@ router.post('/:user/snippet', gotoLogin, controller.snippet.create);
 router.put('/:user/:snippetID', gotoLogin, controller.snippet.edit);
 router.delete('/:user/:snippetID', gotoLogin, controller.snippet.remove);
 
+router.get('/categories', controller.categories.readAll);
+
 router.get('/coworkerRules', gotoLogin, controller.coworkerRules.readAll);
 router.get('/:coworker/coworkerRules', gotoLogin, controller.coworkerRules.readCoworker);
 router.post(

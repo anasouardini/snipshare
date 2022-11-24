@@ -2,7 +2,8 @@ const poolPromise = require('./db');
 const {v4: uuid} = require('uuid');
 
 const queries = {
-    cleardb: 'DROP TABLE IF EXISTS mods, users, snippets, coworkersRules, notifications;',
+    cleardb:
+        'DROP TABLE IF EXISTS mods, users, snippets, categories, languages, coworkersRules, notifications;',
 
     createUsers: `CREATE TABLE users (
         id varchar(100) PRIMARY KEY,
@@ -42,11 +43,23 @@ const queries = {
         author varchar(100) NOT NULL,
         ceateDate dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP,
         lastModified dateTime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        language varchar(30),
+        language varchar(100) NOT NULL,
         categories varchar(1000),
         INDEX title_index (title),
-        CONSTRAINT fk_snippets_users FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
+        CONSTRAINT fk_snippets_users FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE,
+        CONSTRAINT fk_snippets_language FOREIGN KEY(language) REFERENCES languages(name)
     );`,
+
+    createCategories: `CREATE TABLE categories (
+        name varchar(100) PRIMARY KEY NOT NULL,
+        id varchar(100) UNIQUE NOT NULL
+    );`,
+
+    createLanguages: `CREATE TABLE languages(
+        name varchar(100) PRIMARY KEY NOT NULL,
+        id varchar(100) UNIQUE NOT NULL
+    );`,
+
     createNotifications: `CREATE TABLE notifications (
         id varchar(100) PRIMARY KEY,
         user varchar(100) NOT NULL,
@@ -91,6 +104,23 @@ const queries = {
                 '3sila',
                 '$2a$10$o4Gk9LHIOzuTlNdK2lYQi.yTXHMhXZXbXuLkzVPnhL4Tqf.A6v81m'
             );`,
+
+    insertLanguages: `insert into
+        languages(id, name)
+        values
+          ('${uuid()}', ?),
+          ('${uuid()}', ?),
+          ('${uuid()}', ?),
+          ('${uuid()}', ?)
+        ;`,
+    insertCategories: `insert into
+        categories(id, name)
+        values
+          ('${uuid()}', ?),
+          ('${uuid()}', ?),
+          ('${uuid()}', ?),
+          ('${uuid()}', ?)
+        ;`,
 
     insertSnippets: `INSERT INTO
         snippets (
@@ -297,11 +327,22 @@ const restart = async () => {
     // order matters
     const usersIds = [uuid(), uuid(), uuid(), uuid()];
     response = await poolPromise(queries.insertUsers, usersIds);
-    // console.log(response);
     if (!response) return false;
 
+    response = await poolPromise(queries.createLanguages);
+    if (!response) return false;
+    response = await poolPromise(queries.createCategories);
+    if (!response) return false;
+    response = await poolPromise(queries.insertLanguages, ['cpp', 'lua', 'javascript', 'python']);
+    if (!response) return false;
+    response = await poolPromise(queries.insertCategories, [
+        'performance',
+        'genericAbstraction',
+        'reactSnippet',
+        'testing',
+    ]);
+    if (!response) return false;
     response = await poolPromise(queries.createSnippets);
-    // console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.createNotifications);
@@ -338,10 +379,10 @@ const restart = async () => {
             .fill('')
             .map(() => usersIds[3]),
     ]);
+  // console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.createCoworkers);
-  // console.log(response);
     if (!response) return false;
 
     return true;

@@ -6,6 +6,7 @@ module.exports = {
     user: require('./user'),
     whoami: require('./whoami'),
     snippet: require('./snippet'),
+    categories: require('./categories'),
     coworkerRules: require('./coworkerRules'),
     events: require('./events')
 };
