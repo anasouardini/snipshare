@@ -150,11 +150,11 @@ const Snippet = (props) => {
 
                     {/* Description */}
                     <details className='mb-4'>
-                        <summary className='mb-2 cursor-pointer w-maxContent'>Description</summary>
+                        <summary className='mb-2 cursor-pointer w-max'>Description</summary>
                         <p className='text-gray-500 '>{snipInfoState.snippet.descr}</p>
                     </details>
                     <details className='mb-4'>
-                        <summary className='mb-2 cursor-pointer w-maxContent'>Categories:</summary>
+                        <summary className='mb-2 cursor-pointer w-max'>Categories:</summary>
                         <ul className='inline mr-3'>
                             {snipInfoState.snippet.categories.split(' ').map((category) => (
                                 <li

@@ -194,8 +194,8 @@ export default function Snippets() {
                 !userParam ? (
                     <button
                         onClick={handleCreate}
-                        className={`border-[1px] border-lime-300 px-2 py-2
-                                text-[1rem] text-lime-300 rounded-md`}
+                        className={`border-[1px] border-primary px-2 py-2
+                                text-[1rem] text-primary rounded-md`}
                     >
                         Add Snippet
                     </button>

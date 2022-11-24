@@ -7,7 +7,7 @@ module.exports = {
                 primary: 'rgb(101 163 13)',
                 dark: '#191919',
             },
-      // fixing stupid tailwind
+            // fixing stupid tailwind
             width: {maxContent: 'max-content'},
         },
         screens: {

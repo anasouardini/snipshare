@@ -214,19 +214,24 @@ const Form = (props) => {
     };
 
     return (
-        <div className={`z-10 fixed top-0 left-0 w-full h-full flex items-center justify-center`}>
+        <div
+            className={`backdrop-blur-sm z-10 fixed top-0 left-0
+                        w-full h-full flex items-center justify-center`}
+        >
             <div
                 onClick={handleClose}
                 className={`fixed content-[""] top-0 left-0
-                        w-full h-full bg-primary opacity-20`}
+                        w-full h-full`}
             ></div>
             <form
                 ref={refs.form}
-                className='flex flex-col w-[600px] gap-6 p-6 pt-8 bg-[#181818] z-30 drop-shadow-2xl relative'
+                className='flex flex-col w-[600px] gap-6 p-6 pt-8
+                          bg-[#181818] z-30 drop-shadow-2xl relative'
             >
                 <span
                     onClick={handleClose}
-                    className='absolute content-["X"] top-2 right-2 text-xl cursor-pointer text-gray-700'
+                    className='absolute content-["X"] top-2 right-2
+                            text-xl cursor-pointer text-gray-700'
                 >
                     X
                 </span>

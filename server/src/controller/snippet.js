@@ -393,7 +393,7 @@ const create = async (req, res) => {
             ...req.body.props,
             author: coworker,
         });
-        console.log(response);
+        // console.log(response);
         if (response && response[0]?.affectedRows) {
             // if the author is a coworker
             // giving the coworker access to the snippet they've created
