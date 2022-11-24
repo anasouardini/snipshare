@@ -116,6 +116,7 @@ const edit = async (req, res) => {
     const owner = req.params.user;
     const response = await Snippet.editSnippet(owner, req.body.props, req.params.snippetID);
     // console.log(req.body.props);
+    // console.log(response);
     return response[0]?.affectedRows
         ? res.json({status: 200, msg: `snippet has been edited`})
         : res.json({status: 500, msg: `something happend while editting the snippet`});
@@ -166,10 +167,12 @@ const readMiddleware = async (req, res) => {
         title: req.query?.title,
         language: req.query?.language,
         categories: (() => {
-            if(!req.query?.categories) {return undefined}
+            if (!req.query?.categories) {
+                return undefined;
+            }
             const categories = req.query?.categories?.trim();
             if (categories[categories.length - 1] == ',') {
-                return categories.slice(0, categories.length-1);
+                return categories.slice(0, categories.length - 1);
             }
         })(),
     };
@@ -390,7 +393,7 @@ const create = async (req, res) => {
             ...req.body.props,
             author: coworker,
         });
-        // console.log(response);
+        console.log(response);
         if (response && response[0]?.affectedRows) {
             // if the author is a coworker
             // giving the coworker access to the snippet they've created

@@ -67,8 +67,8 @@ const deleteSnippet = (user, snipID) =>
 const createSnippet = (props) => {
     return poolPromise(
         `INSERT INTO
-        snippets (id, user, isPrivate, title, descr, snippet, author)
-        SELECT ?, u.id, ?, ?, ?, ?, uu.id
+        snippets (id, user, isPrivate, title, descr, snippet, language, categories, author)
+        SELECT ?, u.id, ?, ?, ?, ?, ?, ?, uu.id
         FROM users u
         INNER JOIN users uu ON u.user=? AND uu.user=?
         `,
@@ -78,6 +78,8 @@ const createSnippet = (props) => {
             props.title,
             props.descr,
             props.snippet,
+            props.language,
+            props.categories,
             props.owner,
             props.author,
         ]
@@ -86,9 +88,18 @@ const createSnippet = (props) => {
 const editSnippet = (owner, props, snippetID) =>
     poolPromise(
         `UPDATE
-            snippets SET title=?, descr=?, snippet=?, isPrivate=?
+            snippets SET title=?, descr=?, snippet=?, isPrivate=?, language=?, categories=? 
               WHERE user IN (SELECT id FROM users WHERE user=?) AND id=?;`,
-        [props.title, props.descr, props.snippet, Number(props.isPrivate), owner, snippetID]
+        [
+            props.title,
+            props.descr,
+            props.snippet,
+            Number(props.isPrivate),
+            props.language,
+            props.categories,
+            owner,
+            snippetID,
+        ]
     );
 
 module.exports = {

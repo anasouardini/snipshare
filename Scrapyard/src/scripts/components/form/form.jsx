@@ -13,6 +13,8 @@ const Form = (props) => {
         snippet: useRef({parent: null, snippet: null}),
         formButton: useRef(''),
         isPrivate: useRef(''),
+        categories: useRef(''),
+        language: useRef(''),
         error: useRef(true), // the form is invalid bt default
     };
 
@@ -116,7 +118,7 @@ const Form = (props) => {
                     body.props[fieldKey] = snippetValue;
                     // console.log(body.props[fieldKey]);
                 } else {
-                    // console.log(refs[fieldKey].current);
+                    console.log(refs[fieldKey].current);
                     body.props[fieldKey] = refs[fieldKey].current.value;
                 }
             }
@@ -139,8 +141,11 @@ const Form = (props) => {
     };
 
     const handleCreate = async () => {
+        const requestBody = createRequestBody();
+        console.log(requestBody);
+
         // console.log(props.owner);
-        const response = await create(`${props.owner}/snippet`, createRequestBody());
+        const response = await create(`${props.owner}/snippet`, requestBody);
         notify({type: 'info', msg: response.msg});
         props.refetch();
     };

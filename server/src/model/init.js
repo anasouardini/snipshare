@@ -166,7 +166,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -177,7 +177,7 @@ const queries = {
             'import react from "react";\nexport default function Component(props){\n\treturn (<p>Component</p>);\n}',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -188,7 +188,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -199,7 +199,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -210,7 +210,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -221,7 +221,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -232,7 +232,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -243,7 +243,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -254,7 +254,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -265,7 +265,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -276,7 +276,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -287,7 +287,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -298,7 +298,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         ),
         (
             '${uuid()}',
@@ -309,7 +309,7 @@ const queries = {
             'let str = "be a string";\nstr = str.split(" ").reverse().join(" ");',
             ?,
             'javascript',
-            'basicAbstraction'
+            'genericAbstraction'
         );`,
 };
 

@@ -4,11 +4,13 @@ import Snippet from '../components/snippet';
 import {useParams, useOutletContext} from 'react-router-dom';
 import Form from '../components/form/form';
 
-import {commonSnippetFields, getSnippets, getCategories} from '../tools/snipStore';
+import {commonSnippetFields, getSnippets} from '../tools/snipStore';
 import {useNavigate} from 'react-router-dom';
-import {useInfiniteQuery, useQuery} from 'react-query';
+import {useInfiniteQuery} from 'react-query';
 import debouncer from '../tools/debouncer';
 import autoAnimate from '@formkit/auto-animate';
+import Categories from '../components/form/fields/categories';
+import Language from '../components/form/fields/language';
 
 export default function Snippets() {
     const navigate = useNavigate();
@@ -37,19 +39,6 @@ export default function Snippets() {
     const categoriesInputRef = useRef();
     const languageInputRef = useRef();
     const searchInputRef = useRef();
-
-    const {data: categories, status: categoriesStatus} = useQuery('categories', () =>
-        getCategories()
-    );
-    const [dataListOptionsState, setDataListOptionsState] = useState({
-        categories: [],
-    });
-    // aweful way to do it
-    const categoriesReadyRef = useRef(false);
-    if (categoriesStatus == 'success' && !categoriesReadyRef.current) {
-        setDataListOptionsState({categories: categories});
-        categoriesReadyRef.current = true;
-    }
 
     const {
         data: snippetsPages,
@@ -180,73 +169,14 @@ export default function Snippets() {
         );
     };
 
-    const handleMultiSelectInputChange = (inputType, e) => {
-        if (categoriesStatus != 'success') {
-            return;
-        }
-
-        let inputValue = e.currentTarget.value;
-        const separator = ',';
-
-        if (!inputValue) {
-            console.log('input emptied');
-            return setDataListOptionsState({[inputType]: categories});
-        }
-
-        // determine if the user is asking for the next category
-        const readyForSuggestion = (inp) => {
-            if (inp[inp.length - 1] != ',' || inp == ',' || inp == ' ' || inp.includes(',,')) {
-                console.log('bad pattern (, | ,,)');
-                return false;
-            }
-            return true;
-        };
-        if (!readyForSuggestion(inputValue)) {
-            return;
-        }
-
-        // remove last separator which is the last char
-        inputValue = inputValue.substr(0, inputValue.length - 1);
-        //clean input categories from spaces
-        const inputList = inputValue.split(separator).map((inputCategory) => inputCategory.trim());
-
-        const isOutOfRange = inputList.some((iputCategory) => {
-            // if one of them is not in the list, input is out of range
-            if (!categories.includes(iputCategory.trim())) return true;
-        });
-        if (isOutOfRange) {
-            // console.log(inputList);
-            console.log('category does not exist');
-            return setDataListOptionsState({[inputType]: categories});
-        }
-
-        // determine if there is no suggestion left
-        // console.log('ref list', categories);
-        // console.log('input list', inputList);
-        let end = categories.every((optRef) => {
-            return inputList.includes(optRef);
-        });
-        if (end) {
-            console.log('you have covered all of them');
-            return;
-        }
-
-        // determine which <option>s need to stay with the input as a prefix
-        const cleanOptionsList = categories.reduce((acc, opt) => {
-            if (!inputList.includes(opt)) {
-                acc.push(`${inputValue}${separator} ${opt}`.trim());
-            }
-            return acc;
-        }, []);
-
+    // proving a debouncer cb for categories compnent
+    const debounceCB = () => {
         debouncer.run(
             'snippetsFilter',
             searchInputRef.current.value,
             categoriesInputRef.current.value,
             languageInputRef.current.value
         );
-
-        setDataListOptionsState({[inputType]: cleanOptionsList});
     };
 
     return status == 'success' ? (
@@ -273,40 +203,10 @@ export default function Snippets() {
                     <></>
                 )}
 
-                {/* todo: load all languages and categories*/}
                 {/* todo: distinguish between adding snippets and filtering them*/}
-                <input
-                    type='text'
-                    placeholder='language'
-                    ref={languageInputRef}
-                    onChange={languageFilterChange}
-                    list='languages'
-                    className='w-full max-w-[160px] px-3 py-2
-                            border-[1px] border-primary rounded-md'
-                />
-                <datalist id='languages'>
-                    <option key='javascript' value='javascript'>
-                        javascript
-                    </option>
-                </datalist>
+                <Language ref={languageInputRef} filter={languageFilterChange} />
 
-                <input
-                    type='text'
-                    placeholder='categories'
-                    ref={categoriesInputRef}
-                    list='categories'
-                    multiple
-                    onChange={(e) => {
-                        handleMultiSelectInputChange('categories', e);
-                    }}
-                    className='w-full max-w-[280px] px-3 py-2
-                            border-[1px] border-primary rounded-md'
-                />
-                <datalist id='categories'>
-                    {dataListOptionsState['categories'].map((opt) => {
-                        return <option key={opt} value={opt}></option>;
-                    })}
-                </datalist>
+                <Categories ref={categoriesInputRef} debounceCB={debounceCB} />
 
                 {/* search with title */}
                 <label>

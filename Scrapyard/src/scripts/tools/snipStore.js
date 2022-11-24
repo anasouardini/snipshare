@@ -41,6 +41,15 @@ const getCategories = async ()=>{
     return response;
 }
 
+const getLanguages = async ()=>{
+    const response = await read(`languages`);
+
+    if (response.status == 200) {
+        return response.msg;
+    }
+    return response;
+}
+
 const commonSnippetFields = [
     //- the attr.key is used as Ref and snippet prop
     {
@@ -75,12 +84,20 @@ const commonSnippetFields = [
             type: 'checkbox', // determins how to handle value
         },
     },
-    // {
-    //     type: 'Coworkers',
-    //     attr: {
-    //         key: 'coworkers',
-    //     },
-    // },
+    {
+        type: 'Categories',
+        attr: {
+            key: 'categories',
+            type: 'categories',
+        },
+    },
+    {
+        type: 'Language',
+        attr: {
+            key: 'language',
+            type: 'language',
+        },
+    },
 ];
 
-export {getSnippets, getUsers, readCoworkerRules, commonSnippetFields, getCategories};
+export {getSnippets, getUsers, readCoworkerRules, commonSnippetFields, getCategories, getLanguages};
