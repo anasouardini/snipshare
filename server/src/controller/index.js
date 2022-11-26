@@ -9,5 +9,6 @@ module.exports = {
     categories: require('./categories'),
     languages: require('./languages'),
     coworkerRules: require('./coworkerRules'),
-    events: require('./events')
+    events: require('./events'),
+    notifications: require('./notifications')
 };

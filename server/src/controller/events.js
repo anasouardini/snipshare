@@ -22,7 +22,7 @@ const listen = (req, res) => {
     res.on('close', () => {
         delete notifyQueue.streams[username];
         delete notifyQueue.queu?.[username];
-        console.log('sse connection closed: ', username);
+        // console.log('sse connection closed: ', username);
     });
 };
 

@@ -129,8 +129,8 @@ const ExceptionsPopUp = (props, ref) => {
     // console.log(ref.current);
     // console.log(coworkerExceptionsRef.current);
     const classes = {
-        inputs: 'flex justify-between items-center mb-[2rem]',
-        ruleItem: 'flex justify-between items-center',
+        inputs: 'flex justify-between items-center mb-[2rem] flex-wrap gap-5',
+        ruleItem: 'flex justify-between items-center gap-5 flex-wrap',
         buttons: 'flex gap-5',
         iconButton: 'text-2xl text-primary tooltip',
         li: 'mb-2 px-3 py-2 border-2 border-[#323232] rounded-md hover:bg-[#262626]',
@@ -228,13 +228,13 @@ const ExceptionsPopUp = (props, ref) => {
 
     return (
         <div
-            className={`z-10 fixed top-0 left-0 w-full h-full
-                      flex items-center justify-center`}
+            className={`backdrop-blur-sm z-10 fixed top-0 left-0
+                      w-full h-full flex items-center justify-center`}
         >
             <div
                 onClick={handleClose}
                 className={`fixed content-[""] top-0 left-0
-                w-full h-full bg-primary opacity-20`}
+                            w-full h-full`}
             ></div>
             <form
                 className='flex flex-col w-[600px] gap-6 p-6 pt-8
@@ -250,7 +250,7 @@ const ExceptionsPopUp = (props, ref) => {
 
                 <div>
                     <h1 className='mb-[4rem] text-2xl text-center'>
-                        Managing {props.coworkerUsername}'s Rules
+                        Managing {props.coworkerUsername}&apos;s Rules
                     </h1>
                     <div className={classes.inputs}>
                         {ref.current[props.oldOrNew].new && snippetsStatus == 'success' ? (

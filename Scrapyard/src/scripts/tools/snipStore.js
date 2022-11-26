@@ -1,8 +1,23 @@
-import {read} from './bridge';
+import {read, update} from './bridge';
 import toUrlEncoded from './toUrlEncoded';
 
-const getSnippets = async ({user, title, language, categories, meta, pageParam, perPage}) => {
-    const urlParams = toUrlEncoded({title, language, categories, meta, pageParam, perPage});
+const getSnippets = async ({
+    user,
+    title,
+    language,
+    categories,
+    meta,
+    pageParam,
+    perPage,
+}) => {
+    const urlParams = toUrlEncoded({
+        title,
+        language,
+        categories,
+        meta,
+        pageParam,
+        perPage,
+    });
     // console.log('urlParams', urlParams);
     const response = await read(`${user ? `${user}/` : ''}snippets${urlParams}`);
 
@@ -32,23 +47,50 @@ const readCoworkerRules = async () => {
     return response;
 };
 
-const getCategories = async ()=>{
+const getCategories = async () => {
     const response = await read(`categories`);
 
     if (response.status == 200) {
         return response.msg;
     }
     return response;
-}
+};
 
-const getLanguages = async ()=>{
+const getLanguages = async () => {
     const response = await read(`languages`);
 
     if (response.status == 200) {
         return response.msg;
     }
     return response;
-}
+};
+
+const checkNotifications = async () => {
+    const response = await read(`checkUnreadNotifications`);
+
+    if (response.status == 200) {
+        return response.msg;
+    }
+    return response;
+};
+
+const getNotifications = async () => {
+    const response = await read(`notifications`);
+
+    if (response.status == 200) {
+        return response.msg;
+    }
+    return response;
+};
+
+const markNotificationRead = async () => {
+    const response = await update(`markNotificationsRead`);
+
+    if (response.status == 200) {
+        return response.msg;
+    }
+    return response;
+};
 
 const commonSnippetFields = [
     //- the attr.key is used as Ref and snippet prop
@@ -100,4 +142,14 @@ const commonSnippetFields = [
     },
 ];
 
-export {getSnippets, getUsers, readCoworkerRules, commonSnippetFields, getCategories, getLanguages};
+export {
+    getSnippets,
+    getUsers,
+    readCoworkerRules,
+    getCategories,
+    getLanguages,
+    checkNotifications,
+    getNotifications,
+    markNotificationRead,
+    commonSnippetFields,
+};

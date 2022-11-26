@@ -75,20 +75,23 @@ const Snippet = (props) => {
     // console.log(snipInfoState.snippet);
     const classes = {
         buttons: 'flex justify-around mt-[20px]',
-        button: 'w-[100px] py-[4px] leserdeading-8 rounded-md text-white',
-        btnPreview: `${
-            snipInfoState.snippet.access?.read ? 'bg-cyan-600' : 'bg-gray-400 cursor-not-allowed'
-        }`,
+        button: 'w-[100px] py-[4px] rounded-md',
         btnEdit: `${
-            snipInfoState.snippet.access?.update ? 'bg-primary' : 'bg-gray-400 cursor-not-allowed'
+            snipInfoState.snippet.access?.update
+                ? 'bg-lime-700 font-bold'
+                : 'bg-gray-400 text-[#222] font-bold cursor-not-allowed'
         }`,
         btnDelete: `${
-            snipInfoState.snippet.access?.delete ? 'bg-red-500' : 'bg-gray-400 cursor-not-allowed'
+            snipInfoState.snippet.access?.delete
+                ? 'bg-red-700 font-bold'
+                : 'bg-gray-400 font-bold text-[#222] cursor-not-allowed'
         }`,
     };
 
     const updateEditedSnippet = async () => {
-        const response = await read(`${snipInfoState.snippet.user}/${snipInfoState.snippet.id}`);
+        const response = await read(
+            `${snipInfoState.snippet.user}/${snipInfoState.snippet.id}`
+        );
         if (response?.status == 200) {
             console.log('reading new version');
 
@@ -121,18 +124,23 @@ const Snippet = (props) => {
                     <div className='flex justify-between mb-4'>
                         {/* Owner */}
                         <div className='flex flex-row gap-3'>
-                            <div className='w-[50px] h-[50px] border-[1px] border-primary rounded-full'></div>
+                            <div
+                                className='w-[50px] h-[50px] border-[1px]
+                                        border-primary rounded-full'
+                            ></div>
                             <p>
                                 <span>{snipInfoState.snippet.user}</span>
                                 <br />
-                                <span className='text-gray-500 text-sm'>
+                                <span className='text-[#939393] text-sm'>
                                     @{snipInfoState.snippet.user}
                                 </span>
                             </p>
                         </div>
                         {/* Author */}
                         {snipInfoState.snippet.author != snipInfoState.snippet.user ? (
-                            <div className='grow-2'>Author: @{snipInfoState.snippet.author}</div>
+                            <div className='grow-2'>
+                                Author: @{snipInfoState.snippet.author}
+                            </div>
                         ) : (
                             <></>
                         )}
@@ -146,24 +154,32 @@ const Snippet = (props) => {
                         </p>
                     </div>
                     {/* Title */}
-                    <h2 className='text-xl text-gray-300 mb-4'>{snipInfoState.snippet.title}</h2>
+                    <h2 className='text-xl text-gray-300 mb-4'>
+                        {snipInfoState.snippet.title}
+                    </h2>
 
                     {/* Description */}
                     <details className='mb-4'>
-                        <summary className='mb-2 cursor-pointer w-max'>Description</summary>
-                        <p className='text-gray-500 '>{snipInfoState.snippet.descr}</p>
+                        <summary className='mb-2 cursor-pointer w-max'>
+                            Description
+                        </summary>
+                        <p className='text-[#939393]'>{snipInfoState.snippet.descr}</p>
                     </details>
                     <details className='mb-4'>
-                        <summary className='mb-2 cursor-pointer w-max'>Categories:</summary>
+                        <summary className='mb-2 cursor-pointer w-max'>
+                            Categories:
+                        </summary>
                         <ul className='inline mr-3'>
-                            {snipInfoState.snippet.categories.split(' ').map((category) => (
-                                <li
-                                    key={category}
-                                    className='inline ml-2 border-[1px] border-primary rounded-xl p-1 px-2'
-                                >
-                                    {category}
-                                </li>
-                            ))}
+                            {snipInfoState.snippet.categories
+                                .split(' ')
+                                .map((category) => (
+                                    <li
+                                        key={category}
+                                        className='inline ml-2 border-[1px] border-primary rounded-xl p-1 px-2'
+                                    >
+                                        {category}
+                                    </li>
+                                ))}
                         </ul>
                     </details>
                     <h3 className='text-md text-gray-300 mb-3'>

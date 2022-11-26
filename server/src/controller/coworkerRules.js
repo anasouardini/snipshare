@@ -9,7 +9,7 @@ const readAll = async (req, res) => {
 
     const response = await CoworkerRules.readAllRules({owner});
 
-    console.log('l80 coworkerrules: ', response[0]);
+    // console.log('l80 coworkerrules: ', response[0]);
     let rules = {generic: {}, exceptions: {}};
     if (response[0].length) {
         rules = {
@@ -107,7 +107,7 @@ const create = async (req, res) => {
 
     // todo: add notification to db, marked as unread
     const notificationsResponse = await Notifications.add({
-        user: owner,
+        user: req.body.props.coworker,
         type: 'message',
         message: `${owner} gave you access to his account`,
         read: false,
@@ -134,7 +134,7 @@ const update = async (req, res) => {
 
     // todo: add notification to db, marked as unread
     const notificationsResponse = await Notifications.add({
-        user: owner,
+        user: req.body.props.coworker,
         type: 'message',
         message: `${owner} has modified your permissions on his account`,
         read: false,
@@ -166,7 +166,7 @@ const remove = async (req, res) => {
 
     // todo: add notification to db, marked as unread
     const notificationsResponse = await Notifications.add({
-        user: owner,
+        user: req.body.props.coworker,
         type: 'message',
         message: `you are no longer have access to ${owner}'s account`,
         read: false,

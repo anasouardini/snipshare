@@ -26,6 +26,9 @@ const gotoHome = (req, res, next) => {
 router.get('/listenEvent', controller.events.listen);
 // get list of notifications
 router.get('/getEvents', controller.events.read);
+router.get('/checkUnreadNotifications', controller.notifications.checkUnread);
+router.get('/notifications', controller.notifications.read);
+router.put('/markNotificationsRead', controller.notifications.markAllRead);
 
 // premade db structure
 router.post('/restart', gotoLogin, controller.init.restart);

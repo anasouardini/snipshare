@@ -176,7 +176,7 @@ const readMiddleware = async (req, res) => {
             }
         })(),
     };
-    console.log(filters);
+    // console.log(filters);
 
     const snippetsResponse = snippetsOwner
         ? await Snippet.getUserSnippets({user: snippetsOwner, ...filters})

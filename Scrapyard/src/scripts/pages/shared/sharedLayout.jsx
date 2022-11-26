@@ -9,7 +9,6 @@ import Notify from '../../components/notify';
 import Bell from '../../components/bell';
 import {v4 as uuid} from 'uuid';
 import {FaBars} from 'react-icons/fa';
-import SSE from '../../components/sse.jsx';
 
 export default function SharedLayout() {
     // const [_, setForceRenderState] = useState(false);
@@ -53,7 +52,11 @@ export default function SharedLayout() {
 
     const listNotifications = () => {
         return Object.keys(notifyState).map((notiKey) => (
-            <Notify key={notiKey} type={notifyState[notiKey].type} msg={notifyState[notiKey].msg} />
+            <Notify
+                key={notiKey}
+                type={notifyState[notiKey].type}
+                msg={notifyState[notiKey].msg}
+            />
         ));
     };
 
@@ -99,7 +102,9 @@ export default function SharedLayout() {
             return;
         }
         menuOverlayRef.current.className = `sm>:block`;
-        navRef.current.className = `sm>:hidden sm<:px-[5%] sm<:py-2`;
+        navRef.current.className = `sm>:hidden sm<:px-[5%] sm<:py-2
+                                    sm<:fixed sm<:top-0 sm<:right-0
+                                    sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-dark`;
     };
 
     const loginAs = async ({usr, passwd, keepSignIn}) => {
@@ -114,6 +119,7 @@ export default function SharedLayout() {
         if (response) {
             if (response.status == 200) {
                 // console.log('redirect to home');
+                //todo: redirect using pure js
                 return navigate('/');
             }
             // console.log('success');
@@ -128,16 +134,22 @@ export default function SharedLayout() {
     return (
         <div className='font-roboto'>
             {/* {whoami.msg} */}
-            <div
-                onClick={hideMenu}
-                ref={menuOverlayRef}
-                className={`sm>:flex sm>:justify-center sm>:align-center sm<:px-[5%] sm<:py-2`}
-            >
-                <button onClick={showMenu} className='sm<:hidden absolute top-3 left-3 text-2xl'>
+            <div onClick={hideMenu} ref={menuOverlayRef} className={`sm>:block`}>
+                <button
+                    onClick={showMenu}
+                    className='sm<:hidden absolute top-3 left-3 text-2xl'
+                >
                     <FaBars />
                 </button>
 
-                <nav onClick={hideMenu} ref={navRef} className='sm>:hidden'>
+                <nav
+                    onClick={hideMenu}
+                    ref={navRef}
+                    className={`sm>:hidden
+                                    sm<:px-[5%] sm<:py-2
+                                    sm<:fixed sm<:top-0 sm<:right-0
+                                    sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-dark`}
+                >
                     <ul className='sm<:flex sm<:gap-3'>
                         <li>
                             <NavLink className={classes.navLink} end to='/'>
@@ -170,7 +182,7 @@ export default function SharedLayout() {
                         >
                             Hacks
                             <ul
-                                className={`hidden absolute top-[20px] right-0 pt-4`}
+                                className={`hidden z-30 absolute top-[20px] right-0 pt-4`}
                             >
                                 <ul
                                     onMouseOver={(e) => {
@@ -247,7 +259,8 @@ export default function SharedLayout() {
                                 </ul>
                                 <li
                                     className={`cursor-pointer pb-2 bg-[#222222] hover:bg-[#282828]
-                                                border-[1px] border-[#353525] border-t-0 text-gray-200 p-2 px-3`}
+                                                border-[1px] border-[#353525] border-t-0
+                                                text-gray-200 p-2 px-3`}
                                     onClick={async () => {
                                         const response = await create('restart');
                                         // setForceRenderState((st) => !st);
@@ -261,12 +274,20 @@ export default function SharedLayout() {
                         {whoami.status == 401 ? (
                             <>
                                 <li className='ml-auto'>
-                                    <NavLink className={classes.navLink} to='/login' replace>
+                                    <NavLink
+                                        className={classes.navLink}
+                                        to='/login'
+                                        replace
+                                    >
                                         Login
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink className={classes.navLink} to='/signup' replace>
+                                    <NavLink
+                                        className={classes.navLink}
+                                        to='/signup'
+                                        replace
+                                    >
                                         Create Account
                                     </NavLink>
                                 </li>
@@ -274,7 +295,8 @@ export default function SharedLayout() {
                         ) : (
                             <>
                                 <li
-                                    className={`ml-auto cursor-pointer pb-2 border-b-[3px] border-b-transparent 
+                                    className={`ml-auto sm>:ml-0 cursor-pointer
+                                              pb-1 border-b-[3px] border-b-transparent 
                                         hover:border-b-primary text-gray-200`}
                                     onClick={async () => {
                                         const response = await create('logout');
@@ -284,9 +306,21 @@ export default function SharedLayout() {
                                 >
                                     Logout
                                 </li>
-                                {/* <li><Bell/></li> */}
                                 <li>
-                                    <NavLink className={classes.navLink} to={`${whoami.msg}`}>
+                                    {whoami &&
+                                    (whoami?.status == 200 ||
+                                        location.pathname.includes('login') ||
+                                        location.pathname.includes('signup')) ? (
+                                        <Bell notify={notify} />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </li>
+                                <li>
+                                    <NavLink
+                                        className={classes.navLink}
+                                        to={`user/${whoami.msg}`}
+                                    >
                                         Me
                                     </NavLink>
                                 </li>
@@ -308,12 +342,9 @@ export default function SharedLayout() {
             )}
 
             {/* notifications */}
-            <div className='fixed top-[30px] right-[50%] translate-x-[50%] flex-row'>
+            <div className='fixed top-[50px] right-[50%] translate-x-[50%] flex-row'>
                 {listNotifications(notifyState)}
             </div>
-            {/* <Notify key={'notiKey'} type={'warning'} msg={'empty'} /> */}
-            {/* SSE */}
-            {whoami && whoami?.status == 200 ? <SSE notify={notify} /> : <></>}
         </div>
     );
 }

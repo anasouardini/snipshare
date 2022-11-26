@@ -2,8 +2,8 @@ const poolPromise = require('./db');
 const {v4: uuid} = require('uuid');
 
 const queries = {
-    cleardb:
-        'DROP TABLE IF EXISTS mods, users, snippets, categories, languages, coworkersRules, notifications;',
+    cleardb: `DROP TABLE IF EXISTS mods, users, snippets, categories,
+                            languages, coworkersRules, notifications;`,
 
     createUsers: `CREATE TABLE users (
         id varchar(100) PRIMARY KEY,
@@ -67,7 +67,8 @@ const queries = {
         message varchar(1000) NOT NULL,
         isRead tinyInt  NOT NULL,
         createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT fk_notifications_users FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE
+        CONSTRAINT fk_notifications_users FOREIGN KEY(user)
+        REFERENCES users(id) ON DELETE CASCADE
     );`,
 
     insertMods: `
@@ -104,6 +105,10 @@ const queries = {
                 '3sila',
                 '$2a$10$o4Gk9LHIOzuTlNdK2lYQi.yTXHMhXZXbXuLkzVPnhL4Tqf.A6v81m'
             );`,
+
+    insertNotifications: `INSERT INTO notifications
+                      (id, user, type, message, isRead)
+                      VALUES (?, ?, 'info', 'this is a default/test notification', 0)`,
 
     insertLanguages: `insert into
         languages(id, name)
@@ -379,10 +384,16 @@ const restart = async () => {
             .fill('')
             .map(() => usersIds[3]),
     ]);
-  // console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.createCoworkers);
+    if (!response) return false;
+
+    response = await poolPromise(queries.insertNotifications, [uuid(), usersIds[0]]);
+    response = await poolPromise(queries.insertNotifications, [uuid(), usersIds[1]]);
+    response = await poolPromise(queries.insertNotifications, [uuid(), usersIds[2]]);
+    response = await poolPromise(queries.insertNotifications, [uuid(), usersIds[3]]);
+    // console.log(response);
     if (!response) return false;
 
     return true;

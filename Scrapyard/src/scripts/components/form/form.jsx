@@ -225,13 +225,14 @@ const Form = (props) => {
             ></div>
             <form
                 ref={refs.form}
-                className='flex flex-col w-[600px] gap-6 p-6 pt-8
-                          bg-[#181818] z-30 drop-shadow-2xl relative'
+                className='flex flex-col gap-6 p-6 pt-8
+                          bg-[#181818] z-30 drop-shadow-2xl relative
+                          w-[600px] sm>:w-full'
             >
                 <span
                     onClick={handleClose}
                     className='absolute content-["X"] top-2 right-2
-                            text-xl cursor-pointer text-gray-700'
+                            text-xl cursor-pointer '
                 >
                     X
                 </span>
@@ -239,7 +240,8 @@ const Form = (props) => {
 
                 <button
                     ref={refs.formButton}
-                    className='w-[100px] bg-primary leading-8 rounded-md text-white mx-auto z-10'
+                    className='w-[100px] bg-lime-700 leading-8
+                               rounded-md  text-white mx-auto z-10'
                     onClick={handleSubmit}
                 >
                     {props.action == 'edit' ? 'Edit' : 'Create'}
