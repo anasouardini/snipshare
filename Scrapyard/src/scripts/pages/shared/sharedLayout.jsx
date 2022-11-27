@@ -37,7 +37,7 @@ export default function SharedLayout() {
     };
 
     if (whoami.msg && whoami?.status == 200 && location.pathname.includes('login')) {
-        // console.log('redirecting to home from shared layout');
+        console.log('redirecting to home from shared layout');
         navigate('/');
     }
 
@@ -116,14 +116,11 @@ export default function SharedLayout() {
             keepSignIn,
         });
 
-        if (response) {
-            if (response.status == 200) {
-                // console.log('redirect to home');
-                //todo: redirect using pure js
-                return navigate('/');
-            }
-            // console.log('success');
-            // console.log(response);
+        if (response && response.status == 200) {
+            // console.log('redirect to home');
+            // react-router redirection was not cutting it in this case
+            return document.location.replace('http://127.0.0.1:3000/');
+            // return navigate('/');
         }
 
         console.log('not success :)');
@@ -301,7 +298,9 @@ export default function SharedLayout() {
                                     onClick={async () => {
                                         const response = await create('logout');
                                         notify({type: 'info', msg: response.msg});
-                                        return navigate('/login', {replace: true});
+                                        
+                                        document.location.replace('http://127.0.0.1:3000/login');
+                                        // return navigate('/login', {replace: true});
                                     }}
                                 >
                                     Logout
