@@ -2,7 +2,20 @@ import React, {useRef, useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
 
 import {create, update} from '../../tools/bridge';
-import fieldsMap from './fieldsMap';
+
+// FIELDS
+import IsPrivate from './fields/isPrivate';
+import CodeSnippet from './fields/snippet';
+import Categories from './fields/categories';
+import Language from './fields/language';
+const fieldsMap = {
+    IsPrivate,
+    CodeSnippet,
+    Categories,
+    Language,
+};
+const getFieldsMap = (type) => fieldsMap[type] ?? type;
+
 
 const Form = (props) => {
     const {notify} = useOutletContext();
@@ -99,7 +112,7 @@ const Form = (props) => {
     const handleClose = (e) => {
         if (e) e.stopPropagation();
         // unmount form
-        props.hidePopUp('form');
+        props.hidePopUp();
     };
 
     const createRequestBody = () => {
@@ -172,7 +185,7 @@ const Form = (props) => {
         // console.log(fields);
         // TODO: clear this spagetty of conditions, DRY it a little
         return fields.map((input) => {
-            const Component = fieldsMap(input.type);
+            const Component = getFieldsMap(input.type);
             if (input.attr.key == 'descr') {
                 let descrHeight = 2 * 35;
                 if (input.attr?.defaultValue) {

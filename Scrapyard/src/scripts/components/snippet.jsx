@@ -4,7 +4,6 @@ import {useOutletContext} from 'react-router-dom';
 import {commonSnippetFields} from '../tools/snipStore';
 import {read, remove} from '../tools/bridge';
 import Form from './form/form';
-import Preview from './preview';
 import {FaLock, FaLockOpen} from 'react-icons/fa';
 import CodeSnippet from './form/fields/snippet';
 import {useRef} from 'react';
@@ -17,7 +16,7 @@ const Snippet = (props) => {
     });
     // console.log(snipInfoState.snippet);
 
-    const [popUpState, setPopUpState] = useState({showForm: false, showPreview: false});
+    const [popUpState, setPopUpState] = useState({showForm: false});
 
     const formFieldsState = useRef({
         fields: Object.values(structuredClone({commonSnippetFields}))[0],
@@ -55,7 +54,7 @@ const Snippet = (props) => {
                     field.attr.readOnly = false;
                 }
             });
-            setPopUpState({showForm: true, showPreview: false});
+            setPopUpState({showForm: true});
         }
     };
 
@@ -101,15 +100,8 @@ const Snippet = (props) => {
             setSnipInfoState({snippet: response.msg});
         }
     };
-    const hidePopUp = (popUp) => {
-        let newState = {...popUpState};
-        if (popUp == 'form') {
-            newState.showForm = false;
-        } else {
-            newState.showPreview = false;
-        }
-
-        setPopUpState(newState);
+    const hidePopUp = () => {
+        setPopUpState({showForm: false});
     };
 
     // console.log(Object.values(formFieldsState.current.fields)[2].attr);
@@ -175,7 +167,8 @@ const Snippet = (props) => {
                                 .map((category) => (
                                     <li
                                         key={category}
-                                        className='inline ml-2 border-[1px] border-primary rounded-xl p-1 px-2'
+                                        className='inline ml-2 border-[1px]
+                                          border-primary rounded-xl p-1 px-2'
                                     >
                                         {category}
                                     </li>
@@ -222,18 +215,6 @@ const Snippet = (props) => {
                     snipId={snipInfoState.snippet.id}
                     snipUser={snipInfoState.snippet.user}
                     updateEditedSnippet={updateEditedSnippet}
-                />
-            ) : (
-                <></>
-            )}
-            {popUpState.showPreview ? (
-                <Preview
-                    hidePopUp={hidePopUp}
-                    data={{
-                        title: snipInfoState.snippet.title,
-                        descr: snipInfoState.snippet.descr,
-                        snippet: snipInfoState.snippet.snippet,
-                    }}
                 />
             ) : (
                 <></>
