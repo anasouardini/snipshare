@@ -30,6 +30,13 @@ export const create = (route, body) =>
         })
         .catch(() => false);
 
+// export const readBlob = (route) =>
+//     fetch(server.url + route)
+//         .then(async (res) => {
+//             return URL.createObjectURL(await res.blob());
+//         })
+//         .catch((err) => err);
+
 export const read = (route) =>
     fetch(server.url + route, server.options('get'))
         .then(async (res) => {

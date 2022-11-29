@@ -1,4 +1,5 @@
-const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
 const controller = require('../controller');
 // const passport = require('../passport/local');
 
@@ -69,5 +70,7 @@ router.put(
     controller.coworkerRules.update
 );
 router.delete('/coworkerRules', gotoLogin, controller.coworkerRules.remove);
+
+router.get('/media/:section/:file', controller.media.getFile);
 
 module.exports = router;

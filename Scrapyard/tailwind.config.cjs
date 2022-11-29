@@ -7,8 +7,7 @@ module.exports = {
                 primary: 'rgb(101 163 13)',
                 dark: '#191919',
             },
-            // fixing stupid tailwind
-            width: {maxContent: 'max-content'},
+            boxShadow: {'2xl': '0 0px 20px 30px rgb(0 0 0 / .4)'},
         },
         screens: {
             'sm>': {max: '640px'},

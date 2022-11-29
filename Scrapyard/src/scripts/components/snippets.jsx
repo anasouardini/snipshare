@@ -203,7 +203,7 @@ export default function Snippets() {
                     <></>
                 )}
 
-                {/* todo: distinguish between adding snippets and filtering them*/}
+                {/* todo: ux - distinguish between adding snippets and filtering them*/}
                 <Language ref={languageInputRef} filter={languageFilterChange} />
 
                 <Categories ref={categoriesInputRef} debounceCB={debounceCB} />
@@ -222,6 +222,7 @@ export default function Snippets() {
             </div>
             {listSnippets(snippetsPages)}
 
+            {/* todo: suspense this with lazy loading */}
             {popUpState.showForm ? (
                 <Form
                     action='create'

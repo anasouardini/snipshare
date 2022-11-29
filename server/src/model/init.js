@@ -9,6 +9,7 @@ const queries = {
         id varchar(100) PRIMARY KEY,
         user varchar(100) UNIQUE NOT NULL,
         passwd varchar(100) NOT NULL,
+        avatar varchar(100),
         createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
 
@@ -73,37 +74,43 @@ const queries = {
 
     insertMods: `
     INSERT INTO
-        mods (id, user, passwd)
+        mods (id, user, passwd, avatar)
     VALUES
         (
             '${uuid()}',
             'moderator',
-            '$2a$10$L612B2ckWsoZgWRPaYi6JuOgVCC8w6EvGJSL67Qw99yLCDKfIPbW2'
+            '$2a$10$L612B2ckWsoZgWRPaYi6JuOgVCC8w6EvGJSL67Qw99yLCDKfIPbW2',
+            'http://127.0.0.1:2000/media/avatars/moderator.jpeg'
         );`,
 
     insertUsers: `
         INSERT INTO
-            users (id, user, passwd)
+            users (id, user, passwd, avatar)
         VALUES   
             (
                 ?,
                 'venego',
-                '$2b$10$ZwjIliPoQ5Exets.CIQbs.MV0ap50GN9vUmTojQuwKJT5oPpkIDVi'
+                '$2b$10$ZwjIliPoQ5Exets.CIQbs.MV0ap50GN9vUmTojQuwKJT5oPpkIDVi',
+                ?
+
             ),
             (
                 ?,
                 '3disa',
-                '$2a$10$2ez/Hwk0h6lVG8m2fQJBU.IcXRBpjKmhCSFCbvbXXl6QL4fqykBLW'
+                '$2a$10$2ez/Hwk0h6lVG8m2fQJBU.IcXRBpjKmhCSFCbvbXXl6QL4fqykBLW',
+                ?
             ),
             (
                 ?,
                 'm9ila',
-                '$2a$10$j7.gQk2JlsdxIQVGdMeHaO8S6TCcgHn7Z3qvgmk/XwxDzlem7B7Su'
+                '$2a$10$j7.gQk2JlsdxIQVGdMeHaO8S6TCcgHn7Z3qvgmk/XwxDzlem7B7Su',
+                ?
             ),
             (
                 ?,
                 '3sila',
-                '$2a$10$o4Gk9LHIOzuTlNdK2lYQi.yTXHMhXZXbXuLkzVPnhL4Tqf.A6v81m'
+                '$2a$10$o4Gk9LHIOzuTlNdK2lYQi.yTXHMhXZXbXuLkzVPnhL4Tqf.A6v81m',
+                ? 
             );`,
 
     insertNotifications: `INSERT INTO notifications
@@ -331,7 +338,18 @@ const restart = async () => {
 
     // order matters
     const usersIds = [uuid(), uuid(), uuid(), uuid()];
-    response = await poolPromise(queries.insertUsers, usersIds);
+    const avatarsPath = 'http://127.0.0.1:2000/media/avatars/';
+    response = await poolPromise(queries.insertUsers, [
+        usersIds[0],
+        `${avatarsPath}venego.jpeg`,
+        usersIds[1],
+        `${avatarsPath}3disa.jpeg`,
+        usersIds[2],
+        `${avatarsPath}m9ila.jpeg`,
+        usersIds[3],
+        `${avatarsPath}3sila.jpeg`,
+    ]);
+    console.log(response);
     if (!response) return false;
 
     response = await poolPromise(queries.createLanguages);
