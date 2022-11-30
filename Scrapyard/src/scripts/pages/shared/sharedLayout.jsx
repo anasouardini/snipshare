@@ -308,37 +308,36 @@ export default function SharedLayout() {
                                         Logout
                                     </p>
                                 </li>
-                                <li>
-                                    {whoami &&
-                                    (whoami?.status == 200 ||
-                                        location.pathname.includes('login') ||
-                                        location.pathname.includes('signup')) ? (
-                                        <Bell notify={notify} />
-                                    ) : (
-                                        <></>
-                                    )}
-                                </li>
-                                <li>
-                                    <NavLink
-                                        className={classes.navLink}
-                                        to={`user/${whoami?.msg?.username}`}
-                                    >
-                                        <figure
-                                            className='border-primary border-[1px]
+                                {whoami && whoami?.status == 200 ? (
+                                    <>
+                                        <li>
+                                            <Bell notify={notify} />
+                                        </li>
+                                        <li>
+                                            <NavLink
+                                                className={classes.navLink}
+                                                to={`user/${whoami?.msg?.username}`}
+                                            >
+                                                <figure
+                                                    className='border-primary border-[1px]
                                                     w-[40px] h-[40px] rounded-[50%]
                                                        overflow-hidden'
-                                        >
-                                            <img
-                                                style={{
-                                                    width: '40px',
-                                                    height: '40px',
-                                                }}
-                                                crossOrigin='anonymous | use-credentials'
-                                                src={whoami?.msg?.avatar}
-                                            ></img>
-                                        </figure>
-                                    </NavLink>
-                                </li>
+                                                >
+                                                    <img
+                                                        style={{
+                                                            width: '40px',
+                                                            height: '40px',
+                                                        }}
+                                                        crossOrigin='anonymous | use-credentials'
+                                                        src={whoami?.msg?.avatar}
+                                                    ></img>
+                                                </figure>
+                                            </NavLink>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
                             </>
                         )}
                     </ul>
@@ -349,7 +348,14 @@ export default function SharedLayout() {
             (whoami?.status == 200 ||
                 location.pathname.includes('login') ||
                 location.pathname.includes('signup')) ? (
-                <Outlet context={{whoami: whoami?.msg.username, notify, avatar: whoami.msg.avatar}} />
+                <Outlet
+                    context={{
+                        whoami: whoami.msg?.username,
+                        notify,
+                        avatar: whoami.msg?.avatar,
+                        description: whoami.msg?.description,
+                    }}
+                />
             ) : (
                 <></>
             )}

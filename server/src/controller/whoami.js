@@ -5,8 +5,14 @@ const whoami = async (req, res) => {
     if (req.user) {
         const userResponse = await User.getUser(req.user.username);
         // console.log('controller/whoami l:7 - ', avatarResponse)
-        if (userResponse&& userResponse[0].length) {
-            return res.json({msg: {username: req.user.username, avatar: userResponse[0][0].avatar}});
+        if (userResponse && userResponse[0].length) {
+            return res.json({
+                msg: {
+                    username: req.user.username,
+                    avatar: userResponse[0][0].avatar,
+                    description: userResponse[0][0].descr,
+                },
+            });
         }
     }
 

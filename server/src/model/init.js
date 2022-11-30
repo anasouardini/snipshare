@@ -10,6 +10,7 @@ const queries = {
         user varchar(100) UNIQUE NOT NULL,
         passwd varchar(100) NOT NULL,
         avatar varchar(100),
+        descr varchar(1000),
         createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
 
@@ -85,32 +86,36 @@ const queries = {
 
     insertUsers: `
         INSERT INTO
-            users (id, user, passwd, avatar)
+            users (id, user, passwd, avatar, descr)
         VALUES   
             (
                 ?,
                 'venego',
                 '$2b$10$ZwjIliPoQ5Exets.CIQbs.MV0ap50GN9vUmTojQuwKJT5oPpkIDVi',
-                ?
+                ?,
+                'my name is venego and this profile a collection of art. my snippets are so valuable you should create a script to add them to your IDE each time you install it on a new setup.'
 
             ),
             (
                 ?,
                 '3disa',
                 '$2a$10$2ez/Hwk0h6lVG8m2fQJBU.IcXRBpjKmhCSFCbvbXXl6QL4fqykBLW',
-                ?
+                ?,
+                'my name is 3disa and this profile a collection of art. my snippets are so valuable you should create a script to add them to your IDE each time you install it on a new setup.'
             ),
             (
                 ?,
                 'm9ila',
                 '$2a$10$j7.gQk2JlsdxIQVGdMeHaO8S6TCcgHn7Z3qvgmk/XwxDzlem7B7Su',
-                ?
+                ?,
+                'my name is m9ila and this profile a collection of art. my snippets are so valuable you should create a script to add them to your IDE each time you install it on a new setup.'
             ),
             (
                 ?,
                 '3sila',
                 '$2a$10$o4Gk9LHIOzuTlNdK2lYQi.yTXHMhXZXbXuLkzVPnhL4Tqf.A6v81m',
-                ? 
+                ?,
+                'my name is 3sila and this profile a collection of art. my snippets are so valuable you should create a script to add them to your IDE each time you install it on a new setup.' 
             );`,
 
     insertNotifications: `INSERT INTO notifications

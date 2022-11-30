@@ -50,6 +50,19 @@ export const read = (route) =>
         })
         .catch((err) => err);
 
+export const updateFile = (route, body) =>
+    fetch(server.url + route, {method: 'put', body})
+        .then(async (res) => {
+            return {
+                ...(await res
+                    .json()
+                    .then((res) => res)
+                    .catch(() => false)),
+                status: res.status,
+            };
+        })
+        .catch((err) => false);
+
 export const update = (route, body) =>
     fetch(server.url + route, server.options('put', body))
         .then(async (res) => {

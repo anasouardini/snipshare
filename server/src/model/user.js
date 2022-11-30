@@ -12,6 +12,25 @@ const createUser = ({id, user, pass}) =>
 
 const deleteUser = (user) => poolPromise(`DELETE FROM users WHERE user=?`, [user]);
 
+const editUser = (user, {newUsername, newDescription, newAvatar}) => {
+    if (newUsername) {
+        return poolPromise(`update users set user=? where user=?`, [
+            newUsername,
+            user,
+        ]);
+    } else if (newDescription) {
+        return poolPromise(`update users set descr=? where user=?`, [
+            newDescription,
+            user,
+        ]);
+    } else if (newAvatar) {
+        return poolPromise(`update users set avatar=? where user=?`, [
+            newAvatar,
+            user,
+        ]);
+    }
+};
+
 module.exports = {
     readAll,
     getUser,
@@ -19,4 +38,5 @@ module.exports = {
     getMod,
     createUser,
     deleteUser,
+    editUser,
 };
