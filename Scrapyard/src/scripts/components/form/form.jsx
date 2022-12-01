@@ -34,7 +34,7 @@ const Form = (props) => {
     // input validation
     const validateForm = () => {
         //helpers
-        const removeInvalidStyle = (el, msg) => {
+        const removeInvalidStyle = (el) => {
             //removes error styling if exists
             const invalidInputStyle = `border-2 border-red-400 before:block`;
             invalidInputStyle.split(' ').forEach((styleClass) => {

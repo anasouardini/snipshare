@@ -10,5 +10,6 @@ module.exports = {
     languages: require('./languages'),
     coworkerRules: require('./coworkerRules'),
     events: require('./events'),
-    notifications: require('./notifications')
+    notifications: require('./notifications'),
+    media: require('./media')
 };

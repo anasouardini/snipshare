@@ -79,7 +79,7 @@ export default function Bell(props) {
         <>
             <div
                 ref={unreadNotificationsRef}
-                className={`hover:cursor-pointer mt-1
+                className={`hover:cursor-pointer
                         before:hidden before:bg-primary
                         before:w-[7px] before:h-[7px] before:absolute
                       `}

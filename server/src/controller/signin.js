@@ -18,7 +18,7 @@ const signinMod = async (req, res) => {
     }
 
     if (modResponse[0].length) {
-        // console.log(modResponse[0]);
+        console.log(modResponse[0]);
         if (await bcrypt.compare(req.body.passwd, modResponse[0][0].passwd)) {
             const options = {algorithm: 'RS256', expiresIn: '24h'};
             const privateKey = await fs.readFile(process.cwd() + '/rsa/priv.pem');

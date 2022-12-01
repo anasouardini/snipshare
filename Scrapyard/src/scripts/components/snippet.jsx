@@ -191,7 +191,6 @@ const Snippet = (props) => {
 
                     {/* Actions */}
                     <div className={`${classes.buttons}`}>
-
                         <button
                             onClick={handleEdit}
                             className={`${classes.button} ${classes.btnEdit}`}

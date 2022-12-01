@@ -13,7 +13,13 @@ const PORT = process.env.PORT || 2000;
 
 // midleware
 app.use(helmet());
-app.use(cors({origin: ['http://127.0.0.1:3000'], credentials: true}));
+// app.use(helmet.contentSecurityPolicy({'img-src': '127.0.0.1:2000/media/avatars'}));
+app.use(
+    cors({
+        origin: ['http://127.0.0.1:3000'],
+        credentials: true,
+    })
+);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -37,11 +43,6 @@ app.use(async (req, res, next) => {
     next();
 });
 
-// router
-// app.use('/', (req, res, next) => {
-//     console.log('======' + req.url);
-//     next();
-// });
 app.use('/', router);
 
 // 404 response
@@ -51,7 +52,7 @@ app.use('*', (req, res) => {
 });
 
 // err handling
-app.use((err, erq, res, next) => {
+app.use((err, erq, res) => {
     console.log(err);
     res.status(500).json({err: 'something went bad'});
 });

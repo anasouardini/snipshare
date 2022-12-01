@@ -1,8 +1,7 @@
 import React, {useRef} from 'react';
 import {Outlet, useLocation, useNavigate} from 'react-router-dom';
-import {useQuery} from 'react-query';
 import {create, read} from '../../tools/bridge';
-import {Link, NavLink} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {useEffect} from 'react';
 import {useState} from 'react';
 import Notify from '../../components/notify';
@@ -14,7 +13,6 @@ export default function SharedLayout() {
     // const [_, setForceRenderState] = useState(false);
     const updateWhoamiState = async () => {
         const whoamiUsr = await read('whoami');
-
         setWhoami(whoamiUsr);
     };
 
@@ -27,6 +25,10 @@ export default function SharedLayout() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // outlet uses this to update the whoami info
+    const reload = () => {
+        updateWhoamiState();
+    };
     useEffect(() => {
         updateWhoamiState();
     }, [location.pathname]);
@@ -36,13 +38,13 @@ export default function SharedLayout() {
               hover:border-b-primary text-gray-200`,
     };
 
-    if (whoami.msg && whoami?.status == 200 && location.pathname.includes('login')) {
+    if (whoami?.msg && whoami?.status == 200 && location.pathname.includes('login')) {
         console.log('redirecting to home from shared layout');
         navigate('/');
     }
 
     if (
-        (!whoami.msg || whoami?.status == 401) &&
+        (!whoami?.msg || whoami?.status == 401) &&
         !location.pathname.includes('login') &&
         !location.pathname.includes('signup')
     ) {
@@ -84,7 +86,6 @@ export default function SharedLayout() {
     const showMenu = (e) => {
         e.stopPropagation();
         // THIS IS A HUGE MESS BUT IT'S A CHANCE TO EXPERIMENT WITH TAILWIND SOME MORE
-
         menuOverlayRef.current.className = `
               navigationOverlay sm>:fixed sm>:top-0 sm>:left-0 sm>:right-0 sm>:bottom-0
               sm>:z-20 sm>:flex sm>:justify-center sm>:items-center bg-dark/75`;
@@ -130,7 +131,6 @@ export default function SharedLayout() {
 
     return (
         <div className='font-roboto'>
-            {/* {whoami.msg} */}
             <div onClick={hideMenu} ref={menuOverlayRef} className={`sm>:block`}>
                 <button
                     onClick={showMenu}
@@ -147,7 +147,7 @@ export default function SharedLayout() {
                                     sm<:fixed sm<:top-0 sm<:right-0
                                     sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-dark`}
                 >
-                    <ul className='sm<:flex sm<:gap-3'>
+                    <ul className='sm<:flex sm<:items-center sm<:gap-3'>
                         <li>
                             <NavLink className={classes.navLink} end to='/'>
                                 Home
@@ -292,37 +292,56 @@ export default function SharedLayout() {
                         ) : (
                             <>
                                 <li
-                                    className={`ml-auto sm>:ml-0 cursor-pointer
-                                              pb-1 border-b-[3px] border-b-transparent 
-                                        hover:border-b-primary text-gray-200`}
+                                    className='ml-auto sm>:ml-0'
                                     onClick={async () => {
                                         const response = await create('logout');
                                         notify({type: 'info', msg: response.msg});
-                                        
-                                        document.location.replace('http://127.0.0.1:3000/login');
+
+                                        document.location.replace(
+                                            'http://127.0.0.1:3000/login'
+                                        );
                                         // return navigate('/login', {replace: true});
                                     }}
                                 >
-                                    Logout
-                                </li>
-                                <li>
-                                    {whoami &&
-                                    (whoami?.status == 200 ||
-                                        location.pathname.includes('login') ||
-                                        location.pathname.includes('signup')) ? (
-                                        <Bell notify={notify} />
-                                    ) : (
-                                        <></>
-                                    )}
-                                </li>
-                                <li>
-                                    <NavLink
-                                        className={classes.navLink}
-                                        to={`user/${whoami.msg}`}
+                                    <p
+                                        className='cursor-pointer
+                                                  text-gray-200pb-1 border-b-[3px]
+                                                  border-b-transparent 
+                                                  hover:border-b-primary'
                                     >
-                                        Me
-                                    </NavLink>
+                                        Logout
+                                    </p>
                                 </li>
+                                {whoami && whoami?.status == 200 ? (
+                                    <>
+                                        <li>
+                                            <Bell notify={notify} />
+                                        </li>
+                                        <li>
+                                            <NavLink
+                                                className={classes.navLink}
+                                                to={`user/${whoami?.msg?.username}`}
+                                            >
+                                                <figure
+                                                    className='border-primary border-[1px]
+                                                    w-[40px] h-[40px] rounded-[50%]
+                                                       overflow-hidden'
+                                                >
+                                                    <img
+                                                        style={{
+                                                            width: '40px',
+                                                            height: '40px',
+                                                        }}
+                                                        crossOrigin='anonymous | use-credentials'
+                                                        src={whoami?.msg?.avatar}
+                                                    ></img>
+                                                </figure>
+                                            </NavLink>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
                             </>
                         )}
                     </ul>
@@ -333,10 +352,16 @@ export default function SharedLayout() {
             (whoami?.status == 200 ||
                 location.pathname.includes('login') ||
                 location.pathname.includes('signup')) ? (
-                // <GlobalContext.Provider value={whoami}>
-                <Outlet context={{whoami: whoami.msg, notify}} />
+                <Outlet
+                    context={{
+                        whoami: whoami.msg?.username,
+                        notify,
+                        avatar: whoami.msg?.avatar,
+                        description: whoami.msg?.description,
+                        reload,
+                    }}
+                />
             ) : (
-                // </GlobalContext.Provider>
                 <></>
             )}
 
