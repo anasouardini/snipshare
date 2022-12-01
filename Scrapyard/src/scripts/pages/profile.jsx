@@ -86,7 +86,7 @@ export default function Profile() {
                     <div
                         aria-label='avatar'
                         className={`profile-img relative flex justify-center items-center w-[90px]
-                            h-[90px] border-primary border-2 rounded-[50%] mb-5 overflow-hidden`}
+                            h-[90px] border-primary border-[1px] rounded-[50%] mb-5 overflow-hidden`}
                     >
                         <img
                             alt='profile image'
