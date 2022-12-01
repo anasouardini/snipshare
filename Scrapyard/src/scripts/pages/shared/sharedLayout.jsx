@@ -25,6 +25,10 @@ export default function SharedLayout() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // outlet uses this to update the whoami info
+    const reload = () => {
+        updateWhoamiState();
+    };
     useEffect(() => {
         updateWhoamiState();
     }, [location.pathname]);
@@ -354,6 +358,7 @@ export default function SharedLayout() {
                         notify,
                         avatar: whoami.msg?.avatar,
                         description: whoami.msg?.description,
+                        reload,
                     }}
                 />
             ) : (

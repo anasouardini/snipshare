@@ -1,8 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controller');
+const path = require('path');
+
 const multer = require('multer');
-const upload = multer({dest: './src/media/avatars'})
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        // console.log('l8 routes ', file);
+        cb(null, 'src/media/avatars/');
+    },
+    filename: (req, file, cb) => {
+        // console.log('l12 routes ', file);
+        cb(null, req.user.username + path.extname(file.originalname));
+    },
+});
+const upload = multer({storage});
 // const passport = require('../passport/local');
 
 const gotoLogin = (req, res, next) => {
@@ -44,7 +56,7 @@ router.post('/signup', gotoHome, controller.signup);
 router.post('/logout', controller.logout);
 router.get('/whoami', controller.whoami);
 router.get('/users', gotoLogin, controller.user.readAll);
-router.put('/users', gotoLogin, upload.single(), controller.user.editUser);
+router.put('/users', gotoLogin, upload.single('avatar'), controller.user.editUser);
 
 // snippets
 router.get('/snippets', gotoLogin, controller.snippet.readAll);

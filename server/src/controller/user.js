@@ -12,10 +12,9 @@ const editUser = async (req, res) => {
     // only one of then is sent from the client, others are undefined.
     const newUsername = req.body?.username;
     const newDescription = req.body?.description;
-    const newAvatar = req.body?.avatar;
 
     // all are sent to the model, but only the truthy one will be updated
-    let userNewInfo = {newUsername, newDescription, newAvatar};
+    let userNewInfo = {newUsername, newDescription};
 
     if (newUsername) {
         const userResponse = await User.getUser(newUsername);
@@ -25,9 +24,9 @@ const editUser = async (req, res) => {
         if (userResponse[0].length) {
             return res.status(400).json({msg: 'this username already exists'});
         }
-    } else if (newAvatar) {
+    } else if (req.file) {
         // todo: save avatar file with the user's username, and set url in a variable
-        const newAvatarUrl = '';
+        const newAvatarUrl = 'http://127.0.0.1:2000/media/avatars/' + req.file.filename;
         userNewInfo.newAvatar = newAvatarUrl;
     }
 

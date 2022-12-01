@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Snippets from '../components/snippets';
-import {update} from '../tools/bridge';
-import {useOutletContext} from 'react-router';
+import {update, updateFile} from '../tools/bridge';
+import {useOutletContext} from 'react-router-dom';
 import {FaPen} from 'react-icons/fa';
 
 export default function Profile() {
-    const {whoami, avatar, description} = useOutletContext();
+    const {whoami, avatar, description, reload} = useOutletContext();
 
     const profileInfo = {username: whoami, description, avatar};
 
@@ -57,13 +57,17 @@ export default function Profile() {
 
     const fileChange = async (e) => {
         //todo: upload the file to the API
+        // e.target.parentNode.submit();
+
         const file = e.target.files[0];
+
         const formData = new FormData();
-        formData.append('avatar', file, `${whoami}.${file.name.split('.').reverse()[0]}`)
-        const res = await update(`users`, formData);
-        console.log(res);
+        formData.append('avatar', file, `${whoami}.${file.name.split('.').reverse()[0]}`);
+        const res = await updateFile(`users`, formData);
+
+        // console.log(res);
         if (res && res.status == 200) {
-          // update the avatar
+            reload();
         }
     };
 
@@ -100,15 +104,17 @@ export default function Profile() {
                         >
                             Change
                         </label>
-                        <input
-                            type='file'
-                            id='uploadBtn'
-                            className='hidden'
-                            onChange={(e) => {
-                                fileChange(e);
-                            }}
-                            accept='.jpg, .jpeg, .png'
-                        />
+                        <form encType='multipart/form-data' className='hidden'>
+                            <input
+                                name='avatar'
+                                type='file'
+                                id='uploadBtn'
+                                onChange={(e) => {
+                                    fileChange(e);
+                                }}
+                                accept='.jpg, .jpeg, .png'
+                            />
+                        </form>
                     </div>
                 </div>
 

@@ -51,7 +51,7 @@ export const read = (route) =>
         .catch((err) => err);
 
 export const updateFile = (route, body) =>
-    fetch(server.url + route, {method: 'put', body})
+    fetch(server.url + route, {method: 'put', credentials: 'include', body})
         .then(async (res) => {
             return {
                 ...(await res
