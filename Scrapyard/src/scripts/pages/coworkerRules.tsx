@@ -1,10 +1,8 @@
-import React from 'react';
+import {useRef, useState} from 'react';
 import {useNavigate, useOutletContext} from 'react-router';
-import {useState} from 'react';
-import {useRef} from 'react';
 import ExceptionsPopUp from '../components/exceptionsPopUp';
 import AccessControl from '../components/accessControl';
-import {readCoworkerRules, getSnippets} from '../tools/snipStore';
+import {readCoworkerRules} from '../tools/snipStore';
 
 import {create, remove, update} from '../tools/bridge';
 import {useQuery} from 'react-query';
@@ -12,14 +10,8 @@ import {useQuery} from 'react-query';
 import {
     FaMinusSquare,
     FaFolderPlus,
-    FaPuzzlePiece,
-    FaMinusCircle,
-    FaRegMinusSquare,
-    FaArrowAltCircleUp,
-    FaArrowCircleUp,
     FaRetweet,
     FaPlusSquare,
-    FaHistory,
 } from 'react-icons/fa';
 
 export default function AddRules() {
@@ -50,18 +42,14 @@ export default function AddRules() {
     });
     // console.log(exceptionAccessRefs.current);
 
-    const {
-        data: coworkersRulesData,
-        status: coworkersRulesStatus,
-        error: coworkersRulesErr,
-        refetch,
-    } = useQuery('coworkers', () => {
+    const coworkersRules = useQuery('coworkers', () => {
         return readCoworkerRules();
     });
-    if (coworkersRulesErr?.req?.status == 401) {
-        return navigate('/login', {replace: true});
+    if (coworkersRules.error?.req?.status == 401) {
+        navigate('/login', {replace: true});
+        return <></>
     }
-    console.log('query coworkers', coworkersRulesData);
+    console.log('query coworkers', coworkersRules.data);
 
     const eventDefaults = (e) => {
         e.stopPropagation();
@@ -73,7 +61,7 @@ export default function AddRules() {
         const response = await remove(`coworkerRules`, {props: {coworker: coworkerUsername}});
 
         if (response.status == 200) {
-            refetch();
+            coworkersRules.refetch();
         }
     };
 
@@ -90,7 +78,7 @@ export default function AddRules() {
         const exceptions = popUpState.oldOrNew == 'new' ? Excpts ?? {} : Excpts?.[coworker] ?? {};
 
         //-I- check if the coworker exists, better to add coworkers by id and usernames like in discord
-        if (coworkersRulesData.generic[coworker]) {
+        if (coworkersRules.data.generic[coworker]) {
             notify({type: 'error', msg: 'this coworker already exists'});
             return;
         }
@@ -111,7 +99,7 @@ export default function AddRules() {
             exceptionAccessRefs.current.new.old = {};
             exceptionAccessRefs.current.new.new = {};
 
-            refetch();
+            coworkersRules.refetch();
         }
     };
 
@@ -129,19 +117,19 @@ export default function AddRules() {
             generic,
             exceptions:
                 exceptionAccessRefs.current.old?.old?.[coworkerUsername] ??
-                coworkersRulesData.exceptions[coworkerUsername],
+                coworkersRules.data.exceptions[coworkerUsername],
         };
         // console.log(props);
         const response = await update(`coworkerRules`, {props});
 
         if (response.status == 200) {
             changedCoworkers.current.delete(coworkerUsername);
-            refetch();
+            coworkersRules.refetch();
         }
     };
 
     const showExceptionsPopUp = (coworker, oldOrNew, coworkerUsername) => {
-        // console.log(coworkersRulesData, coworker);
+        // console.log(coworkersRules.data, coworker);
         setPopUpState({...popUpState, showExceptions: true, coworker, oldOrNew, coworkerUsername});
     };
 
@@ -164,12 +152,12 @@ export default function AddRules() {
     };
 
     const listCoworkers = () =>
-        coworkersRulesData.generic ? (
-            Object.keys(coworkersRulesData.generic).map((coworkerUsername) => {
+        coworkersRules.data.generic ? (
+            Object.keys(coworkersRules.data.generic).map((coworkerUsername) => {
                 //* a copy of the state keeps the doctor away
-                // console.log(coworkersRulesData.generic[coworkerUsername]);
+                // console.log(coworkersRules.data.generic[coworkerUsername]);
                 genericAccessRefs.current.old[coworkerUsername] = {
-                    ...coworkersRulesData.generic[coworkerUsername],
+                    ...coworkersRules.data.generic[coworkerUsername],
                 };
                 return (
                     <li key={coworkerUsername} className={classes.li}>
@@ -180,7 +168,7 @@ export default function AddRules() {
                             </div>
                             <AccessControl
                                 ref={genericAccessRefs.current.old[coworkerUsername]}
-                                coworkerAccess={coworkersRulesData.generic[coworkerUsername]}
+                                coworkerAccess={coworkersRules.data.generic[coworkerUsername]}
                                 type='generic'
                                 markChangedCoworker={(e) => {
                                     markChangedCoworker(coworkerUsername);
@@ -207,7 +195,7 @@ export default function AddRules() {
                                     onClick={(e) => {
                                         e.preventDefault();
                                         showExceptionsPopUp(
-                                            coworkersRulesData.exceptions[coworkerUsername],
+                                            coworkersRules.data.exceptions[coworkerUsername],
                                             'old',
                                             coworkerUsername
                                         );
@@ -239,8 +227,8 @@ export default function AddRules() {
             <></>
         );
 
-    return coworkersRulesStatus == 'success' ? (
-        <div className='container mt-[4rem]'>
+    return coworkersRules.status == 'success' ? (
+        <div className='container pt-[7rem]'>
             <section aria-label='instructions' className='text-gray-300 mb-11'>
                 <li>The tags in the middle are for generic access to the account.</li>
                 <li>

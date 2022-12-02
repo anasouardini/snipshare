@@ -3,7 +3,7 @@ import {useQuery} from 'react-query';
 import {forwardRef} from 'react';
 import {getCategories} from '../../../tools/snipStore';
 
-const IsPrivate = (props, ref) => {
+const Categories = (props, ref) => {
     // console.log(props);
 
     const {data: categories, status: categoriesStatus} = useQuery('categories', () =>
@@ -34,7 +34,12 @@ const IsPrivate = (props, ref) => {
 
         // determine if the user is asking for the next category
         const readyForSuggestion = (inp) => {
-            if (inp[inp.length - 1] != ',' || inp == ',' || inp == ' ' || inp.includes(',,')) {
+            if (
+                inp[inp.length - 1] != ',' ||
+                inp == ',' ||
+                inp == ' ' ||
+                inp.includes(',,')
+            ) {
                 console.log('bad pattern (, | ,,)');
                 return false;
             }
@@ -47,7 +52,9 @@ const IsPrivate = (props, ref) => {
         // remove last separator which is the last char
         inputValue = inputValue.substr(0, inputValue.length - 1);
         //clean input categories from spaces
-        const inputList = inputValue.split(separator).map((inputCategory) => inputCategory.trim());
+        const inputList = inputValue
+            .split(separator)
+            .map((inputCategory) => inputCategory.trim());
 
         const isOutOfRange = inputList.some((iputCategory) => {
             // if one of them is not in the list, input is out of range
@@ -87,19 +94,21 @@ const IsPrivate = (props, ref) => {
 
     return (
         <>
-            <input
-                type='text'
-                placeholder='categories'
-                defaultValue={props?.defaultValue}
-                ref={ref}
-                list='categories'
-                onChange={(e) => {
-                    handleMultiSelectInputChange('categories', e);
-                }}
-                className={`${props?.debounceCB ? '' : 'relative z-20'}
+            <label>
+                <input
+                    type='text'
+                    placeholder='categories'
+                    defaultValue={props?.defaultValue}
+                    ref={ref}
+                    list='categories'
+                    onChange={(e) => {
+                        handleMultiSelectInputChange('categories', e);
+                    }}
+                    className={`${props?.debounceCB ? '' : 'relative z-20'}
                             bg-transparent w-full max-w-[280px] px-3 py-2
                             border-[1px] border-primary rounded-md`}
-            />
+                />
+            </label>
             <datalist id='categories'>
                 {dataListOptionsState['categories'].map((opt) => {
                     return <option key={opt} value={opt}></option>;
@@ -109,4 +118,4 @@ const IsPrivate = (props, ref) => {
     );
 };
 
-export default forwardRef(IsPrivate);
+export default forwardRef(Categories);

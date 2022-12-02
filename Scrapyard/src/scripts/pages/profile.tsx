@@ -38,7 +38,6 @@ export default function Profile() {
                 return;
             }
 
-            //todo: update the db
             const res = await update(`users`, {
                 [inputName]: input.value,
             });
@@ -56,16 +55,12 @@ export default function Profile() {
     };
 
     const fileChange = async (e) => {
-        //todo: upload the file to the API
-        // e.target.parentNode.submit();
-
         const file = e.target.files[0];
 
         const formData = new FormData();
-        formData.append('avatar', file, `${whoami}.${file.name.split('.').reverse()[0]}`);
+        formData.append('avatar', file, file.name);
         const res = await updateFile(`users`, formData);
 
-        // console.log(res);
         if (res && res.status == 200) {
             reload();
         }
@@ -75,15 +70,20 @@ export default function Profile() {
     return (
         <div className='mt-[7rem] w-full '>
             {/* todo: profile related info */}
-            <section className='mb-10 w-[90%] max-w-[600px] mx-auto'>
+            <section
+                aria-label='profile info (editable)'
+                className='mb-10 w-[90%] max-w-[600px] mx-auto'
+            >
                 {/* avatar */}
-                <div className={`mb-5`}>
+                <div aria-label='profile avatar' className={`mb-5`}>
                     <style
                         ref={(el) => {
                             refs.buttonHoverStyle = el;
                         }}
-                    >{`.profile-img:has(label):hover > label.hidden{display: block}`}</style>
+                    >{`.profile-img:has(label):focus > label.invisible{visibility: visible}
+                      .profile-img:has(label):hover > label.invisible{visibility: visible}`}</style>
                     <div
+                        tabIndex='0'
                         aria-label='avatar'
                         className={`profile-img relative flex justify-center items-center w-[90px]
                             h-[90px] border-primary border-[1px] rounded-[50%] mb-5 overflow-hidden`}
@@ -95,31 +95,35 @@ export default function Profile() {
                             style={{width: '90px', height: '90px'}}
                             className='absolute top-0 left-0 bottom-0 right-0'
                         ></img>
-
                         <label
+                            role='button'
+                            aria-label='change avatar'
+                            tabIndex='0'
                             htmlFor='uploadBtn'
-                            className={`hidden cursor-pointer z-10 bg-dark/60 shadow-2xl
+                            className={`invisible focus:visible cursor-pointer
+                                        z-10 bg-dark/60 shadow-2xl
                                       text-primary text-[.9rem] py-[3px] px-2
                                         border-primary border-2`}
                         >
                             Change
                         </label>
-                        <form encType='multipart/form-data' className='hidden'>
-                            <input
-                                name='avatar'
-                                type='file'
-                                id='uploadBtn'
-                                onChange={(e) => {
-                                    fileChange(e);
-                                }}
-                                accept='.jpg, .jpeg, .png'
-                            />
-                        </form>
+                        <input
+                            aria-hidden='true'
+                            tabIndex='-1'
+                            className='hidden'
+                            name='avatar'
+                            type='file'
+                            id='uploadBtn'
+                            onChange={(e) => {
+                                fileChange(e);
+                            }}
+                            accept='.jpg, .jpeg, .png'
+                        />
                     </div>
                 </div>
 
                 {/* username */}
-                <p className='mb-5 text-xl'>
+                <p aria-label='profile username' className='mb-5 text-xl'>
                     <input
                         onKeyPress={(e) => {
                             viewMode(e, 'username');
@@ -130,7 +134,7 @@ export default function Profile() {
                         ref={(el) => {
                             refs.inputs.username = el;
                         }}
-                        className='hidden'
+                        className='hidden w-[200px]'
                         defaultValue={whoami}
                     />
                     <span
@@ -141,6 +145,7 @@ export default function Profile() {
                         {whoami}
                     </span>
                     <button
+                        aria-label='edit'
                         ref={(el) => {
                             refs.buttons.username = el;
                         }}
@@ -149,12 +154,12 @@ export default function Profile() {
                         }}
                         className='inline ml-6 text-primary'
                     >
-                        <FaPen className='text-[1.1rem]' />
+                        <FaPen aria-hidden='true' className='text-[1.1rem]' />
                     </button>
                 </p>
 
                 {/* description */}
-                <div className='relative'>
+                <div aria-label='profile description' className='relative'>
                     <details
                         ref={(el) => {
                             refs.view.description = el;
@@ -179,6 +184,7 @@ export default function Profile() {
                         defaultValue={description}
                     ></textarea>
                     <button
+                        aria-label='edit'
                         ref={(el) => {
                             refs.buttons.description = el;
                         }}
@@ -187,7 +193,7 @@ export default function Profile() {
                         }}
                         className='absolute top-0 left-[167px] inline ml-6 text-primary'
                     >
-                        <FaPen className='text-[1.1rem]' />
+                        <FaPen aria-hidden='true' className='text-[1.1rem]' />
                     </button>
                 </div>
             </section>

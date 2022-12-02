@@ -111,9 +111,9 @@ const Snippet = (props) => {
                 data-key={snipInfoState.snippet.id}
                 className={`bg-[#292929] rounded-md w-full max-w-[600px]`}
             >
-                <div className={`snippet flex flex-col max-w-[600px]  p-8`}>
+                <div className={`snippet flex flex-col max-w-[600px]  p-6`}>
                     {/* Owner and Author and Privacy*/}
-                    <div className='flex justify-between mb-4'>
+                    <div className='flex justify-between mb-4 gap-3'>
                         {/* Owner */}
                         <div className='flex flex-row gap-3'>
                             <div
@@ -161,7 +161,7 @@ const Snippet = (props) => {
                         <summary className='mb-2 cursor-pointer w-max'>
                             Categories:
                         </summary>
-                        <ul className='inline mr-3'>
+                        <ul className='mr-3 flex flex-wrap'>
                             {snipInfoState.snippet.categories
                                 .split(' ')
                                 .map((category) => (

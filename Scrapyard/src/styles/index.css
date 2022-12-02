@@ -61,7 +61,8 @@ input[type='checkbox'] {
     @apply invisible w-[max-content] bg-[#323232] text-[white] text-sm text-center absolute px-2 py-1 top-6 left-[-60px];
 }
 
-.tooltip:hover .tooltiptext {
+.tooltip:hover .tooltiptext,
+.tooltip:focus .tooltiptext {
     visibility: visible;
 }
 

@@ -9,6 +9,14 @@ const getSnippets = async ({
     meta,
     pageParam,
     perPage,
+}: {
+    user: string | undefined;
+    title: string;
+    categories: string;
+    meta?: boolean | undefined;
+    language: string;
+    pageParam: number;
+    perPage: number;
 }) => {
     const urlParams = toUrlEncoded({
         title,

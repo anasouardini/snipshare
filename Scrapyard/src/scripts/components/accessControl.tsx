@@ -6,10 +6,13 @@ const AccessControl = (props, ref) => {
 
     useEffect(() => {
         if (props?.coworkerAccess) {
-            const accessObj = Object.keys(props?.coworkerAccess).reduce((acc, accessKey) => {
-                acc[accessKey] = props?.coworkerAccess[accessKey];
-                return acc;
-            }, {});
+            const accessObj = Object.keys(props?.coworkerAccess).reduce(
+                (acc, accessKey) => {
+                    acc[accessKey] = props?.coworkerAccess[accessKey];
+                    return acc;
+                },
+                {}
+            );
             // console.log(accessObj);
             setAccessState(accessObj);
         } else {
@@ -60,11 +63,11 @@ const AccessControl = (props, ref) => {
                 <>
                     {props.type == 'generic' ? (
                         <label
-                            role='button'
-                            aria-disabled='false'
+                            role='checkbox'
+                            tabIndex='0'
+                            aria-label='create access'
                             onKeyPress={handleKeyPress}
                             onClick={onLabelClick}
-                            tabIndex={0}
                             style={{
                                 ...styles.tag,
                                 filter: `grayscale(${Number(!accessState.create)})`,
@@ -73,6 +76,7 @@ const AccessControl = (props, ref) => {
                         >
                             Create
                             <input
+                                aria-hidden='true'
                                 style={styles.tag.checkbox}
                                 className={classes.checkbox}
                                 type='checkbox'
@@ -87,11 +91,11 @@ const AccessControl = (props, ref) => {
                         <></>
                     )}
                     <label
-                        role='button'
-                        aria-disabled='false'
+                        role='checkbox'
+                        tabIndex='0'
+                        aria-label='read access'
                         onKeyPress={handleKeyPress}
                         onClick={onLabelClick}
-                        tabIndex={0}
                         style={{
                             ...styles.tag,
                             filter: `grayscale(${Number(!accessState.read)})`,
@@ -100,6 +104,7 @@ const AccessControl = (props, ref) => {
                     >
                         Read
                         <input
+                            aria-hidden='true'
                             style={styles.tag.checkbox}
                             className={classes.checkbox}
                             type='checkbox'
@@ -111,11 +116,11 @@ const AccessControl = (props, ref) => {
                         />
                     </label>
                     <label
-                        role='button'
-                        aria-disabled='false'
+                        role='checkbox'
+                        tabIndex='0'
+                        aria-label='update access'
                         onKeyPress={handleKeyPress}
                         onClick={onLabelClick}
-                        tabIndex={0}
                         style={{
                             ...styles.tag,
                             filter: `grayscale(${Number(!accessState.update)})`,
@@ -124,6 +129,7 @@ const AccessControl = (props, ref) => {
                     >
                         Update
                         <input
+                            aria-hidden='true'
                             style={styles.tag.checkbox}
                             className={classes.checkbox}
                             type='checkbox'
@@ -135,11 +141,11 @@ const AccessControl = (props, ref) => {
                         />
                     </label>
                     <label
-                        role='button'
-                        aria-disabled='false'
+                        role='checkbox'
+                        tabIndex='0'
+                        aria-label='delete access'
                         onKeyPress={handleKeyPress}
                         onClick={onLabelClick}
-                        tabIndex={0}
                         style={{
                             ...styles.tag,
                             filter: `grayscale(${Number(!accessState.delete)})`,
@@ -148,6 +154,7 @@ const AccessControl = (props, ref) => {
                     >
                         Delete
                         <input
+                            aria-hidden='true'
                             style={styles.tag.checkbox}
                             className={classes.checkbox}
                             type='checkbox'

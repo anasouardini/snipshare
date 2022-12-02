@@ -10,7 +10,6 @@ specifiers:
   eslint-plugin-react: ^7.31.10
   express: ^4.18.1
   express-session: ^1.17.3
-  express-sse: ^0.5.3
   helmet: ^6.0.0
   jsonwebtoken: ^8.5.1
   multer: 1.4.5-lts.1
@@ -28,7 +27,6 @@ dependencies:
   dotenv: 16.0.2
   express: 4.18.1
   express-session: 1.17.3
-  express-sse: 0.5.3
   helmet: 6.0.0
   jsonwebtoken: 8.5.1
   multer: 1.4.5-lts.1
@@ -725,10 +723,6 @@ packages:
       uid-safe: 2.1.5
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /express-sse/0.5.3:
-    resolution: {integrity: sha512-DJF0nofFGq0IXJLGq95hfrryP3ZprVAVpyZUnmAk6QhHnm7zCzsHBNFP0i4FKFo2XjOf+JiYUKjT7jQhIeljpg==}
     dev: false
 
   /express/4.18.1:

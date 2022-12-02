@@ -7,9 +7,8 @@ export default function Signin() {
     const navigate = useNavigate();
 
     const refs = {
-        username: useRef('username'),
-        password: useRef('password'),
-        keepSignIn: useRef('keepSignIn'),
+        username: useRef<HTMLInputElement>(),
+        password: useRef<HTMLInputElement>(),
     };
 
     const sendIdToken = async () => {
@@ -29,22 +28,21 @@ export default function Signin() {
         sendIdToken();
     }, []);
 
-    const handleOAuth = (e) => {
+    const handleOAuth = (e:MouseEvent) => {
         e.preventDefault();
 
         window.open('http://127.0.0.1:2000/auth/google', '_self');
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e:MouseEvent) => {
         e.preventDefault();
         signIn(); //asyn
     };
 
     const signIn = async () => {
         const response = await create('signin', {
-            usr: refs.username.current.value,
-            passwd: refs.password.current.value,
-            keepSignIn: refs.keepSignIn.value,
+            usr: refs.username.current?.value,
+            passwd: refs.password.current?.value,
         });
 
         if (response) {
@@ -105,15 +103,6 @@ export default function Signin() {
                         name="password"
                     />
                 </label>
-                {/* <label className={classes.label}>
-                    <input
-                        className={`${classes.input} ${classes.checkbox}`}
-                        ref={refs.keepSignIn}
-                        type="checkbox"
-                        name="keepSignIn"
-                    />
-                    Keep Log In
-                </label> */}
 
                 <label className={classes.label}>
                     <button className={classes.submit} onClick={handleSubmit}>

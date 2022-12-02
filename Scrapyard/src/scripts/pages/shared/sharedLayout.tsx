@@ -130,7 +130,7 @@ export default function SharedLayout() {
     };
 
     return (
-        <div className='font-roboto'>
+        <header>
             <div onClick={hideMenu} ref={menuOverlayRef} className={`sm>:block`}>
                 <button
                     onClick={showMenu}
@@ -352,15 +352,17 @@ export default function SharedLayout() {
             (whoami?.status == 200 ||
                 location.pathname.includes('login') ||
                 location.pathname.includes('signup')) ? (
-                <Outlet
-                    context={{
-                        whoami: whoami.msg?.username,
-                        notify,
-                        avatar: whoami.msg?.avatar,
-                        description: whoami.msg?.description,
-                        reload,
-                    }}
-                />
+                <main>
+                    <Outlet
+                        context={{
+                            whoami: whoami.msg?.username,
+                            notify,
+                            avatar: whoami.msg?.avatar,
+                            description: whoami.msg?.description,
+                            reload,
+                        }}
+                    />
+                </main>
             ) : (
                 <></>
             )}
@@ -369,6 +371,6 @@ export default function SharedLayout() {
             <div className='fixed top-[50px] right-[50%] translate-x-[50%] flex-row'>
                 {listNotifications(notifyState)}
             </div>
-        </div>
+        </header>
     );
 }

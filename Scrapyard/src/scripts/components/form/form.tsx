@@ -242,13 +242,14 @@ const Form = (props) => {
                           bg-[#181818] z-30 drop-shadow-2xl relative
                           w-[600px] sm>:w-full'
             >
-                <span
+                <button
+                    aria-label='close form'
                     onClick={handleClose}
                     className='absolute content-["X"] top-2 right-2
                             text-xl cursor-pointer '
                 >
                     X
-                </span>
+                </button>
                 {listInputs(props.fields)}
 
                 <button
