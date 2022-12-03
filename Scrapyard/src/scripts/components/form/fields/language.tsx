@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { Ref, RefAttributes } from 'react';
 import {useQuery} from 'react-query';
 import {forwardRef} from 'react';
 import {getLanguages} from '../../../tools/snipStore';
 
-const Language = (props, ref) => {
+const Language = (props:{filter:()=>undefined, defaultValue?:string}, ref:React.LegacyRef<HTMLInputElement>) => {
     // console.log(props);
 
     const {data: languages, status: languagesStatus} = useQuery('languages', () =>
         getLanguages()
     );
-    const [dataListOptionsState, setDataListOptionsState] = React.useState({
-        languages: [],
-    });
 
-    const handleChange = (e) => {
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         if (props?.filter) {
             if (languages.includes(e.currentTarget.value)) {
                 props.filter();
@@ -42,8 +39,8 @@ const Language = (props, ref) => {
             </label>
             <datalist id='languages'>
                 {languagesStatus == 'success' ? (
-                    languages.map((opt) => {
-                        return <option key={opt} value={opt}></option>;
+                    languages.map((lang:string) => {
+                        return <option key={lang} value={lang}></option>;
                     })
                 ) : (
                     <></>

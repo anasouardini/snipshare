@@ -1,14 +1,12 @@
-import React from 'react';
 import {forwardRef} from 'react';
 
-const IsPrivate = (props, ref) => {
+const IsPrivate = (props:{key: string, type:string}, ref) => {
     // console.log(props);
     return (
         <>
             <input
                 ref={ref}
                 // onChange={() => {}}
-                type='checkbox'
                 {...props}
                 style={{display: 'inline'}}
             />

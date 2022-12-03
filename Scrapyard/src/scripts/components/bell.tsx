@@ -8,9 +8,12 @@ import {
     markNotificationRead,
 } from '../tools/snipStore';
 
-export default function Bell(props) {
+type notifyMsgObjT = {type: string; msg: string};
+type notifyFuncT = (msg: notifyMsgObjT) => undefined;
+
+export default function Bell(props: {notify: notifyFuncT}) {
     const [state, setState] = useState({notifications: {show: false}});
-    const unreadNotificationsRef = useRef();
+    const unreadNotificationsRef = useRef<HTMLDivElement|null>();
 
     const notifications = useQuery('notificationsBell', () => getNotifications());
 
@@ -19,12 +22,8 @@ export default function Bell(props) {
             const response = await checkNotifications();
             if (parseInt(response)) {
                 // console.log(response);
-                if (
-                    Array.from(unreadNotificationsRef.current.classList).includes(
-                        'before:hidden'
-                    )
-                ) {
-                    unreadNotificationsRef.current.classList.remove('before:hidden');
+                if (unreadNotificationsRef.current?.classList.contains('before:hidden')) {
+                    unreadNotificationsRef.current?.classList.remove('before:hidden');
                 }
             }
         })();
@@ -32,28 +31,28 @@ export default function Bell(props) {
         const eventSource = new EventSource('http://127.0.0.1:2000/listenEvent', {
             withCredentials: true,
         });
-        const messageHandler = (e) => {
+        const messageHandler = (e:MessageEvent) => {
             console.log('sse data: ', e.data);
             // todo:
             notifications.refetch();
-            unreadNotificationsRef.current.classList.remove('before:hidden');
+            unreadNotificationsRef.current?.classList.remove('before:hidden');
             props.notify({type: 'info', msg: e.data});
         };
-        const errorHandler = (err) => {
+        const errorHandler = (err: Event) => {
             console.error('error: ', err);
         };
-        const messageListener = eventSource.addEventListener('message', messageHandler);
-        const errorListener = eventSource.addEventListener('error', errorHandler);
+        eventSource.addEventListener('message', messageHandler);
+        eventSource.addEventListener('error', errorHandler);
         return () => {
-            eventSource.removeEventListener(messageListener, messageHandler);
-            eventSource.removeEventListener(errorListener, errorHandler);
+            eventSource.removeEventListener('message', messageHandler);
+            eventSource.removeEventListener('error', errorHandler);
         };
     }, []);
 
-    const toggleNotification = async (e) => {
+    const toggleNotification = async () => {
         // todo: fix the bug
 
-        unreadNotificationsRef.current.classList.add('before:hidden');
+        unreadNotificationsRef.current?.classList.add('before:hidden');
 
         const stateCpy = deepClone(state);
         stateCpy.notifications.show = !stateCpy.notifications.show;
@@ -65,13 +64,15 @@ export default function Bell(props) {
 
     const listNotifications = () => {
         if (notifications.status == 'success') {
-            return notifications.data.map((notification) => {
-                return (
-                    <li key={notification.id} className={`rounded-md py-2`}>
-                        {notification.type}: {notification.message}
-                    </li>
-                );
-            });
+            return notifications.data.map(
+                (notification: {id: string; type: 'string'; message: 'string'}) => {
+                    return (
+                        <li key={notification.id} className={`rounded-md py-2`}>
+                            {notification.type}: {notification.message}
+                        </li>
+                    );
+                }
+            );
         }
     };
 

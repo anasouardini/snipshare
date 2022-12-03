@@ -3,23 +3,24 @@ import {useQuery} from 'react-query';
 import {forwardRef} from 'react';
 import {getCategories} from '../../../tools/snipStore';
 
-const Categories = (props, ref) => {
+const Categories = (
+    props: {filtering: boolean; debounceCB: () => undefined; defaultValue?: string},
+    ref:React.LegacyRef<HTMLInputElement>
+) => {
     // console.log(props);
 
     const {data: categories, status: categoriesStatus} = useQuery('categories', () =>
         getCategories()
     );
-    const [dataListOptionsState, setDataListOptionsState] = React.useState({
-        categories: [],
-    });
+    const [dataListOptionsState, setDataListOptionsState] = React.useState([]);
     // aweful way to do it
     const categoriesReadyRef = React.useRef(false);
     if (categoriesStatus == 'success' && !categoriesReadyRef.current) {
-        setDataListOptionsState({categories: categories});
+        setDataListOptionsState(categories);
         categoriesReadyRef.current = true;
     }
 
-    const handleMultiSelectInputChange = (inputType, e) => {
+    const handleMultiSelectInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (categoriesStatus != 'success') {
             return;
         }
@@ -29,11 +30,11 @@ const Categories = (props, ref) => {
 
         if (!inputValue) {
             console.log('input emptied');
-            return setDataListOptionsState({[inputType]: categories});
+            return setDataListOptionsState(categories);
         }
 
         // determine if the user is asking for the next category
-        const readyForSuggestion = (inp) => {
+        const readyForSuggestion = (inp: string) => {
             if (
                 inp[inp.length - 1] != ',' ||
                 inp == ',' ||
@@ -50,7 +51,7 @@ const Categories = (props, ref) => {
         }
 
         // remove last separator which is the last char
-        inputValue = inputValue.substr(0, inputValue.length - 1);
+        inputValue = inputValue.substring(0, inputValue.length - 1);
         //clean input categories from spaces
         const inputList = inputValue
             .split(separator)
@@ -63,13 +64,13 @@ const Categories = (props, ref) => {
         if (isOutOfRange) {
             // console.log(inputList);
             console.log('category does not exist');
-            return setDataListOptionsState({[inputType]: categories});
+            return setDataListOptionsState(categories);
         }
 
         // determine if there is no suggestion left
         // console.log('ref list', categories);
         // console.log('input list', inputList);
-        let end = categories.every((optRef) => {
+        let end = categories.every((optRef: string) => {
             return inputList.includes(optRef);
         });
         if (end) {
@@ -78,7 +79,7 @@ const Categories = (props, ref) => {
         }
 
         // determine which <option>s need to stay with the input as a prefix
-        const cleanOptionsList = categories.reduce((acc, opt) => {
+        const cleanOptionsList = categories.reduce((acc: string[], opt: string) => {
             if (!inputList.includes(opt)) {
                 acc.push(`${inputValue}${separator} ${opt}`.trim());
             }
@@ -88,7 +89,7 @@ const Categories = (props, ref) => {
         if (props?.debounceCB) props.debounceCB();
 
         console.log(cleanOptionsList);
-        setDataListOptionsState({[inputType]: cleanOptionsList});
+        setDataListOptionsState(cleanOptionsList);
     };
     // console.log(props);
 
@@ -102,15 +103,15 @@ const Categories = (props, ref) => {
                     ref={ref}
                     list='categories'
                     onChange={(e) => {
-                        handleMultiSelectInputChange('categories', e);
+                        handleMultiSelectInputChange( e);
                     }}
-                    className={`${props?.debounceCB ? '' : 'relative z-20'}
+                    className={`${props.filtering ? '' : 'relative z-20'}
                             bg-transparent w-full max-w-[280px] px-3 py-2
                             border-[1px] border-primary rounded-md`}
                 />
             </label>
             <datalist id='categories'>
-                {dataListOptionsState['categories'].map((opt) => {
+                {dataListOptionsState.map((opt) => {
                     return <option key={opt} value={opt}></option>;
                 })}
             </datalist>

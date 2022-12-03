@@ -1,23 +1,30 @@
 import React, {forwardRef, useRef} from 'react';
 import MonacoEditor from '@monaco-editor/react';
 
-const CodeSnippet = (props, ref) => {
+const CodeSnippet = (
+    props: {defaultValue: string, readOnly: boolean},
+    ref:React.LegacyRef<{parent: HTMLElement | null; snippet: any | null}>
+) => {
     // console.log(props);
     const lineHeight = 19;
     const linesNumber = useRef(5 * lineHeight);
     if (props?.defaultValue) {
         linesNumber.current =
-            Math.min(props.defaultValue.split(/\r\n|\r|\n/).length * lineHeight, 10 * lineHeight) +
+            Math.min(
+                props.defaultValue.split(/\r\n|\r|\n/).length * lineHeight,
+                10 * lineHeight
+            ) +
             lineHeight * 3; //last line (+lineHeight) to remove the scroll bar
     }
 
-    const handleOnMount = (editor, monaco) => {
+    const handleOnMount = (editor: any) => {
         if (props?.readOnly) {
             editor.updateOptions({readOnly: true});
             // monacoEditorAttr.options.readOnly = true;
         } else {
             ref.current.snippet = editor;
         }
+        console.log('sdlkfjsdl', editor);
         // monacoEditorAttr.height = editor.getModel().getLineCount() * 19;
         // monacoEditorAttr.height = 100;
         // editor.layout();

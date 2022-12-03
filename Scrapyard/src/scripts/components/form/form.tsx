@@ -14,58 +14,97 @@ const fieldsMap = {
     Categories,
     Language,
 };
-const getFieldsMap = (type) => fieldsMap[type] ?? type;
+const getFieldsMap = (type: 'IsPrivate' | 'CodeSnippet' | 'Categories' | 'Language') =>
+    fieldsMap[type] ?? type;
 
+type formPropsT = {
+    action: string;
+    fields: [
+        {
+            type: string;
+            attr: {
+                key:
+                    'title'
+                    | 'descr'
+                    | 'snippet'
+                    | 'categories'
+                    | 'isPrivate'
+                    | 'language';
+                type: string;
+                name?: string;
+                placeHolder?: string;
+            };
+        }
+    ];
+    hidePopUp: () => undefined;
+    owner: string | undefined;
+    refetch: any;
+    snipId: string;
+    snipUser: string;
+};
 
-const Form = (props) => {
+const Form = (props: formPropsT) => {
     const {notify} = useOutletContext();
 
     const refs = {
-        title: useRef(''),
-        descr: useRef(''),
-        snippet: useRef({parent: null, snippet: null}),
-        formButton: useRef(''),
-        isPrivate: useRef(''),
-        categories: useRef(''),
-        language: useRef(''),
-        error: useRef(true), // the form is invalid bt default
+        title: useRef<HTMLInputElement>(null),
+        descr: useRef<HTMLInputElement>(null),
+        snippet: useRef<{parent: HTMLElement | null; snippet: any | null}>({
+            parent: null,
+            snippet: null,
+        }),
+        formButton: useRef<HTMLInputElement>(null),
+        isPrivate: useRef<HTMLInputElement>(null),
+        categories: useRef<HTMLInputElement>(null),
+        language: useRef<HTMLInputElement>(null),
+        error: useRef(true), // the form is invalid by default
     };
 
     // input validation
     const validateForm = () => {
         //helpers
-        const removeInvalidStyle = (el) => {
+        const removeInvalidStyle = (el: HTMLElement | HTMLInputElement | null) => {
             //removes error styling if exists
             const invalidInputStyle = `border-2 border-red-400 before:block`;
             invalidInputStyle.split(' ').forEach((styleClass) => {
-                el.classList.remove(styleClass);
+                el?.classList.remove(styleClass);
             });
-            el.parentNode.querySelector('.error').classList.add('hidden');
+            el?.parentNode?.querySelector('.error')?.classList.add('hidden');
             console.log('removing red border');
         };
-        const addInvalidStyle = (el, msg) => {
-            el.classList.remove('border-2');
-            el.classList.remove('border-green-400');
+        const addInvalidStyle = (
+            el: HTMLElement | HTMLInputElement | null,
+            msg: string
+        ) => {
+            el?.classList.remove('border-2');
+            el?.classList.remove('border-green-400');
 
             const invalidInputStyle = `border-2 border-red-400 before:block`;
             invalidInputStyle.split(' ').forEach((styleClass) => {
-                el.classList.add(styleClass);
+                el?.classList.add(styleClass);
             });
-            el.parentNode.querySelector('.error').innerText = msg;
-            el.parentNode.querySelector('.error').classList.remove('hidden');
+
+            el?.parentNode
+                ?.querySelector('.error')
+                ?.replaceChildren(document.createTextNode(msg));
+            el?.parentNode?.querySelector('.error')?.classList.remove('hidden');
             console.log('adding red border');
         };
-        const addValidStyle = (el) => {
+        const addValidStyle = (el: HTMLElement | null) => {
             //removes error styling if exists
-            el.classList.add('border-2');
-            el.classList.add('border-green-400');
+            el?.classList.add('border-2');
+            el?.classList.add('border-green-400');
             console.log('adding green border');
         };
         //validators
         const validateTitle = () => {
             const element = refs.title.current;
-            removeInvalidStyle(element, 'the input is out of range (0-1000)');
-            if (element.value.length < 100 && element.value.length > 0) {
+            removeInvalidStyle(element);
+            if (
+                element?.value &&
+                element.value.length < 100 &&
+                element.value.length > 0
+            ) {
                 addValidStyle(element);
                 return true;
             }
@@ -74,19 +113,22 @@ const Form = (props) => {
         };
         const validateDescription = () => {
             const element = refs.descr.current;
-            removeInvalidStyle(element, 'the input is out of range (0-1000)');
-            if (element.value.length < 1000 && element.value.length > 0) {
+            removeInvalidStyle(element);
+            if (
+                element?.value &&
+                element.value.length < 1000 &&
+                element.value.length > 0
+            ) {
                 addValidStyle(element);
                 return true;
             }
             return addInvalidStyle(element, 'the input is out of range (0-1000)');
-            return false;
         };
         const validateSnippet = () => {
             console.log('snippet validation--------------------- ');
             const elementParent = refs.snippet.current.parent;
             const element = refs.snippet.current.snippet;
-            removeInvalidStyle(elementParent, 'the input is out of range (0-1000)');
+            removeInvalidStyle(elementParent);
             if (element.getValue().length < 1000 && element.getValue().length > 0) {
                 addValidStyle(elementParent);
                 return true;
@@ -95,9 +137,9 @@ const Form = (props) => {
             return false;
         };
         // listeners
-        refs.title.current.addEventListener('blur', validateTitle);
-        refs.descr.current.addEventListener('blur', validateDescription);
-        refs.formButton.current.addEventListener('click', () => {
+        refs.title.current?.addEventListener('blur', validateTitle);
+        refs.descr.current?.addEventListener('blur', validateDescription);
+        refs.formButton.current?.addEventListener('click', () => {
             const validTitle = validateTitle();
             const validDescription = validateDescription();
             const validSnippet = validateSnippet();
@@ -109,14 +151,25 @@ const Form = (props) => {
 
     useEffect(validateForm, []);
 
-    const handleClose = (e) => {
-        if (e) e.stopPropagation();
+    const handleClose = (e?: MouseEvent) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
         // unmount form
         props.hidePopUp();
     };
 
     const createRequestBody = () => {
-        const body = {props: {}};
+        type filedsKeysT =
+            | 'title'
+            | 'descr'
+            | 'snippet'
+            | 'categories'
+            | 'isPrivate'
+            | 'language';
+        const body: {props: Record<filedsKeysT, string | boolean> | {}} = {props: {}};
 
         // console.log(props.fields);
         props.fields.forEach((field) => {
@@ -193,12 +246,18 @@ const Form = (props) => {
                 }
                 // console.log(descrHeight);
                 return (
-                    <label key={input.attr.key} className={input.attr.className + 'z-30 relative'}>
+                    <label
+                        key={input.attr.key}
+                        className={input.attr.className + 'z-30 relative'}
+                    >
                         <Component
                             ref={refs[input?.attr?.key]}
                             key={input.attr.key}
                             {...input.attr}
-                            style={{height: `min(${descrHeight}px, 100px)`, width: '100%'}}
+                            style={{
+                                height: `min(${descrHeight}px, 100px)`,
+                                width: '100%',
+                            }}
                         />
                         <div className='error text-red-500 p-1 hidden'></div>
                     </label>
@@ -209,7 +268,8 @@ const Form = (props) => {
                 <label
                     key={input.attr.key}
                     className={
-                        input.attr.className + 'z-30 relative' + input.attr.key == 'isPrivate'
+                        input.attr.className + 'z-30 relative' + input.attr.key ==
+                        'isPrivate'
                             ? 'self-start'
                             : ''
                     }
@@ -242,14 +302,14 @@ const Form = (props) => {
                           bg-[#181818] z-30 drop-shadow-2xl relative
                           w-[600px] sm>:w-full'
             >
-                <button
+                <div
                     aria-label='close form'
                     onClick={handleClose}
                     className='absolute content-["X"] top-2 right-2
                             text-xl cursor-pointer '
                 >
                     X
-                </button>
+                </div>
                 {listInputs(props.fields)}
 
                 <button

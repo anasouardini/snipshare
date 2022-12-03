@@ -1,9 +1,9 @@
 const server = {
     url: 'http://127.0.0.1:2000/',
 
-    options: (method, body) => {
+    options: (method:string, body?:BodyInit) => {
         // console.log(body);
-        const options = {
+        const options:RequestInit = {
             method,
             mode: 'cors',
             headers: {
@@ -20,7 +20,7 @@ const server = {
     },
 };
 
-export const create = (route, body) =>
+export const create = (route:string, body:BodyInit) =>
     fetch(server.url + route, server.options('post', body))
         .then(async (res) => {
             return {
@@ -37,7 +37,7 @@ export const create = (route, body) =>
 //         })
 //         .catch((err) => err);
 
-export const read = (route) =>
+export const read = (route:string) =>
     fetch(server.url + route, server.options('get'))
         .then(async (res) => {
             return {
@@ -50,7 +50,7 @@ export const read = (route) =>
         })
         .catch((err) => err);
 
-export const updateFile = (route, body) =>
+export const updateFile = (route:string, body:BodyInit) =>
     fetch(server.url + route, {method: 'put', credentials: 'include', body})
         .then(async (res) => {
             return {
@@ -63,7 +63,7 @@ export const updateFile = (route, body) =>
         })
         .catch((err) => false);
 
-export const update = (route, body) =>
+export const update = (route:string, body:BodyInit|undefined) =>
     fetch(server.url + route, server.options('put', body))
         .then(async (res) => {
             return {
@@ -76,7 +76,7 @@ export const update = (route, body) =>
         })
         .catch((err) => false);
 
-export const remove = (route, body) =>
+export const remove = (route:string, body:BodyInit) =>
     fetch(server.url + route, server.options('delete', body))
         .then(async (res) => {
             return {

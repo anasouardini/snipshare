@@ -11,10 +11,10 @@ const getSnippets = async ({
     perPage,
 }: {
     user: string | undefined;
-    title: string;
-    categories: string;
+    title: string | undefined;
+    categories: string | undefined;
     meta?: boolean | undefined;
-    language: string;
+    language: string | undefined;
     pageParam: number;
     perPage: number;
 }) => {

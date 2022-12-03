@@ -8,7 +8,7 @@ import {FaLock, FaLockOpen} from 'react-icons/fa';
 import CodeSnippet from './form/fields/snippet';
 import {useRef} from 'react';
 
-const Snippet = (props) => {
+const Snippet = (props:{snippet:{}, update:()=>void}) => {
     const {notify} = useOutletContext();
 
     const [snipInfoState, setSnipInfoState] = useState({

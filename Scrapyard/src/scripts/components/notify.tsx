@@ -1,7 +1,9 @@
-import React from 'react';
 import {useEffect} from 'react';
 
-export default function Notify(props) {
+export default function Notify(props: {
+    type: 'info' | 'warning' | 'error';
+    msg: 'string';
+}) {
     // console.log('props', props);
 
     const classes = {
@@ -26,10 +28,12 @@ export default function Notify(props) {
 
     return (
         <div
-            aria-label="notification"
+            aria-label='notification'
             className={`${classes.container} ${notificationType[props.type]}`}
         >
-            <p>{typeof props.msg == 'string' ? props.msg : 'msg string was not provided'}</p>
+            <p>
+                {typeof props.msg == 'string' ? props.msg : 'msg string was not provided'}
+            </p>
         </div>
     );
 }
