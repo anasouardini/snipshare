@@ -63,7 +63,7 @@ export const updateFile = (route:string, body:BodyInit) =>
         })
         .catch((err) => false);
 
-export const update = (route:string, body:BodyInit|undefined) =>
+export const update = (route:string, body?:BodyInit) =>
     fetch(server.url + route, server.options('put', body))
         .then(async (res) => {
             return {
@@ -76,7 +76,7 @@ export const update = (route:string, body:BodyInit|undefined) =>
         })
         .catch((err) => false);
 
-export const remove = (route:string, body:BodyInit) =>
+export const remove = (route:string, body?:BodyInit) =>
     fetch(server.url + route, server.options('delete', body))
         .then(async (res) => {
             return {

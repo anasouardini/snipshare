@@ -202,7 +202,7 @@ const ExceptionsPopUp = (props, ref) => {
     };
 
     const snippetsDataList = () => {
-        console.log(snippetsData);
+        // console.log(snippetsData);
         return (
             <>
                 <input

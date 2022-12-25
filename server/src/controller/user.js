@@ -7,6 +7,12 @@ const readAll = async (req, res) => {
     res.json({msg: response[0].map((item) => item.user)});
 };
 
+const readSingle = async (req, res) => {
+    const response = await User.getUser(req.params.user);
+
+    res.json({msg: response[0][0]});
+};
+
 const editUser = async (req, res) => {
     // console.log('edit user, l10', req.file);
     // only one of then is sent from the client, others are undefined.
@@ -46,4 +52,4 @@ const editUser = async (req, res) => {
     res.json({msg: 'profile has been modified successfullly'});
 };
 
-module.exports = {readAll, editUser};
+module.exports = {readAll, readSingle, editUser};

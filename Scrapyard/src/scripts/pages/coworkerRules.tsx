@@ -49,7 +49,7 @@ export default function AddRules() {
         navigate('/login', {replace: true});
         return <></>
     }
-    console.log('query coworkers', coworkersRules.data);
+    // console.log('query coworkers', coworkersRules.data);
 
     const eventDefaults = (e) => {
         e.stopPropagation();

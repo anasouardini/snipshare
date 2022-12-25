@@ -43,7 +43,7 @@ const AccessControl = (props, ref) => {
 
     const onLabelClick = (e) => {
         const checked = Number(e.currentTarget.children[0].checked);
-        console.log(checked);
+        // console.log(checked);
         e.currentTarget.children[0].checked = !e.currentTarget.children[0].checked;
         // toggle checked effect
         e.currentTarget.style.filter = `grayscale(${checked})`;

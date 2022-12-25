@@ -8,28 +8,51 @@ import IsPrivate from './fields/isPrivate';
 import CodeSnippet from './fields/snippet';
 import Categories from './fields/categories';
 import Language from './fields/language';
+
 const fieldsMap = {
     IsPrivate,
     CodeSnippet,
     Categories,
     Language,
 };
-const getFieldsMap = (type: 'IsPrivate' | 'CodeSnippet' | 'Categories' | 'Language') =>
-    fieldsMap[type] ?? type;
+function getFieldsMapTG(type: string): type is keyof typeof fieldsMap {
+    return type in fieldsMap;
+}
+const getFieldsMap = (type: fieldsTypesT) => {
+    if (getFieldsMapTG(type)) {
+        // only returns react functions
+        console.log(`jsx com (${type}): `, fieldsMap[type]);
+        const holder = fieldsMap[type];
+        return holder;
+    }
+
+    console.log(`built-in com (${type}: `, type);
+    // only returns built-in dom elements
+    return type;
+};
+
+type fieldsTypesT =
+    | 'title'
+    | 'descr'
+    | 'CodeSnippet'
+    | 'Categories'
+    | 'IsPrivate'
+    | 'Language';
+type fieldsKeysT =
+    | 'title'
+    | 'descr'
+    | 'snippet'
+    | 'categories'
+    | 'isPrivate'
+    | 'language';
 
 type formPropsT = {
     action: string;
     fields: [
         {
-            type: string;
+            type: fieldsTypesT;
             attr: {
-                key:
-                    'title'
-                    | 'descr'
-                    | 'snippet'
-                    | 'categories'
-                    | 'isPrivate'
-                    | 'language';
+                key: fieldsKeysT;
                 type: string;
                 name?: string;
                 placeHolder?: string;
@@ -53,11 +76,11 @@ const Form = (props: formPropsT) => {
             parent: null,
             snippet: null,
         }),
-        formButton: useRef<HTMLInputElement>(null),
+        formButton: useRef<HTMLButtonElement>(null),
         isPrivate: useRef<HTMLInputElement>(null),
-        categories: useRef<HTMLInputElement>(null),
-        language: useRef<HTMLInputElement>(null),
-        error: useRef(true), // the form is invalid by default
+        categories: useRef<HTMLSelectElement>(null),
+        language: useRef<HTMLSelectElement>(null),
+        error: useRef<Boolean>(true), // the form is invalid by default
     };
 
     // input validation
@@ -151,41 +174,42 @@ const Form = (props: formPropsT) => {
 
     useEffect(validateForm, []);
 
-    const handleClose = (e?: MouseEvent) => {
-        if (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+    const handleClose = (/* e?: React.MouseEventHandler<HTMLDivElement> */) => {
+        // if (e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        // }
 
         // unmount form
         props.hidePopUp();
     };
 
+    type filedsKeysT =
+        | 'title'
+        | 'descr'
+        | 'snippet'
+        | 'categories'
+        | 'isPrivate'
+        | 'language';
+    type fieldPropsT = Partial<Record<filedsKeysT, string | boolean>>;
     const createRequestBody = () => {
-        type filedsKeysT =
-            | 'title'
-            | 'descr'
-            | 'snippet'
-            | 'categories'
-            | 'isPrivate'
-            | 'language';
-        const body: {props: Record<filedsKeysT, string | boolean> | {}} = {props: {}};
+        const body: {props: fieldPropsT} = {props: {}};
 
         // console.log(props.fields);
         props.fields.forEach((field) => {
             const fieldKey = field.attr.key;
             // keept the != undefined, because js is weird
             if (refs?.[fieldKey] != undefined) {
-                if (field.attr.type == 'checkbox') {
+                if (fieldKey == 'isPrivate') {
                     // console.log('fieldtype', refs[fieldKey].current.checked);
-                    body.props[fieldKey] = refs[fieldKey].current.checked;
-                } else if (field.attr.type == 'snippet') {
-                    const snippetValue = refs[fieldKey].current.snippet.getValue();
+                    body.props[fieldKey] = refs[fieldKey].current?.checked;
+                } else if (fieldKey == 'snippet') {
+                    const snippetValue = refs[fieldKey].current?.snippet.getValue();
                     body.props[fieldKey] = snippetValue;
                     // console.log(body.props[fieldKey]);
                 } else {
                     console.log(refs[fieldKey].current);
-                    body.props[fieldKey] = refs[fieldKey].current.value;
+                    body.props[fieldKey] = refs[fieldKey].current?.value;
                 }
             }
         });
@@ -234,10 +258,10 @@ const Form = (props: formPropsT) => {
 
     // console.log(Object.values(props.fields)[2].attr);
     // listing form fields
-    const listInputs = (fields = []) => {
+    const listInputs = () => {
         // console.log(fields);
         // TODO: clear this spagetty of conditions, DRY it a little
-        return fields.map((input) => {
+        return props.fields.map((input) => {
             const Component = getFieldsMap(input.type);
             if (input.attr.key == 'descr') {
                 let descrHeight = 2 * 35;
@@ -297,7 +321,6 @@ const Form = (props: formPropsT) => {
                         w-full h-full`}
             ></div>
             <form
-                ref={refs.form}
                 className='flex flex-col gap-6 p-6 pt-8
                           bg-[#181818] z-30 drop-shadow-2xl relative
                           w-[600px] sm>:w-full'
@@ -310,7 +333,7 @@ const Form = (props: formPropsT) => {
                 >
                     X
                 </div>
-                {listInputs(props.fields)}
+                {listInputs()}
 
                 <button
                     ref={refs.formButton}

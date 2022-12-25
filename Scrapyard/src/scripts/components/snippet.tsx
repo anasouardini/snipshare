@@ -1,14 +1,28 @@
-import React, {useState, memo} from 'react';
+import React, {useState, memo, useRef, useEffect} from 'react';
 import {useOutletContext} from 'react-router-dom';
 
-import {commonSnippetFields} from '../tools/snipStore';
+import {commonSnippetFields, getUser} from '../tools/snipStore';
 import {read, remove} from '../tools/bridge';
 import Form from './form/form';
 import {FaLock, FaLockOpen} from 'react-icons/fa';
 import CodeSnippet from './form/fields/snippet';
-import {useRef} from 'react';
 
-const Snippet = (props:{snippet:{}, update:()=>void}) => {
+type propsT = {
+    snippet: {
+        id: string;
+        user: string;
+        title: string;
+        descr: string;
+        snippet: string;
+        isPrivate: Boolean;
+        author: string;
+        language: string;
+        categories: string;
+        access: {read: Boolean; update: Boolean; delete: Boolean};
+    };
+};
+
+function Snippet(props: propsT) {
     const {notify} = useOutletContext();
 
     const [snipInfoState, setSnipInfoState] = useState({
@@ -17,6 +31,19 @@ const Snippet = (props:{snippet:{}, update:()=>void}) => {
     // console.log(snipInfoState.snippet);
 
     const [popUpState, setPopUpState] = useState({showForm: false});
+
+    // fetching avatar for the snippet
+    const avatarRef = useRef(null);
+    const fetchAvatar = async () => {
+        const userInfo = await getUser(snipInfoState.snippet.user);
+        // console.log(userInfo.avatar)
+        if (avatarRef.current) {
+            avatarRef.current.src = userInfo.avatar;
+        }
+    };
+    useEffect(() => {
+        fetchAvatar();
+    }, []);
 
     const formFieldsState = useRef({
         fields: Object.values(structuredClone({commonSnippetFields}))[0],
@@ -92,7 +119,7 @@ const Snippet = (props:{snippet:{}, update:()=>void}) => {
             `${snipInfoState.snippet.user}/${snipInfoState.snippet.id}`
         );
         if (response?.status == 200) {
-            console.log('reading new version');
+            // console.log('reading new version');
 
             // updateFields();
             firstRender.current = true; // to update the fields
@@ -105,6 +132,7 @@ const Snippet = (props:{snippet:{}, update:()=>void}) => {
     };
 
     // console.log(Object.values(formFieldsState.current.fields)[2].attr);
+    console.log(snipInfoState.snippet);
     return (
         <>
             <div
@@ -116,10 +144,18 @@ const Snippet = (props:{snippet:{}, update:()=>void}) => {
                     <div className='flex justify-between mb-4 gap-3'>
                         {/* Owner */}
                         <div className='flex flex-row gap-3'>
-                            <div
-                                className='w-[50px] h-[50px] border-[1px]
-                                        border-primary rounded-full'
-                            ></div>
+                            <figure
+                                className='border-primary border-[1px]
+                                                    w-[50px] h-[50px] rounded-full
+                                                       overflow-hidden'
+                            >
+                                <img
+                                    ref={avatarRef}
+                                    class='w-full h-full'
+                                    crossOrigin='anonymous | use-credentials'
+                                    src=''
+                                ></img>
+                            </figure>
                             <p>
                                 <span>{snipInfoState.snippet.user}</span>
                                 <br />
@@ -220,5 +256,5 @@ const Snippet = (props:{snippet:{}, update:()=>void}) => {
             )}
         </>
     );
-};
+}
 export default memo(Snippet);

@@ -46,6 +46,16 @@ const getUsers = async () => {
     return response;
 };
 
+const getUser = async (user:string) => {
+    const response = await read(`user/${user}`);
+
+    // console.log(response);
+    if (response.status == 200) {
+        return response.msg;
+    }
+    return response;
+};
+
 const readCoworkerRules = async () => {
     const response = await read(`coworkerRules`);
 
@@ -153,6 +163,7 @@ const commonSnippetFields = [
 export {
     getSnippets,
     getUsers,
+    getUser,
     readCoworkerRules,
     getCategories,
     getLanguages,

@@ -24,7 +24,7 @@ const CodeSnippet = (
         } else {
             ref.current.snippet = editor;
         }
-        console.log('sdlkfjsdl', editor);
+        // console.log('sdlkfjsdl', editor);
         // monacoEditorAttr.height = editor.getModel().getLineCount() * 19;
         // monacoEditorAttr.height = 100;
         // editor.layout();

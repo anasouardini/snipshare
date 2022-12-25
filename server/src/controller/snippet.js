@@ -225,11 +225,14 @@ const readMiddleware = async (req, res) => {
     }
 };
 
-const appendSnippetToResponse = (req, filteredSnippets, snippetObj, access) => {
+const appendSnippetToResponse = async (req, filteredSnippets, snippetObj, access) => {
     // console.log(snippetObj);
+
     if (access?.read) {
         const {id, user, title, descr, snippet, isPrivate, author, language, categories} =
             snippetObj;
+
+        //push snippet info to the filtered snippet
         if (req.query?.meta) {
             filteredSnippets.push({
                 id,

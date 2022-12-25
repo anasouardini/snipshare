@@ -56,6 +56,7 @@ router.post('/signup', gotoHome, controller.signup);
 router.post('/logout', controller.logout);
 router.get('/whoami', controller.whoami);
 router.get('/users', gotoLogin, controller.user.readAll);
+router.get('/user/:user', gotoLogin, controller.user.readSingle);
 router.put('/users', gotoLogin, upload.single('avatar'), controller.user.editUser);
 
 // snippets
