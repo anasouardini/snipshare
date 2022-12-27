@@ -81,7 +81,7 @@ export default function Profile() {
             if (inputName == 'username') {
                 document.location.replace('http://127.0.0.1:3000/login');
             }
-            console.log(res);
+            // console.log(res);
         }
     };
 

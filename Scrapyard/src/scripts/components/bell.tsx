@@ -32,14 +32,14 @@ export default function Bell(props: {notify: notifyFuncT}) {
             withCredentials: true,
         });
         const messageHandler = (e: MessageEvent) => {
-            console.log('sse data: ', e.data);
+            // console.log('sse data: ', e.data);
             // todo:
             notifications.refetch();
             unreadNotificationsRef.current?.classList.remove('before:hidden');
             props.notify({type: 'info', msg: e.data});
         };
         const errorHandler = (err: Event) => {
-            console.error('error: ', err);
+            // console.error('error: ', err);
         };
         eventSource.addEventListener('message', messageHandler);
         eventSource.addEventListener('error', errorHandler);

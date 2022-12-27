@@ -29,7 +29,7 @@ const Categories = (
         const separator = ',';
 
         if (!inputValue) {
-            console.log('input emptied');
+            // console.log('input emptied');
             return setDataListOptionsState(categories);
         }
 
@@ -41,7 +41,7 @@ const Categories = (
                 inp == ' ' ||
                 inp.includes(',,')
             ) {
-                console.log('bad pattern (, | ,,)');
+                // console.log('bad pattern (, | ,,)');
                 return false;
             }
             return true;
@@ -63,7 +63,7 @@ const Categories = (
         });
         if (isOutOfRange) {
             // console.log(inputList);
-            console.log('category does not exist');
+            // console.log('category does not exist');
             return setDataListOptionsState(categories);
         }
 
@@ -74,7 +74,7 @@ const Categories = (
             return inputList.includes(optRef);
         });
         if (end) {
-            console.log('you have covered all of them');
+            // console.log('you have covered all of them');
             return;
         }
 
@@ -88,7 +88,7 @@ const Categories = (
 
         if (props?.debounceCB) props.debounceCB();
 
-        console.log(cleanOptionsList);
+        // console.log(cleanOptionsList);
         setDataListOptionsState(cleanOptionsList);
     };
     // console.log(props);

@@ -39,7 +39,7 @@ export default function SharedLayout() {
     };
 
     if (whoami?.msg && whoami?.status == 200 && location.pathname.includes('login')) {
-        console.log('redirecting to home from shared layout');
+        // console.log('redirecting to home from shared layout');
         navigate('/');
     }
 
@@ -126,8 +126,8 @@ export default function SharedLayout() {
             // return navigate('/');
         }
 
-        console.log('not success :)');
-        console.log(response);
+        // console.log('not success :)');
+        // console.log(response);
         // console.log(create);
     };
 

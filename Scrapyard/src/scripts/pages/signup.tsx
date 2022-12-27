@@ -20,15 +20,15 @@ export default function SignUp() {
 
         if (response) {
             // console.log('success');
-            console.log(response);
+            // console.log(response);
             if (response.status == 200) {
                 navigate('/signin', {replace: true});
             }
             return;
         }
 
-        console.log('not success :)');
-        console.log(response);
+        // console.log('not success :)');
+        // console.log(response);
         // console.log(create);
     };
 
