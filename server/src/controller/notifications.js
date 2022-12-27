@@ -1,6 +1,10 @@
 const Notifications = require('../model/notifications.js');
 
 const read = async (req, res) => {
+    if (!req.user) {
+        return res.json({msg: {}});
+    }
+
     const response = await Notifications.read({user: req.user.username});
     // console.log('l9 controller/notifications: ', response);
     if (!response || !response?.[0]) {

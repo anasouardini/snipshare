@@ -132,7 +132,7 @@ function Snippet(props: propsT) {
     };
 
     // console.log(Object.values(formFieldsState.current.fields)[2].attr);
-    console.log(snipInfoState.snippet);
+    // console.log(snipInfoState.snippet);
     return (
         <>
             <div
@@ -151,7 +151,7 @@ function Snippet(props: propsT) {
                             >
                                 <img
                                     ref={avatarRef}
-                                    class='w-full h-full'
+                                    className='w-full h-full'
                                     crossOrigin='anonymous | use-credentials'
                                     src=''
                                 ></img>

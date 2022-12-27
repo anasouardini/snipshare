@@ -177,7 +177,7 @@ export default function SharedLayout() {
                                     .querySelector(':scope > ul')
                                     .classList.add('hidden');
                             }}
-                            className={`relative cursor-pointer text-gray-200`}
+                            className={`relative cursor-pointer text-gray-200 border-2 rounded-md border-orange-500 px-2 py-1`}
                         >
                             Hacks
                             <ul
