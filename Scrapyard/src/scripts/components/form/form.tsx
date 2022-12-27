@@ -21,12 +21,12 @@ function getFieldsMapTG(type: string): type is keyof typeof fieldsMap {
 const getFieldsMap = (type: fieldsTypesT) => {
     if (getFieldsMapTG(type)) {
         // only returns react functions
-        console.log(`jsx com (${type}): `, fieldsMap[type]);
+        // console.log(`jsx com (${type}): `, fieldsMap[type]);
         const holder = fieldsMap[type];
         return holder;
     }
 
-    console.log(`built-in com (${type}: `, type);
+    // console.log(`built-in dom (${type}: `, type);
     // only returns built-in dom elements
     return type;
 };
@@ -93,7 +93,7 @@ const Form = (props: formPropsT) => {
                 el?.classList.remove(styleClass);
             });
             el?.parentNode?.querySelector('.error')?.classList.add('hidden');
-            console.log('removing red border');
+            // console.log('removing red border');
         };
         const addInvalidStyle = (
             el: HTMLElement | HTMLInputElement | null,
@@ -111,13 +111,13 @@ const Form = (props: formPropsT) => {
                 ?.querySelector('.error')
                 ?.replaceChildren(document.createTextNode(msg));
             el?.parentNode?.querySelector('.error')?.classList.remove('hidden');
-            console.log('adding red border');
+            // console.log('adding red border');
         };
         const addValidStyle = (el: HTMLElement | null) => {
             //removes error styling if exists
             el?.classList.add('border-2');
             el?.classList.add('border-green-400');
-            console.log('adding green border');
+            // console.log('adding green border');
         };
         //validators
         const validateTitle = () => {
@@ -148,7 +148,7 @@ const Form = (props: formPropsT) => {
             return addInvalidStyle(element, 'the input is out of range (0-1000)');
         };
         const validateSnippet = () => {
-            console.log('snippet validation--------------------- ');
+            // console.log('snippet validation--------------------- ');
             const elementParent = refs.snippet.current.parent;
             const element = refs.snippet.current.snippet;
             removeInvalidStyle(elementParent);
@@ -208,13 +208,13 @@ const Form = (props: formPropsT) => {
                     body.props[fieldKey] = snippetValue;
                     // console.log(body.props[fieldKey]);
                 } else {
-                    console.log(refs[fieldKey].current);
+                    // console.log(refs[fieldKey].current);
                     body.props[fieldKey] = refs[fieldKey].current?.value;
                 }
             }
         });
 
-        console.log(body);
+        // console.log(body);
         return body;
     };
 
@@ -232,7 +232,7 @@ const Form = (props: formPropsT) => {
 
     const handleCreate = async () => {
         const requestBody = createRequestBody();
-        console.log(requestBody);
+        // console.log(requestBody);
 
         // console.log(props.owner);
         const response = await create(`${props.owner}/snippet`, requestBody);

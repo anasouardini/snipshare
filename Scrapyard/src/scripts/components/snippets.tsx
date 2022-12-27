@@ -59,6 +59,7 @@ export default function Snippets() {
             getNextPageParam: (lastPage) => lastPage.nextPage,
         }
     );
+    // if(snippets.status == 'success'){console.log(snippets.data)}
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -95,7 +96,7 @@ export default function Snippets() {
                 categories: string | undefined,
                 language: string | undefined
             ) => {
-                console.log('filtering...', {title, categories, language});
+                // console.log('filtering...', {title, categories, language});
                 setSnippetFilterState({title, categories, language});
 
                 return undefined;
@@ -212,7 +213,7 @@ export default function Snippets() {
                                   items-center flex-wrap my-5 gap-3'
             >
                 {whoami == userParam ||
-                snippets.data.pages?.[0]?.snippets?.[0]?.genericAccess?.create ||
+                snippets.data.pages?.[0]?.genericAccess?.create ||
                 !userParam ? (
                     <button
                         onClick={handleCreate}

@@ -71,6 +71,7 @@ const authAction = async (req, action) => {
         rulesResponse = await CoworkerRules.readCoworkerRules(owner, usr);
     }
     // if the user is a coworker
+    // console.log('snippet.js =>> ', owner, usr);
     if (rulesResponse[0].length) {
         // console.log(rulesResponse[0][0].exceptions[snippetID]);
         if (

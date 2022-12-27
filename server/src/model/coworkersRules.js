@@ -34,7 +34,7 @@ const readCoworkerRules = (owner, coworker) => {
                           from coworkersRules r 
                           inner join users uu on r.user=uu.id
                           inner join users u on r.coworker=u.id
-                          where u.user=? and u.user=?`,
+                          where uu.user=? and u.user=?`,
         [owner, coworker]
     );
 };
