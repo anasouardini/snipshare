@@ -88,12 +88,12 @@ export default function SharedLayout() {
         // THIS IS A HUGE MESS BUT IT'S A CHANCE TO EXPERIMENT WITH TAILWIND SOME MORE
         menuOverlayRef.current.className = `
               navigationOverlay sm>:fixed sm>:top-0 sm>:left-0 sm>:right-0 sm>:bottom-0
-              sm>:z-20 sm>:flex sm>:justify-center sm>:items-center bg-dark/75`;
+              sm>:z-20 sm>:flex sm>:justify-center sm>:items-center sm>:bg-dark/75`;
         navRef.current.className = `sm<:px-[5%] sm<:py-2
                                     sm>:flex-row sm>:bg-dark
                                     sm>:border-2 sm>:border-primary sm>:p-4 rounded-md 
                                     `;
-        navRef.current.children[0].className = `sm<:flex sm<:gap-3
+        navRef.current.children[0].className = `sm<:flex sm<:items-center sm<:gap-3
                                                flex sm>:flex-col sm>:gap-5 px-4`;
     };
     const hideMenu = (e) => {
@@ -102,10 +102,12 @@ export default function SharedLayout() {
         if (!isOverlayVisible && e.currentTarget.tagName != 'NAV') {
             return;
         }
-        menuOverlayRef.current.className = `sm>:block`;
+        menuOverlayRef.current.className = `sm>:inherit`;
         navRef.current.className = `sm>:hidden sm<:px-[5%] sm<:py-2
                                     sm<:fixed sm<:top-0 sm<:right-0
                                     sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-dark`;
+        navRef.current.children[0].className = `sm<:flex sm<:items-center sm<:gap-3
+                                               flex sm>:flex-col sm>:gap-5 px-4`;
     };
 
     const loginAs = async ({usr, passwd, keepSignIn}) => {
@@ -144,7 +146,7 @@ export default function SharedLayout() {
                     ref={navRef}
                     className={`sm>:hidden
                                     sm<:px-[5%] sm<:py-2
-                                    sm<:fixed sm<:top-0 sm<:right-0
+                                    fixed sm<:top-0 sm<:right-0
                                     sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-dark`}
                 >
                     <ul className='sm<:flex sm<:items-center sm<:gap-3'>
@@ -270,7 +272,7 @@ export default function SharedLayout() {
                         </ul>
                         {whoami.status == 401 ? (
                             <>
-                                <li className='ml-auto'>
+                                <li className='sm<:ml-auto'>
                                     <NavLink
                                         className={classes.navLink}
                                         to='/login'
