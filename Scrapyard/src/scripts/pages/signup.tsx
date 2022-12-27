@@ -2,6 +2,7 @@ import React, {useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {create} from '../tools/bridge';
 // import {useNavigate} from 'react-router';
+import OauthButton from './shared/oauthButton';
 
 export default function SignUp() {
     const navigate = useNavigate();
@@ -62,20 +63,20 @@ export default function SignUp() {
             <form className={classes.form}>
                 <label className={classes.label}>
                     <input
-                        placeholder="Username"
+                        placeholder='Username'
                         className={`${classes.input} ${classes.textInput}`}
                         ref={refs.username}
-                        type="text"
-                        name="username"
+                        type='text'
+                        name='username'
                     />
                 </label>
                 <label className={classes.label}>
                     <input
-                        placeholder="Password"
+                        placeholder='Password'
                         className={`${classes.input} ${classes.textInput}`}
                         ref={refs.password}
-                        type="password"
-                        name="password"
+                        type='password'
+                        name='password'
                     />
                 </label>
 
@@ -83,6 +84,9 @@ export default function SignUp() {
                     <button className={classes.submit} onClick={handleSubmit}>
                         Sign Up
                     </button>
+                </label>
+                <label className={classes.label}>
+                    <OauthButton />
                 </label>
             </form>
         </div>

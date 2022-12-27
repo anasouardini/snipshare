@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import {create, read} from '../tools/bridge';
 import {useNavigate} from 'react-router';
-import {useEffect} from 'react';
+import OauthButton from './shared/oauthButton'
 
 export default function Signin() {
     const navigate = useNavigate();
@@ -9,29 +9,6 @@ export default function Signin() {
     const refs = {
         username: useRef<HTMLInputElement>(),
         password: useRef<HTMLInputElement>(),
-    };
-
-    const sendIdToken = async () => {
-        const fragId = window.location.hash;
-        if (fragId != '') {
-            const idToken = fragId.split('&')[0].split('=')[1];
-            // console.log('idToken', idToken);
-
-            const response = await read(`api/auth/google?idToken=${idToken}`);
-            if (response.status == 200) {
-                navigate('/', {replace: true});
-            }
-        }
-    };
-
-    useEffect(() => {
-        sendIdToken();
-    }, []);
-
-    const handleOAuth = (e:MouseEvent) => {
-        e.preventDefault();
-
-        window.open('http://127.0.0.1:2000/auth/google', '_self');
     };
 
     const handleSubmit = (e:MouseEvent) => {
@@ -70,7 +47,6 @@ export default function Signin() {
         checkbox: 'w-xl mr-3',
         label: 'max-w-[300px] mx-auto',
         submit: 'w-full border-b-2 border-b-primary mt-4 pb-2',
-        oauth: 'w-[200px] border-2 border-primary mt-4 p-2',
     };
 
     return (
@@ -110,9 +86,7 @@ export default function Signin() {
                     </button>
                 </label>
                 <label className={classes.label}>
-                    <button className={classes.oauth+' rounded-md'} onClick={handleOAuth}>
-                        Login With Google
-                    </button>
+                    <OauthButton/>
                 </label>
             </form>
         </div>
