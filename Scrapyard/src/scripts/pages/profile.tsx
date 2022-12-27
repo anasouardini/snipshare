@@ -1,20 +1,51 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Snippets from '../components/snippets';
-import {update, updateFile} from '../tools/bridge';
+import {useParams} from 'react-router-dom';
+import {update, updateFile, read} from '../tools/bridge';
 import {useOutletContext} from 'react-router-dom';
 import {FaPen} from 'react-icons/fa';
 
 export default function Profile() {
-    const {whoami, avatar, description, reload} = useOutletContext();
+    const {reload} = useOutletContext();
 
-    const profileInfo = {username: whoami, description, avatar};
+    // TODO: show profile based on the link instead of who's logged in
+    const params = useParams();
+    const profileInfoRef: {
+        username: string | undefined;
+        description: string;
+        avatar: {src: string; alt: string};
+    } = React.useRef({
+        username: 'Pending...',
+        description: 'Pending...',
+        avatar: {src: '', alt: 'avatar'},
+    }).current;
 
     const refs = React.useRef({
         inputs: {username: null, description: null},
-        view: {username: null, description: null},
+        view: {username: null, description: null, descriptionText: null, img: null},
         buttons: {username: null, description: null},
         buttonHoverStyle: null,
     }).current;
+
+    const fetchUser = async () => {
+        const {
+            msg: {user, descr, avatar},
+        } = await read(`user/${params.user}`);
+
+        refs.view.img.src = avatar;
+        refs.view.img.alt = user + "'s avatar";
+        refs.view.username.innerText = user;
+        refs.view.descriptionText.innerText = descr;
+
+        refs.inputs.username.value = user;
+        refs.inputs.description.value = descr;
+
+        profileInfoRef.username = user;
+        profileInfoRef.description = descr;
+        profileInfoRef.avatar.src = avatar;
+        profileInfoRef.avatar.alt = user + "'s avatar";
+    };
+    fetchUser();
 
     const editMode = (e, inputName) => {
         refs['buttons'][inputName].classList.add('hidden');
@@ -34,7 +65,7 @@ export default function Profile() {
             input.classList.add('hidden');
 
             // nothing to Change
-            if (input.value == profileInfo[inputName]) {
+            if (input.value == profileInfoRef[inputName]) {
                 return;
             }
 
@@ -89,8 +120,9 @@ export default function Profile() {
                             h-[90px] border-primary border-[1px] rounded-[50%] mb-5 overflow-hidden`}
                     >
                         <img
-                            alt='profile image'
-                            src={avatar}
+                            ref={(el) => {
+                                refs.view.img = el;
+                            }}
                             crossOrigin='anonymous'
                             style={{width: '90px', height: '90px'}}
                             className='absolute top-0 left-0 bottom-0 right-0'
@@ -135,14 +167,14 @@ export default function Profile() {
                             refs.inputs.username = el;
                         }}
                         className='hidden w-[200px]'
-                        defaultValue={whoami}
+                        defaultValue={profileInfoRef.username}
                     />
                     <span
                         ref={(el) => {
                             refs.view.username = el;
                         }}
                     >
-                        {whoami}
+                        {profileInfoRef.username}
                     </span>
                     <button
                         aria-label='edit'
@@ -168,7 +200,13 @@ export default function Profile() {
                         <summary className='cursor-pointer w-max'>
                             Profile description
                         </summary>
-                        <p className='mt-2 text-[#969696]'>{description}</p>
+                        <p
+                            className='mt-2 text-[#969696]'
+                            ref={(el) => {
+                                refs.view.descriptionText = el;
+                            }}
+                        >
+                        </p>
                     </details>
                     <textarea
                         onKeyPress={(e) => {
@@ -181,7 +219,7 @@ export default function Profile() {
                         ref={(el) => {
                             refs.inputs.description = el;
                         }}
-                        defaultValue={description}
+                        // defaultValue={description}
                     ></textarea>
                     <button
                         aria-label='edit'
