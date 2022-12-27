@@ -13,7 +13,7 @@ type notifyFuncT = (msg: notifyMsgObjT) => undefined;
 
 export default function Bell(props: {notify: notifyFuncT}) {
     const [state, setState] = useState({notifications: {show: false}});
-    const unreadNotificationsRef = useRef<HTMLDivElement|null>();
+    const unreadNotificationsRef = useRef<HTMLDivElement | null>();
 
     const notifications = useQuery('notificationsBell', () => getNotifications());
 
@@ -31,7 +31,7 @@ export default function Bell(props: {notify: notifyFuncT}) {
         const eventSource = new EventSource('http://127.0.0.1:2000/listenEvent', {
             withCredentials: true,
         });
-        const messageHandler = (e:MessageEvent) => {
+        const messageHandler = (e: MessageEvent) => {
             console.log('sse data: ', e.data);
             // todo:
             notifications.refetch();
@@ -49,8 +49,9 @@ export default function Bell(props: {notify: notifyFuncT}) {
         };
     }, []);
 
-    const toggleNotification = async () => {
+    const toggleNotification = async (e: MouseEvent) => {
         // todo: fix the bug
+        e.stopPropagation();
 
         unreadNotificationsRef.current?.classList.add('before:hidden');
 
