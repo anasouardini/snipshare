@@ -96,7 +96,7 @@ export default function Snippets() {
                 categories: string | undefined,
                 language: string | undefined
             ) => {
-                // console.log('filtering...', {title, categories, language});
+                console.log('filtering...', {title, categories, language});
                 setSnippetFilterState({title, categories, language});
 
                 return undefined;

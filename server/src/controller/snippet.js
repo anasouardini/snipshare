@@ -172,9 +172,9 @@ const readMiddleware = async (req, res) => {
                 return undefined;
             }
             const categories = req.query?.categories?.trim();
-            if (categories[categories.length - 1] == ',') {
-                return categories.slice(0, categories.length - 1);
-            }
+            return categories;
+            // if (categories[categories.length - 1] == ',') {
+            //       }
         })(),
     };
     // console.log(filters);

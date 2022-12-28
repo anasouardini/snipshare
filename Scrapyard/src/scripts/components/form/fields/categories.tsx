@@ -21,6 +21,8 @@ const Categories = (
     }
 
     const handleMultiSelectInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (props?.debounceCB) props.debounceCB();
+
         if (categoriesStatus != 'success') {
             return;
         }
@@ -86,7 +88,6 @@ const Categories = (
             return acc;
         }, []);
 
-        if (props?.debounceCB) props.debounceCB();
 
         // console.log(cleanOptionsList);
         setDataListOptionsState(cleanOptionsList);
