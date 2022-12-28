@@ -15,8 +15,8 @@ const getAllSnippets = ({title, language, categories}) => {
         variables.push(`%${title}%`);
     }
     if (language) {
-        query += ` AND s.language=?`;
-        variables.push(language);
+        query += ` AND s.language like ?`;
+        variables.push(`%${language}%`);
     }
     if (categories) {
         query += ` AND s.categories LIKE ?`;
