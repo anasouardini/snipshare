@@ -17,24 +17,24 @@ The back-end is separate from the front-end so it can be used with any client li
 
 ### Common
 1. Vite (build tool)
-1. NeoVim (code editor/IDE)
-1. Learned how to save a bit of performance using techniques like `debouncing` and `memoization`, and started using `Git` and `Github` in a better way.
-1. Learned how to implement notification system from scratch.
+3. NeoVim (code editor/IDE)
+4. Learned how to save a bit of performance using techniques like `debouncing` and `memoization`, and started using `Git` and `Github` in a better way.
+5. Learned how to implement notification system from scratch.
 
 ### Front-End
 
 1. react-query
-1. React-Router
-1. react-icons
-1. Tailwind
-1. Monaco Editor (code editor library)
+3. React-Router
+4. react-icons
+5. Tailwind
+6. Monaco Editor (code editor library)
 
 ### Back-End
 
 1. Express.js
-1. Passportjs (turns out it only makes things harder)
-1. JWT manually
-1. google OAuth2.0 manually
-1. notification system with SSE
-1. ZOD (input validation)
-1. Mysql2 (mysql client, prisma is too much for medium projects)
+3. Passportjs (turns out it only makes things harder)
+4. JWT manually
+5. google OAuth2.0 manually
+6. notification system with SSE
+7. ZOD (input validation)
+8. Mysql2 (mysql client, prisma is too much for medium projects)
