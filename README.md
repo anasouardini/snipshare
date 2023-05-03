@@ -28,18 +28,22 @@ client like an IDE as an example.
 
 ### Front-End
 
-1. react-query
+1. Eeact-query
 3. React-Router
-4. react-icons
-5. Tailwind
-6. Monaco Editor (code editor library)
+4. Eeact-icons
+5. React-auto-animate
+6. Tailwind
+7. Monaco Editor (code editor library)
 
 ### Back-End
 
 1. Express.js
-3. Passportjs (turns out it only makes things harder)
-4. JWT manually
-5. google OAuth2.0 manually
-6. notification system with SSE
-7. ZOD (input validation)
-8. Mysql2 (mysql client, prisma is too much for medium projects)
+2. Axios
+3. Bcrypt (for storing encrypted passwords)
+4. Multer (for file upload)
+5. Passportjs (turns out it only makes things harder)
+6. JWT manually
+7. google OAuth2.0 manually
+8. Notification system with SSE
+9. ZOD (input validation)
+10. Mysql2 (mysql client, prisma is too much for medium projects)
