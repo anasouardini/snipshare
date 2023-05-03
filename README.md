@@ -30,7 +30,7 @@ The back-end is separate from the front-end so it can be used with any client li
 - google OAuth2.0 manually
 - notification system with SSE
 - ZOD (input validation)
-- Mysql2 (mysql client)
+- Mysql2 (mysql client, prisma is too much for medium projects)
 
 ### Other Tools
 
