@@ -1,4 +1,4 @@
-# SnipShare - code snippets sharing project
+# SnipShare - code snippets sharing app
 
 ## The General Idea
 
