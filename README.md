@@ -2,7 +2,9 @@
 
 ## The General Idea
 
-I started this project just to learn `OAuth2.0`, and I ended up learning more than that, because the idea have changed in the process of making it and then I liked it and wanted to spend more time building it.
+I started this project just to learn `OAuth2.0`, and I ended up learning
+more than that, because the idea have changed in the process of making
+it and then I liked it and wanted to spend more time building it.
 
 ## Features
 
@@ -11,15 +13,18 @@ I started this project just to learn `OAuth2.0`, and I ended up learning more th
 - Other users may search for a snippet by name or category. 
 - Other users can be allowed to have access to your account or a specific snippet
 
-The back-end is separate from the front-end so it can be used with any client like an IDE as an example.
+The back-end is separate from the front-end so it can be used with any
+client like an IDE as an example.
 
 ## Tools Used/Learned In This Project
 
 ### Common
 1. Vite (build tool)
 3. NeoVim (code editor/IDE)
-4. Learned how to save a bit of performance using techniques like `debouncing` and `memoization`, and started using `Git` and `Github` in a better way.
-5. Learned how to implement notification system from scratch.
+4. Learned how to save a bit of performance using techniques
+  like `debouncing` and `memoization`, and started using
+  `Git` and `Github` in a better way.
+6. Learned how to implement notification system from scratch.
 
 ### Front-End
 
