@@ -15,6 +15,12 @@ The back-end is separate from the front-end so it can be used with any client li
 
 ## Tools Used/Learned In This Project
 
+### Common
+- Vite (build tool)
+- NeoVim (code editor/IDE)
+
+I also learned how to save a bit of performance using techniques like `debouncing` and `memoization`, and started using `Git` and `Github` in a better way.
+
 ### Front-End
 
 - react-query
@@ -25,16 +31,10 @@ The back-end is separate from the front-end so it can be used with any client li
 
 ### Back-End
 
+- Express.js
 - Passportjs (turns out it only makes things harder)
 - JWT manually
 - google OAuth2.0 manually
 - notification system with SSE
 - ZOD (input validation)
 - Mysql2 (mysql client, prisma is too much for medium projects)
-
-### Other Tools
-
-- Vite (build tool)
-- NeoVim (code editor/IDE)
-
-I also learned how to save a bit of performance using techniques like `debouncing` and `memoization`, and started using `Git` and `Github` in a better way.
