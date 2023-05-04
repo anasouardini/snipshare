@@ -6,15 +6,14 @@ I started this project just to learn `OAuth2.0`, and I ended up learning
 more than that, because the idea have changed in the process of making
 it and then I liked it and wanted to spend more time building it.
 
+https://user-images.githubusercontent.com/114059811/236328949-a0542a2d-51e8-46c7-904f-cad3a6b3adeb.mp4
+
 ## Features
 
 - Users can create a snippet that is used often
 - The snippet can be categorized by language and purpose
-- Other users may search for a snippet by name or category. 
+- Other users may search for a snippet by name, language or category. 
 - Other users can be allowed to have access to your account or a specific snippet
-
-The back-end is separate from the front-end so it can be used with any
-client like an IDE as an example.
 
 ## Tools Used/Learned In This Project
 
