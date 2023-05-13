@@ -27,9 +27,9 @@ https://user-images.githubusercontent.com/114059811/236328949-a0542a2d-51e8-46c7
 
 ### Front-End
 
-1. Eeact-query
+1. React-query
 3. React-Router
-4. Eeact-icons
+4. React-icons
 5. React-auto-animate
 6. Tailwind
 7. Monaco Editor (code editor library)
