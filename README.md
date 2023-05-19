@@ -1,4 +1,4 @@
-# SnipShare - code snippets sharing app
+# SnipShare - code snippets sharing app | <a href="https://snipshare.anasouardini.online" target="_blank">Check It Live</a>
 
 ## The General Idea
 
