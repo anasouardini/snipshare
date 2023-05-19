@@ -20,7 +20,7 @@ const upload = multer({storage});
 const gotoLogin = (req, res, next) => {
     // console.log(req.user);
     // if not logged in
-    if (!req?.user) {
+    if (!req?.user && req.path !== '/restart') {
         return res.json({redirect: '/login'});
     }
 

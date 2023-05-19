@@ -382,22 +382,22 @@ const restart = async () => {
      *   4 snippets for each owner(and author in this case)
      *   there for the Array(8)*/
     response = await poolPromise(queries.insertSnippets, [
-        ...[
-            usersIds[0],
-            usersIds[1],
+        // ...[
+        //     usersIds[0],
+        //     usersIds[1],
 
-            usersIds[0],
-            usersIds[2],
+        //     usersIds[0],
+        //     usersIds[2],
 
-            usersIds[0],
-            usersIds[0],
+        //     usersIds[0],
+        //     usersIds[0],
 
-            usersIds[0],
-            usersIds[3],
-        ],
-        // ...Array(8)
-        //     .fill('')
-        //     .map(() => usersIds[0]),
+        //     usersIds[0],
+        //     usersIds[3],
+        // ],
+        ...Array(8)
+            .fill('')
+            .map(() => usersIds[0]),
         ...Array(8)
             .fill('')
             .map(() => usersIds[1]),

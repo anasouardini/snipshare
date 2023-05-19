@@ -15,6 +15,6 @@ setInterval(() => {
             delete queue[user];
         }
     });
-}, 5000);
+}, 1000);
 
 module.exports = {queue, queueAdd, streams};
