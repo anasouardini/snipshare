@@ -48,6 +48,10 @@ const signinUser = async (req, res, next) => {
         return res.sendStatus(500);
     }
 
+    if (!userResponse[0]) {
+        return res.sendStatus(500);
+    }
+
     if (userResponse[0].length) {
         // console.log(userResponse[0]);
         if (await bcrypt.compare(req.body.passwd, userResponse[0][0].passwd)) {
