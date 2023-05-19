@@ -262,6 +262,7 @@ export default function SharedLayout() {
                                                 text-gray-200 p-2 px-3`}
                                     onClick={async () => {
                                         const response = await create('restart');
+                                        console.log(response)
                                         // setForceRenderState((st) => !st);
                                         notify({type: 'info', msg: response.msg});
                                     }}
