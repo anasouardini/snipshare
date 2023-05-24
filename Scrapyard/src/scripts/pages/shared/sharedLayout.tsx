@@ -132,6 +132,7 @@ export default function SharedLayout() {
     };
 
     return (
+        <>
         <header>
             <div onClick={hideMenu} ref={menuOverlayRef} className={`sm>:block`}>
                 <button
@@ -350,30 +351,39 @@ export default function SharedLayout() {
                     </ul>
                 </nav>
             </div>
-            {/* {props.children} */}
-            {whoami &&
-            (whoami?.status == 200 ||
-                location.pathname.includes('login') ||
-                location.pathname.includes('signup')) ? (
-                <main>
-                    <Outlet
-                        context={{
-                            whoami: whoami.msg?.username,
-                            notify,
-                            avatar: whoami.msg?.avatar,
-                            description: whoami.msg?.description,
-                            reload,
-                        }}
-                    />
-                </main>
-            ) : (
-                <></>
-            )}
+            </header>
+        {/* {props.children} */}
+        {whoami &&
+        (whoami?.status == 200 ||
+            location.pathname.includes('login') ||
+            location.pathname.includes('signup')) ? (
+            <main>
+                <Outlet
+                    context={{
+                        whoami: whoami.msg?.username,
+                        notify,
+                        avatar: whoami.msg?.avatar,
+                        description: whoami.msg?.description,
+                        reload,
+                    }}
+                />
+            </main>
+        ) : (
+            <></>
+        )}
 
-            {/* notifications */}
-            <div className='fixed top-[50px] right-[50%] translate-x-[50%] flex-row'>
-                {listNotifications(notifyState)}
-            </div>
-        </header>
+        {/* notifications */}
+        <div className='fixed top-[50px] right-[50%] translate-x-[50%] flex-row'>
+            {listNotifications(notifyState)}
+        </div>
+        {/* <footer className={`w-full flex flex-wrap gap-3 justify-center items-center
+                            py-1 font-bold`}>
+            Made by
+                <a href="https://anasouardini.online">Anas Ouardini</a>
+            | <a href="https://github.com/segfaulty1">Github</a>
+            | <a href="https://twitter.com/segfaulty1">Twitter</a>
+            | <a href="https://yesfordev.com">Blog</a>
+        </footer> */}
+    </>
     );
 }
