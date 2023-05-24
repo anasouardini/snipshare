@@ -58,6 +58,6 @@ app.use((err, erq, res) => {
 });
 
 // fire up
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`listening on port: ${PORT} from index.js`);
 });
