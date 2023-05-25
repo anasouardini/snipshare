@@ -122,7 +122,7 @@ export default function SharedLayout() {
         if (response && response.status == 200) {
             // console.log('redirect to home');
             // react-router redirection was not cutting it in this case
-            return document.location.replace('http://127.0.0.1:3000/');
+            return document.location.reload();
             // return navigate('/');
         }
 
