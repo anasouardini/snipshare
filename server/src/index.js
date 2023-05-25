@@ -9,7 +9,7 @@ const helmet = require('helmet');
 const app = express();
 
 require('dotenv').config();
-const PORT = process.env.PORT || 2000;
+const PORT = process.env.PORT || 2001;
 
 // midleware
 app.use(helmet());
