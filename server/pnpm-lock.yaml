@@ -25,6 +25,9 @@ dependencies:
   helmet:
     specifier: ^6.0.0
     version: 6.0.0
+  https:
+    specifier: ^1.0.0
+    version: 1.0.0
   jsonwebtoken:
     specifier: ^8.5.1
     version: 8.5.1
@@ -1096,6 +1099,10 @@ packages:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /https@1.0.0:
+    resolution: {integrity: sha512-4EC57ddXrkaF0x83Oj8sM6SLQHAWXw90Skqu2M4AEWENZ3F02dFJE/GARA8igO79tcgYqGrD7ae4f5L3um2lgg==}
     dev: false
 
   /iconv-lite@0.4.24:

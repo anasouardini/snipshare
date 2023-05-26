@@ -1,4 +1,5 @@
 const express = require('express');
+const https = require('https');
 const router = require('./routes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -58,6 +59,15 @@ app.use((err, erq, res) => {
 });
 
 // fire up
-app.listen(PORT, "0.0.0.0", () => {
-    console.log(`listening on port: ${PORT} from index.js`);
-});
+if(process.env.PRODUCTION){
+  https.createServer(
+    {cert:process.env.SSL_CERT, key:process.env.SSL_KEY},
+    app).listen(PORT, "0.0.0.0", () => {
+      console.log(`listening on port: ${PORT} from index.js`);
+    }
+  );
+}else{
+  app.listen(PORT, "0.0.0.0", () => {
+      console.log(`listening on port: ${PORT} from index.js`);
+  });
+}
