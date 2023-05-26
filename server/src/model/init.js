@@ -1,5 +1,7 @@
 const poolPromise = require('./db');
 const {v4: uuid} = require('uuid');
+require('dotenv').config();
+const vars = require('../vars.js');
 
 const queries = {
     cleardb: `DROP TABLE IF EXISTS mods, users, snippets, categories,
@@ -81,7 +83,7 @@ const queries = {
             '${uuid()}',
             'moderator',
             '$2a$10$L612B2ckWsoZgWRPaYi6JuOgVCC8w6EvGJSL67Qw99yLCDKfIPbW2',
-            'http://127.0.0.1:2000/media/avatars/moderator.jpeg'
+            `${vars.serverAddress}:2000/media/avatars/moderator.jpeg`
         );`,
 
     insertUsers: `
@@ -344,7 +346,7 @@ const restart = async () => {
 
     // order matters
     const usersIds = [uuid(), uuid(), uuid(), uuid()];
-    const avatarsPath = 'http://127.0.0.1:2000/media/avatars/';
+    const avatarsPath = `${vars.serverAddress}:2000/media/avatars/`;
     response = await poolPromise(queries.insertUsers, [
         usersIds[0],
         `${avatarsPath}venego.jpeg`,

@@ -4,20 +4,33 @@ const router = require('./routes');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const fs = require('fs/promises');
+const fsSync = require('fs');
 const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 
+const url = require('url');
+const vars = require('./vars.js');
+
 const app = express();
+
+app.use((req, next)=>{
+  if(vars.serverAddress){next();}
+  const fullAddress = url.format({
+    protocol: req.protocol,
+    host: req.headers.host
+  });
+  console.log(fullAddress);
+  vars.serverAddress = fullAddress;
+});
 
 require('dotenv').config();
 const PORT = process.env.PORT || 2001;
 
 // midleware
 app.use(helmet());
-// app.use(helmet.contentSecurityPolicy({'img-src': '127.0.0.1:2000/media/avatars'}));
 app.use(
     cors({
-        origin: ['http://127.0.0.1:3000'],
+        origin: [vars.serverAddress],
         credentials: true,
     })
 );

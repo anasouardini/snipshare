@@ -4,6 +4,8 @@ const fs = require('fs/promises');
 const bcrypt = require('bcrypt');
 const {v4: uuid} = require('uuid');
 
+const vars = require('./../vars.js');
+
 const axios = require('axios');
 
 require('dotenv').config();
@@ -85,7 +87,7 @@ const signinOAuth = async (req, res) => {
             .catch((error) => ({error: error.response.data.error}));
 
         if (response?.error) {
-            return res.redirect(`http://127.0.0.1:3000/login?error=oauth2 error`);
+            return res.redirect(`${vars.clientAddress}/login?error=oauth2 error`);
         }
 
         // this step is not needed
@@ -131,7 +133,7 @@ const signinOAuth = async (req, res) => {
 
         res.cookie(process.env.COOKIENAME, token, {httpOnly: true});
 
-        return res.redirect(`http://127.0.0.1:3000/login`);
+        return res.redirect(`${vars.clientAddress}/login`);
     }
 
     // NO ID TOKEN, REDIRECTING TO THE CONSENT SCREEN

@@ -1,5 +1,6 @@
 const User = require('../model/user');
 require('dotenv').config();
+cosnt vars = require('./../vars.js');
 
 const readAll = async (req, res) => {
     const response = await User.readAll();
@@ -32,7 +33,7 @@ const editUser = async (req, res) => {
         }
     } else if (req.file) {
         // todo: save avatar file with the user's username, and set url in a variable
-        const newAvatarUrl = 'http://127.0.0.1:2000/media/avatars/' + req.file.filename;
+        const newAvatarUrl = `${vars.serverAddress}/media/avatars/` + req.file.filename;
         userNewInfo.newAvatar = newAvatarUrl;
     }
 
