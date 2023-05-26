@@ -30,7 +30,7 @@ const PORT = process.env.PORT || 2001;
 app.use(helmet());
 app.use(
     cors({
-        origin: [vars.serverAddress],
+        origin: [vars.clientAddress],
         credentials: true,
     })
 );
