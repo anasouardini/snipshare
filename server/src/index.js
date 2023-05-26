@@ -13,7 +13,7 @@ const vars = require('./vars.js');
 
 const app = express();
 
-app.use((req, next)=>{
+app.use((req, res, next)=>{
   if(vars.serverAddress){next();}
   const fullAddress = url.format({
     protocol: req.protocol,
