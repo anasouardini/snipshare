@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const {v4: uuid} = require('uuid');
 
 const axios = require('axios');
-const qs = require('qs');
 
 require('dotenv').config();
 
