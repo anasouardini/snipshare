@@ -1,3 +1,4 @@
+import vars from '../../vars.ts';
 import React, {useRef} from 'react';
 import {Outlet, useLocation, useNavigate} from 'react-router-dom';
 import {create, read} from '../../tools/bridge';
@@ -302,7 +303,7 @@ export default function SharedLayout() {
                                         notify({type: 'info', msg: response.msg});
 
                                         document.location.replace(
-                                            'http://127.0.0.1:3000/login'
+                                            `${vars.serverAddress}:3000/login`
                                         );
                                         // return navigate('/login', {replace: true});
                                     }}

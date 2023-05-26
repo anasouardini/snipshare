@@ -1,3 +1,4 @@
+import vars from '../vars.ts';
 import React, {useState, useEffect, useRef} from 'react';
 import {useQuery} from 'react-query';
 import {FaBell} from 'react-icons/fa';
@@ -28,7 +29,7 @@ export default function Bell(props: {notify: notifyFuncT}) {
             }
         })();
 
-        const eventSource = new EventSource('http://127.0.0.1:2000/listenEvent', {
+        const eventSource = new EventSource(`${vars.serverAddress}:2000/listenEvent`, {
             withCredentials: true,
         });
         const messageHandler = (e: MessageEvent) => {

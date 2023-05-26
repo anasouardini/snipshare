@@ -1,3 +1,4 @@
+import vars from '../../vars.ts';
 import React from 'react';
 import {useNavigate} from 'react-router';
 import {read} from '../../tools/bridge';
@@ -25,7 +26,7 @@ export default function OauthButton() {
     const handleOAuth = (e:MouseEvent) => {
         e.preventDefault();
 
-        window.open('http://127.0.0.1:2000/auth/google', '_self');
+        window.open(`${vars.serverAddress}:2000/auth/google`, '_self');
     };
 
     return (

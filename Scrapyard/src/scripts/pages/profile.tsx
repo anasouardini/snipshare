@@ -79,7 +79,7 @@ export default function Profile() {
             // to prevent any errors related to validating the user.
             // I probably should put the user's id in the JWT tokent in stead of the username
             if (inputName == 'username') {
-                document.location.replace('http://127.0.0.1:3000/login');
+                document.location.replace(`${document.location}:3000/login`);
             }
             // console.log(res);
         }

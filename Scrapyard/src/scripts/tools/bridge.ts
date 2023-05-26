@@ -1,5 +1,6 @@
+import vars from '../vars.ts';
 const server = {
-    url: 'http://127.0.0.1:2000/',
+    url: `${vars.serverAddress}:2000/`,
 
     options: (method:string, body?:BodyInit) => {
         // console.log(body);
