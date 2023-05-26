@@ -83,7 +83,7 @@ const queries = {
             '${uuid()}',
             'moderator',
             '$2a$10$L612B2ckWsoZgWRPaYi6JuOgVCC8w6EvGJSL67Qw99yLCDKfIPbW2',
-            `${vars.serverAddress}:2000/media/avatars/moderator.jpeg`
+            '${vars.serverAddress}:2000/media/avatars/moderator.jpeg'
         );`,
 
     insertUsers: `

@@ -1,6 +1,6 @@
 const User = require('../model/user');
 require('dotenv').config();
-cosnt vars = require('./../vars.js');
+const vars = require('./../vars.js');
 
 const readAll = async (req, res) => {
     const response = await User.readAll();
