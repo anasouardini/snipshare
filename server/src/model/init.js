@@ -83,7 +83,7 @@ const queries = {
             '${uuid()}',
             'moderator',
             '$2a$10$L612B2ckWsoZgWRPaYi6JuOgVCC8w6EvGJSL67Qw99yLCDKfIPbW2',
-            '${vars.serverAddress}:2000/media/avatars/moderator.jpeg'
+            '${vars.serverAddress}/media/avatars/moderator.jpeg'
         );`,
 
     insertUsers: `
@@ -346,7 +346,7 @@ const restart = async () => {
 
     // order matters
     const usersIds = [uuid(), uuid(), uuid(), uuid()];
-    const avatarsPath = `${vars.serverAddress}:2000/media/avatars/`;
+    const avatarsPath = `${vars.serverAddress}/media/avatars/`;
     response = await poolPromise(queries.insertUsers, [
         usersIds[0],
         `${avatarsPath}venego.jpeg`,

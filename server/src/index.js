@@ -19,7 +19,7 @@ app.use((req, res, next)=>{
     protocol: req.protocol,
     host: req.headers.host
   });
-  console.log(fullAddress);
+  // console.log(fullAddress);
   vars.serverAddress = fullAddress;
 });
 
