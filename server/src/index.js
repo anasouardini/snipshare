@@ -74,7 +74,7 @@ app.use((err, erq, res) => {
 // fire up
 if(process.env.PRODUCTION){
   https.createServer(
-    {cert:process.env.SSL_CERT, key:process.env.SSL_KEY},
+    {cert: fsSync.readFileSync(process.env.SSL_CERT), key:fsSync.readFileSync(process.env.SSL_KEY)},
     app).listen(PORT, "0.0.0.0", () => {
       console.log(`listening on port: ${PORT} from index.js`);
     }
