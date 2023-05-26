@@ -303,7 +303,7 @@ export default function SharedLayout() {
                                         notify({type: 'info', msg: response.msg});
 
                                         document.location.replace(
-                                            `${vars.serverAddress}:3000/login`
+                                            `${document.location}:3000/login`
                                         );
                                         // return navigate('/login', {replace: true});
                                     }}

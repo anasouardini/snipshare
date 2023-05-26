@@ -29,7 +29,7 @@ export default function Bell(props: {notify: notifyFuncT}) {
             }
         })();
 
-        const eventSource = new EventSource(`${vars.serverAddress}:2000/listenEvent`, {
+        const eventSource = new EventSource(`${vars.serverAddress}/listenEvent`, {
             withCredentials: true,
         });
         const messageHandler = (e: MessageEvent) => {
