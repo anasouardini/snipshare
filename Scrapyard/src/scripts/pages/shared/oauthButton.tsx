@@ -26,7 +26,7 @@ export default function OauthButton() {
     const handleOAuth = (e:MouseEvent) => {
         e.preventDefault();
 
-        window.open(`${vars.serverAddress}:2000/auth/google`, '_self');
+        window.open(`${vars.serverAddress}/auth/google`, '_self');
     };
 
     return (
