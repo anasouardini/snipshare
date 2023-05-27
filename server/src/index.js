@@ -13,16 +13,6 @@ const vars = require('./vars.js');
 
 const app = express();
 
-app.use((req, res, next)=>{
-  if(vars.serverAddress){next();}
-  const fullAddress = url.format({
-    protocol: req.protocol,
-    host: req.headers.host
-  });
-  // console.log(fullAddress);
-  vars.serverAddress = fullAddress;
-});
-
 require('dotenv').config();
 const PORT = process.env.PORT || 2001;
 
@@ -34,6 +24,20 @@ app.use(
         credentials: true,
     })
 );
+
+app.use((req, res, next)=>{
+  if(vars.serverAddress && vars.clientAddress){next();}
+  const fullAddress = url.format({
+    protocol: req.protocol,
+    host: req.headers.host
+  });
+  // console.log(fullAddress);
+  vars.serverAddress = fullAddress;
+
+  if(req.headers.host.includes('localhost:') || req.headers.host.includes('127.0.0.1:')){
+    vars.clientAddress = `${req.headers.host.split(':')[0]}:3000`;
+  }
+});
 
 app.use(cookieParser());
 app.use(express.json());

@@ -333,7 +333,7 @@ const queries = {
 };
 
 const restart = async () => {
-    // console.log('l334 init.js: ');
+    console.log('l336 init.js: ');
     let response = await poolPromise(queries.cleardb);
     response = await poolPromise(queries.createMods);
     if (!response) return false;
