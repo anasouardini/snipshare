@@ -76,7 +76,7 @@ const signinOAuth = async (req, res) => {
             code: req.query.code,
             client_id: process.env.AUTH_GOOGLE_ID,
             client_secret: process.env.AUTH_GOOGLE_SECRET,
-            redirect_uri: process.env.AUTH_GOOGLE_REDIRECT_URI,
+            redirect_uri: `${req.protocol}${req.headers.host}/oauth/google`,
             grant_type: 'authorization_code',
         };
         const response = await axios
@@ -140,7 +140,7 @@ const signinOAuth = async (req, res) => {
     const consentData = {
         client_id: process.env.AUTH_GOOGLE_ID,
         response_type: 'code',
-        redirect_uri: process.env.AUTH_GOOGLE_REDIRECT_URI,
+        rect_uri: `${req.protocol}${req.headers.host}/oauth/google`,
         scope: 'email profile',
         nonce: '161581761691-3tjdu1rca5q35h60qcgrd7eb0tb2ulmpakonamatata',
     };
