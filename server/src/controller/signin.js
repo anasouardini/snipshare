@@ -140,7 +140,7 @@ const signinOAuth = async (req, res) => {
     const consentData = {
         client_id: process.env.AUTH_GOOGLE_ID,
         response_type: 'code',
-        rect_uri: `${req.protocol}${req.headers.host}/oauth/google`,
+        redirect_uri: `${req.protocol}${req.headers.host}/oauth/google`,
         scope: 'email profile',
         nonce: '161581761691-3tjdu1rca5q35h60qcgrd7eb0tb2ulmpakonamatata',
     };
