@@ -11,7 +11,7 @@ const queries = {
         id varchar(100) PRIMARY KEY,
         user varchar(100) UNIQUE NOT NULL,
         passwd varchar(100) NOT NULL,
-        avatar varchar(100),
+        avatar varchar(200),
         descr varchar(1000),
         createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
@@ -92,10 +92,10 @@ const queries = {
         VALUES   
             (
                 ?,
-                'venego',
+                'mod',
                 '$2b$10$ZwjIliPoQ5Exets.CIQbs.MV0ap50GN9vUmTojQuwKJT5oPpkIDVi',
                 ?,
-                'my name is venego and this profile a collection of art. my snippets are so valuable you should create a script to add them to your IDE each time you install it on a new setup.'
+                'my name is mod and this profile a collection of art. my snippets are so valuable you should create a script to add them to your IDE each time you install it on a new setup.'
 
             ),
             (
@@ -349,7 +349,7 @@ const restart = async () => {
     const avatarsPath = `${vars.serverAddress}/media/avatars/`;
     response = await poolPromise(queries.insertUsers, [
         usersIds[0],
-        `${avatarsPath}venego.jpeg`,
+        `${avatarsPath}mod.jpeg`,
         usersIds[1],
         `${avatarsPath}3disa.jpeg`,
         usersIds[2],
