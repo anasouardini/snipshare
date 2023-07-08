@@ -102,7 +102,7 @@ const Form = (props: formPropsT) => {
             el?.classList.remove('border-2');
             el?.classList.remove('border-green-400');
 
-            const invalidInputStyle = `border-2 border-red-400 before:block`;
+            const invalidInputStyle = `border-2 border-red-400`;
             invalidInputStyle.split(' ').forEach((styleClass) => {
                 el?.classList.add(styleClass);
             });
@@ -159,14 +159,36 @@ const Form = (props: formPropsT) => {
             addInvalidStyle(elementParent, 'the input is out of range (0-1000)');
             return false;
         };
+        const validateCategories = () => {
+            const categoriesInput = refs.categories.current;
+            const parent = categoriesInput.parentNode;
+            removeInvalidStyle(parent);
+            if(!categoriesInput.value){
+                console.log('value id empty');
+                addInvalidStyle(parent, 'make sure you chose categories (space separated)');
+                return false
+            }
+            return true;
+        };
+        const validateLanguage = () => {
+            const languageInput = refs.language.current;
+            const parent = languageInput.parentNode;
+            removeInvalidStyle(parent);
+            if(!languageInput.value){
+                addInvalidStyle(parent, 'make sure you chose a language');
+                return false
+            }
+            return true;
+        };
         // listeners
         refs.title.current?.addEventListener('blur', validateTitle);
         refs.descr.current?.addEventListener('blur', validateDescription);
+        refs.categories.current?.addEventListener('blur', validateCategories);
+        refs.language.current?.addEventListener('blur', validateLanguage);
+
+        // checks after submit button is clicked
         refs.formButton.current?.addEventListener('click', () => {
-            const validTitle = validateTitle();
-            const validDescription = validateDescription();
-            const validSnippet = validateSnippet();
-            if (validTitle && validDescription && validSnippet) {
+            if (validateTitle() && validateDescription() && validateSnippet() && validateCategories()&& validateLanguage()) {
                 refs.error.current = false; // this ref is checked before submission
             }
         });

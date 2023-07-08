@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {create} from '../tools/bridge';
 // import {useNavigate} from 'react-router';
 import OauthButton from './shared/oauthButton';
+import notify from '../components/notify';
 
 export default function SignUp() {
     const navigate = useNavigate();
@@ -27,8 +28,8 @@ export default function SignUp() {
             return;
         }
 
-        // console.log('not success :)');
-        // console.log(response);
+        notify({type: 'error', msg: response.msg});
+
         // console.log(create);
     };
 

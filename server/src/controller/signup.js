@@ -10,6 +10,7 @@ const signup = async (req, res) => {
 
     // chekc if the username exists in the mods table
     const modResponse = await User.getMod(req.body.usr);
+    // console.log(modResponse)
 
     if (!modResponse) {
         return res.sedStatus(500);
@@ -31,9 +32,8 @@ const signup = async (req, res) => {
     }
 
     const hash = await bcrypt.hash(req.body.passwd, 10);
-    // console.log('hash', hash);
     const createUserResponse = await User.createUser({id: uuid(), usr: req.body.usr, pass: hash});
-    // console.log(createUserResponse[0].affectedRows);
+
     if (!createUserResponse[0]?.affectedRows) {
         return res.status(500).json({msg: 'something went bad while signing up'});
     }

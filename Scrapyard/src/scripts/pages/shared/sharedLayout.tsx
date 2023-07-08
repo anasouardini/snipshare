@@ -209,13 +209,13 @@ export default function SharedLayout() {
                                                         hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
                                             onClick={() => {
                                                 loginAs({
-                                                    usr: 'venego',
-                                                    passwd: 'venego',
+                                                    usr: 'admin',
+                                                    passwd: 'admin',
                                                     keepSignIn: false,
                                                 });
                                             }}
                                         >
-                                            venego
+                                            admin
                                         </li>
                                         <li
                                             className={`cursor-pointer pb-2 bg-[#222222]

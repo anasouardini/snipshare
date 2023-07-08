@@ -114,7 +114,7 @@ const signinOAuth = async (req, res) => {
             // creating the user
             const createUserResponse = await User.createUser({
                 id: email,
-                user: uniqueUsername,
+                usr: uniqueUsername,
                 pass: uuid(),
             });
 

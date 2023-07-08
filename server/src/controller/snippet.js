@@ -359,6 +359,7 @@ const readAll = async (req, res) => {
 const create = async (req, res) => {
     const owner = req.params.user;
     const coworker = req.user.username;
+    console.log(req.body);
 
     // input validation
     const schema = Z.object({
@@ -366,9 +367,11 @@ const create = async (req, res) => {
         descr: Z.string(),
         snippet: Z.string(),
         isPrivate: Z.boolean(),
+        language: Z.string(),
+        categories: Z.string(),
     });
     if (schema.safeParse(req.body.props).error) {
-        return res.status(400).json({msg: 'request format is not valid'});
+        return res.status(400).json({msg: 'You might be missing some fields, or have entered an invalid data type.'});
     }
 
     let rulesResponse = undefined;
@@ -390,7 +393,6 @@ const create = async (req, res) => {
 
     if (authorized) {
         const snippetRandomID = uuid();
-        // console.log('uuid', snippetRandomID);
         const response = await Snippet.createSnippet({
             id: snippetRandomID,
             owner: owner,
@@ -426,8 +428,8 @@ const create = async (req, res) => {
         });
     }
 
-    // this should never run
-    res.status(401).json({msg: 'guess what? you can not create a snippets on others accounts'});
+    // this should never run, unless you hack around in the front-end
+    res.status(401).json({msg: 'guess what? you can not create a snippet on others accounts'});
 };
 
 module.exports = {readMiddleware, readAll, readUserAll, read, create, edit, remove};

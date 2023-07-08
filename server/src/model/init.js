@@ -92,8 +92,8 @@ const queries = {
         VALUES   
             (
                 ?,
-                'mod',
-                '$2b$10$ZwjIliPoQ5Exets.CIQbs.MV0ap50GN9vUmTojQuwKJT5oPpkIDVi',
+                'admin',
+                '$2a$10$bvozraFttEPvyZHlF.UXieE4RozU8vHhTujRxvSjzp.7HHHNGElDW',
                 ?,
                 'my name is mod and this profile a collection of art. my snippets are so valuable you should create a script to add them to your IDE each time you install it on a new setup.'
 
