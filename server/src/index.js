@@ -34,7 +34,7 @@ app.use((req, res, next)=>{
   // console.log(fullAddress);
   vars.serverAddress = fullAddress;
 
-  if(req.headers.host.includes('localhost:') || req.headers.host.includes('127.0.0.1:')){
+  if(req.headers.host?.includes('localhost:') || req.headers.host?.includes('127.0.0.1:')){
     vars.clientAddress = `${req.headers.host.split(':')[0]}:3000`;
   }
 });
