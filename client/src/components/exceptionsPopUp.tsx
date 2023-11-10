@@ -1,6 +1,5 @@
 import React, {forwardRef, useState, useRef, useEffect} from 'react';
 import AccessControl from '../components/accessControl';
-import {deepClone} from '../tools/deepClone';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa';
 import {useOutletContext} from 'react-router';
 import {useQuery} from 'react-query';
@@ -50,9 +49,8 @@ const ExceptionsPopUp = (props, ref) => {
         // console.log('ref ref', ref.current);
 
         forceRerender();
-
         // return () => {
-        //     console.log('ref ref', deepClone(ref.current[props.oldOrNew].old));
+        //     console.log('ref ref', structuredClone(ref.current[props.oldOrNew].old));
         //     console.log();
         // };
     }, []);
@@ -108,15 +106,15 @@ const ExceptionsPopUp = (props, ref) => {
         //! not knowing how this works is dangerous
         if (props.oldOrNew == 'new') {
             //- this works
-            ref.current[props.oldOrNew].old = deepClone(coworkerExceptionsRef.current);
+            ref.current[props.oldOrNew].old = structuredClone(coworkerExceptionsRef.current);
         } else {
-            ref.current[props.oldOrNew].old[props.coworkerUsername] = deepClone(
+            ref.current[props.oldOrNew].old[props.coworkerUsername] = structuredClone(
                 coworkerExceptionsRef.current
             ); //- this works
         }
 
         //- this doesn't
-        // coworkerExceptionsRef.current = deepClone(coworkerExceptionsRef.current);
+        // coworkerExceptionsRef.current = structuredClone(coworkerExceptionsRef.current);
 
         // console.log(coworkerExceptionsRef.current);
         // console.log('handle close', ref.current[props.oldOrNew].old);

@@ -2,7 +2,6 @@ import vars from '../vars.ts';
 import React, {useState, useEffect, useRef} from 'react';
 import {useQuery} from 'react-query';
 import {FaBell} from 'react-icons/fa';
-import {deepClone} from '../tools/deepClone';
 import {
     checkNotifications,
     getNotifications,
@@ -56,7 +55,7 @@ export default function Bell(props: {notify: notifyFuncT}) {
 
         unreadNotificationsRef.current?.classList.add('before:hidden');
 
-        const stateCpy = deepClone(state);
+        const stateCpy = structuredClone(state);
         stateCpy.notifications.show = !stateCpy.notifications.show;
         setState(stateCpy);
 
