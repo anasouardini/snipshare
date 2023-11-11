@@ -3,71 +3,71 @@
 @tailwind utilities;
 
 root {
-    --primary: red;
+  --primary: red;
 }
 body::scrollbar,
 .scrollbar::scrollbar {
-    width: 10px;
-    background-color: rgb(00 130 0);
+  width: 10px;
+  background-color: rgb(00 130 0);
 }
 
 body::-webkit-scrollbar,
 .scrollbar::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 
 body::-webkit-scrollbar-thumb,
 .scrollbar::-webkit-scrollbar-thumb {
-    border-left: 2px solid black;
-    border-radius: 5px;
-    background-color: rgb(00 130 0);
+  border-left: 2px solid black;
+  border-radius: 5px;
+  background-color: rgb(00 130 0);
 }
 
 body {
-    background: #181818;
-    color: whitesmoke;
+  background: #181818;
+  color: whitesmoke;
 }
 
 input,
 textarea {
-    background: transparent;
-    @apply border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-1 bg-[#181818];
+  background: transparent;
+  @apply border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-1 bg-[#181818];
 }
 
 input[type='checkbox'] {
-    @apply accent-primary;
+  @apply accent-primary;
 }
 
 .container {
-    @apply max-w-[85%] mx-auto;
+  @apply max-w-[85%] mx-auto;
 }
 
 .pen {
-    background-image: url('../assets/pen.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
+  background-image: url('../assets/pen.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .active {
-    @apply border-b-[3px] border-b-primary;
+  @apply border-b-[3px] border-b-primary;
 }
 
 .tooltip {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .tooltip .tooltiptext {
-    @apply invisible w-[max-content] bg-[#323232] text-[white] text-sm text-center absolute px-2 py-1 top-6 left-[-60px];
+  @apply invisible w-[max-content] bg-[#323232] text-[white] text-sm text-center absolute px-2 py-1 top-6 left-[-60px];
 }
 
 .tooltip:hover .tooltiptext,
 .tooltip:focus .tooltiptext {
-    visibility: visible;
+  visibility: visible;
 }
 
 .chopLongText {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

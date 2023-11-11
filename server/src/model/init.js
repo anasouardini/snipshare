@@ -1,13 +1,13 @@
 const poolPromise = require('./db');
-const {v4: uuid} = require('uuid');
+const { v4: uuid } = require('uuid');
 require('dotenv').config();
 const vars = require('../vars.js');
 
 const queries = {
-    cleardb: `DROP TABLE IF EXISTS mods, users, snippets, categories,
+  cleardb: `DROP TABLE IF EXISTS mods, users, snippets, categories,
                             languages, coworkersRules, notifications;`,
 
-    createUsers: `CREATE TABLE users (
+  createUsers: `CREATE TABLE users (
         id varchar(100) PRIMARY KEY,
         user varchar(100) UNIQUE NOT NULL,
         passwd varchar(100) NOT NULL,
@@ -16,14 +16,14 @@ const queries = {
         createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
 
-    createMods: `CREATE TABLE mods (
+  createMods: `CREATE TABLE mods (
         id varchar(100) PRIMARY KEY,
         user varchar(100) UNIQUE NOT NULL,
         passwd varchar(100) NOT NULL,
         createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
 
-    createCoworkers: `CREATE TABLE coworkersRules (
+  createCoworkers: `CREATE TABLE coworkersRules (
         user varchar(100) NOT NULL,
         coworker varchar(100) NOT NULL,
         generic json NOT NULL,
@@ -37,7 +37,7 @@ const queries = {
         REFERENCES users(id) ON DELETE CASCADE
     );`,
 
-    createSnippets: `CREATE TABLE snippets (
+  createSnippets: `CREATE TABLE snippets (
         id varchar(100) PRIMARY KEY,
         user varchar(100) NOT NULL,
         title varchar(200) NOT NULL,
@@ -54,17 +54,17 @@ const queries = {
         CONSTRAINT fk_snippets_language FOREIGN KEY(language) REFERENCES languages(name)
     );`,
 
-    createCategories: `CREATE TABLE categories (
+  createCategories: `CREATE TABLE categories (
         name varchar(100) PRIMARY KEY NOT NULL,
         id varchar(100) UNIQUE NOT NULL
     );`,
 
-    createLanguages: `CREATE TABLE languages(
+  createLanguages: `CREATE TABLE languages(
         name varchar(100) PRIMARY KEY NOT NULL,
         id varchar(100) UNIQUE NOT NULL
     );`,
 
-    createNotifications: `CREATE TABLE notifications (
+  createNotifications: `CREATE TABLE notifications (
         id varchar(100) PRIMARY KEY,
         user varchar(100) NOT NULL,
         type varchar(20) NOT NULL,
@@ -75,7 +75,7 @@ const queries = {
         REFERENCES users(id) ON DELETE CASCADE
     );`,
 
-    insertMods: `
+  insertMods: `
     INSERT INTO
         mods (id, user, passwd, avatar)
     VALUES
@@ -86,7 +86,7 @@ const queries = {
             '${vars.serverAddress}/media/avatars/moderator.jpeg'
         );`,
 
-    insertUsers: `
+  insertUsers: `
         INSERT INTO
             users (id, user, passwd, avatar, descr)
         VALUES   
@@ -120,11 +120,11 @@ const queries = {
                 'my name is 3sila and this profile a collection of art. my snippets are so valuable you should create a script to add them to your IDE each time you install it on a new setup.' 
             );`,
 
-    insertNotifications: `INSERT INTO notifications
+  insertNotifications: `INSERT INTO notifications
                       (id, user, type, message, isRead)
                       VALUES (?, ?, 'info', 'this is a default/test notification', 0)`,
 
-    insertLanguages: `insert into
+  insertLanguages: `insert into
         languages(id, name)
         values
           ('${uuid()}', ?),
@@ -132,7 +132,7 @@ const queries = {
           ('${uuid()}', ?),
           ('${uuid()}', ?)
         ;`,
-    insertCategories: `insert into
+  insertCategories: `insert into
         categories(id, name)
         values
           ('${uuid()}', ?),
@@ -141,7 +141,7 @@ const queries = {
           ('${uuid()}', ?)
         ;`,
 
-    insertSnippets: `INSERT INTO
+  insertSnippets: `INSERT INTO
         snippets (
             id,
             user,
@@ -333,98 +333,115 @@ const queries = {
 };
 
 const restart = async () => {
-    console.log('l336 init.js: ');
-    let response = await poolPromise(queries.cleardb);
-    response = await poolPromise(queries.createMods);
-    if (!response) return false;
+  console.log('l336 init.js: ');
+  let response = await poolPromise(queries.cleardb);
+  response = await poolPromise(queries.createMods);
+  if (!response) return false;
 
-    response = await poolPromise(queries.insertMods);
-    if (!response) return false;
+  response = await poolPromise(queries.insertMods);
+  if (!response) return false;
 
-    response = await poolPromise(queries.createUsers);
-    if (!response) return false;
+  response = await poolPromise(queries.createUsers);
+  if (!response) return false;
 
-    // order matters
-    const usersIds = [uuid(), uuid(), uuid(), uuid()];
-    const avatarsPath = `${vars.serverAddress}/media/avatars/`;
-    response = await poolPromise(queries.insertUsers, [
-        usersIds[0],
-        `${avatarsPath}mod.jpeg`,
-        usersIds[1],
-        `${avatarsPath}3disa.jpeg`,
-        usersIds[2],
-        `${avatarsPath}m9ila.jpeg`,
-        usersIds[3],
-        `${avatarsPath}3sila.jpeg`,
-    ]);
-    console.log(response);
-    if (!response) return false;
+  // order matters
+  const usersIds = [uuid(), uuid(), uuid(), uuid()];
+  const avatarsPath = `${vars.serverAddress}/media/avatars/`;
+  response = await poolPromise(queries.insertUsers, [
+    usersIds[0],
+    `${avatarsPath}mod.jpeg`,
+    usersIds[1],
+    `${avatarsPath}3disa.jpeg`,
+    usersIds[2],
+    `${avatarsPath}m9ila.jpeg`,
+    usersIds[3],
+    `${avatarsPath}3sila.jpeg`,
+  ]);
+  console.log(response);
+  if (!response) return false;
 
-    response = await poolPromise(queries.createLanguages);
-    if (!response) return false;
-    response = await poolPromise(queries.createCategories);
-    if (!response) return false;
-    response = await poolPromise(queries.insertLanguages, ['cpp', 'lua', 'javascript', 'python']);
-    if (!response) return false;
-    response = await poolPromise(queries.insertCategories, [
-        'performance',
-        'genericAbstraction',
-        'reactSnippet',
-        'testing',
-    ]);
-    if (!response) return false;
-    response = await poolPromise(queries.createSnippets);
-    if (!response) return false;
+  response = await poolPromise(queries.createLanguages);
+  if (!response) return false;
+  response = await poolPromise(queries.createCategories);
+  if (!response) return false;
+  response = await poolPromise(queries.insertLanguages, [
+    'cpp',
+    'lua',
+    'javascript',
+    'python',
+  ]);
+  if (!response) return false;
+  response = await poolPromise(queries.insertCategories, [
+    'performance',
+    'genericAbstraction',
+    'reactSnippet',
+    'testing',
+  ]);
+  if (!response) return false;
+  response = await poolPromise(queries.createSnippets);
+  if (!response) return false;
 
-    response = await poolPromise(queries.createNotifications);
-    if (!response) return false;
+  response = await poolPromise(queries.createNotifications);
+  if (!response) return false;
 
-    // order matters
-    /*   for each snippet, there is an author and an owner.
-     *   4 snippets for each owner(and author in this case)
-     *   there for the Array(8)*/
-    response = await poolPromise(queries.insertSnippets, [
-        // ...[
-        //     usersIds[0],
-        //     usersIds[1],
+  // order matters
+  /*   for each snippet, there is an author and an owner.
+   *   4 snippets for each owner(and author in this case)
+   *   there for the Array(8)*/
+  response = await poolPromise(queries.insertSnippets, [
+    // ...[
+    //     usersIds[0],
+    //     usersIds[1],
 
-        //     usersIds[0],
-        //     usersIds[2],
+    //     usersIds[0],
+    //     usersIds[2],
 
-        //     usersIds[0],
-        //     usersIds[0],
+    //     usersIds[0],
+    //     usersIds[0],
 
-        //     usersIds[0],
-        //     usersIds[3],
-        // ],
-        ...Array(8)
-            .fill('')
-            .map(() => usersIds[0]),
-        ...Array(8)
-            .fill('')
-            .map(() => usersIds[1]),
-        ...Array(8)
-            .fill('')
-            .map(() => usersIds[2]),
-        ...Array(8)
-            .fill('')
-            .map(() => usersIds[3]),
-    ]);
-    if (!response) return false;
+    //     usersIds[0],
+    //     usersIds[3],
+    // ],
+    ...Array(8)
+      .fill('')
+      .map(() => usersIds[0]),
+    ...Array(8)
+      .fill('')
+      .map(() => usersIds[1]),
+    ...Array(8)
+      .fill('')
+      .map(() => usersIds[2]),
+    ...Array(8)
+      .fill('')
+      .map(() => usersIds[3]),
+  ]);
+  if (!response) return false;
 
-    response = await poolPromise(queries.createCoworkers);
-    if (!response) return false;
+  response = await poolPromise(queries.createCoworkers);
+  if (!response) return false;
 
-    response = await poolPromise(queries.insertNotifications, [uuid(), usersIds[0]]);
-    response = await poolPromise(queries.insertNotifications, [uuid(), usersIds[1]]);
-    response = await poolPromise(queries.insertNotifications, [uuid(), usersIds[2]]);
-    response = await poolPromise(queries.insertNotifications, [uuid(), usersIds[3]]);
-    // console.log(response);
-    if (!response) return false;
+  response = await poolPromise(queries.insertNotifications, [
+    uuid(),
+    usersIds[0],
+  ]);
+  response = await poolPromise(queries.insertNotifications, [
+    uuid(),
+    usersIds[1],
+  ]);
+  response = await poolPromise(queries.insertNotifications, [
+    uuid(),
+    usersIds[2],
+  ]);
+  response = await poolPromise(queries.insertNotifications, [
+    uuid(),
+    usersIds[3],
+  ]);
+  // console.log(response);
+  if (!response) return false;
 
-    return true;
+  return true;
 };
 
 module.exports = {
-    restart,
+  restart,
 };

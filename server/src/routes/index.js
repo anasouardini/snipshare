@@ -5,36 +5,36 @@ const path = require('path');
 
 const multer = require('multer');
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // console.log('l8 routes ', file);
-        cb(null, 'src/media/avatars/');
-    },
-    filename: (req, file, cb) => {
-        // console.log('l12 routes ', file);
-        cb(null, req.user.username + path.extname(file.originalname));
-    },
+  destination: (req, file, cb) => {
+    // console.log('l8 routes ', file);
+    cb(null, 'src/media/avatars/');
+  },
+  filename: (req, file, cb) => {
+    // console.log('l12 routes ', file);
+    cb(null, req.user.username + path.extname(file.originalname));
+  },
 });
-const upload = multer({storage});
+const upload = multer({ storage });
 // const passport = require('../passport/local');
 
 const gotoLogin = (req, res, next) => {
-    // console.log(req.user);
-    // if not logged in
-    if (!req?.user && req.path !== '/restart') {
-        return res.json({redirect: '/login'});
-    }
+  // console.log(req.user);
+  // if not logged in
+  if (!req?.user && req.path !== '/restart') {
+    return res.json({ redirect: '/login' });
+  }
 
-    next();
+  next();
 };
 
 const gotoHome = (req, res, next) => {
-    //if already logged in
-    // console.log(req.user);
-    if (req?.user) {
-        return res.json({redirect: '/', msg: 'you are already signed in'});
-    }
+  //if already logged in
+  // console.log(req.user);
+  if (req?.user) {
+    return res.json({ redirect: '/', msg: 'you are already signed in' });
+  }
 
-    next();
+  next();
 };
 
 // initilialize SSE and notification queue
@@ -51,13 +51,23 @@ router.post('/restart', gotoLogin, controller.init.restart);
 router.get('/auth/google', controller.signin.signinOAuth);
 
 //! mods and users login routes should be separate
-router.post('/signin', gotoHome, controller.signin.signinUser, controller.signin.signinMod);
+router.post(
+  '/signin',
+  gotoHome,
+  controller.signin.signinUser,
+  controller.signin.signinMod,
+);
 router.post('/signup', gotoHome, controller.signup);
 router.post('/logout', controller.logout);
 router.get('/whoami', controller.whoami);
 router.get('/users', gotoLogin, controller.user.readAll);
 router.get('/user/:user', gotoLogin, controller.user.readSingle);
-router.put('/users', gotoLogin, upload.single('avatar'), controller.user.editUser);
+router.put(
+  '/users',
+  gotoLogin,
+  upload.single('avatar'),
+  controller.user.editUser,
+);
 
 // snippets
 router.get('/snippets', gotoLogin, controller.snippet.readAll);
@@ -72,18 +82,22 @@ router.get('/categories', controller.categories.readAll);
 router.get('/languages', controller.languages.readAll);
 
 router.get('/coworkerRules', gotoLogin, controller.coworkerRules.readAll);
-router.get('/:coworker/coworkerRules', gotoLogin, controller.coworkerRules.readCoworker);
+router.get(
+  '/:coworker/coworkerRules',
+  gotoLogin,
+  controller.coworkerRules.readCoworker,
+);
 router.post(
-    '/coworkerRules',
-    gotoLogin,
-    controller.coworkerRules.validateRules,
-    controller.coworkerRules.create
+  '/coworkerRules',
+  gotoLogin,
+  controller.coworkerRules.validateRules,
+  controller.coworkerRules.create,
 );
 router.put(
-    '/coworkerRules',
-    gotoLogin,
-    controller.coworkerRules.validateRules,
-    controller.coworkerRules.update
+  '/coworkerRules',
+  gotoLogin,
+  controller.coworkerRules.validateRules,
+  controller.coworkerRules.update,
 );
 router.delete('/coworkerRules', gotoLogin, controller.coworkerRules.remove);
 

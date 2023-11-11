@@ -1,9 +1,13 @@
 const getFile = async (req, res) => {
-    res.sendFile(req.params.file, {root: `./src/media/${req.params.section}`}, (err) => {
-        if (err) {
-            return console.log('file was not sent: ', err);
-        }
-        // console.log('file was sent');
-    });
+  res.sendFile(
+    req.params.file,
+    { root: `./src/media/${req.params.section}` },
+    err => {
+      if (err) {
+        return console.log('file was not sent: ', err);
+      }
+      // console.log('file was sent');
+    },
+  );
 };
-module.exports = {getFile};
+module.exports = { getFile };

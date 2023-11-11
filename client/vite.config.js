@@ -1,10 +1,10 @@
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default {
-    plugins: [react()],
-    server: {port: 3000, host: '127.0.0.1', hmr: {retry: false}},
+  plugins: [react()],
+  server: { port: 3000, host: '127.0.0.1', hmr: { retry: false } },
 };
 
 // export default defineConfig(({command, mode, ssrBuild}) => {

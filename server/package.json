@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "format": "prettier . --write",
     "dev": "nodemon ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,12 +21,13 @@
     "express-session": "^1.17.3",
     "helmet": "^6.0.0",
     "https": "^1.0.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
     "multer": "1.4.5-lts.1",
     "mysql2": "^2.3.3",
-    "nodemon": "^2.0.22",
+    "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
+    "prettier": "^3.0.3",
     "uuid": "^9.0.0",
     "zod": "^3.19.1"
   },
