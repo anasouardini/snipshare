@@ -439,11 +439,9 @@ const create = async (req, res) => {
     categories: Z.string(),
   });
   if (schema.safeParse(req.body.props).error) {
-    return res
-      .status(400)
-      .json({
-        msg: 'You might be missing some fields, or have entered an invalid data type.',
-      });
+    return res.status(400).json({
+      msg: 'You might be missing some fields, or have entered an invalid data type.',
+    });
   }
 
   let rulesResponse = undefined;
@@ -504,11 +502,9 @@ const create = async (req, res) => {
   }
 
   // this should never run, unless you hack around in the front-end
-  res
-    .status(401)
-    .json({
-      msg: 'guess what? you can not create a snippet on others accounts',
-    });
+  res.status(401).json({
+    msg: 'guess what? you can not create a snippet on others accounts',
+  });
 };
 
 module.exports = {

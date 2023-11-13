@@ -35,7 +35,7 @@ export default function Home() {
 
   // console.log(users, getUsersStatus, getUsersErr);
   return (
-    <div className='mt-12 w-full'>
+    <div className='w-full'>
       <Snippets />
     </div>
   );

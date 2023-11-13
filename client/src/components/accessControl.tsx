@@ -1,5 +1,6 @@
 import React, { useState, forwardRef, useEffect } from 'react';
 
+// handles snippets authorization modification
 const AccessControl = (props, ref) => {
   const [accessState, setAccessState] = useState({});
   const markChangedCoworker = props?.markChangedCoworker ?? (() => {});

@@ -1,4 +1,4 @@
-import vars from '../../vars.ts';
+import vars from '../../vars';
 import React, { useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { create, read } from '../../tools/bridge';
@@ -90,7 +90,7 @@ export default function SharedLayout() {
   const navRef = useRef();
   const showMenu = e => {
     e.stopPropagation();
-    // THIS IS A HUGE MESS BUT IT'S A CHANCE TO EXPERIMENT WITH TAILWIND SOME MORE
+    //* this is a huge mess but i wanted to experiment with tailwind some more
     menuOverlayRef.current.className = `
               navigationOverlay sm>:fixed sm>:top-0 sm>:left-0 sm>:right-0 sm>:bottom-0
               sm>:z-20 sm>:flex sm>:justify-center sm>:items-center sm>:bg-dark/75`;
@@ -224,7 +224,7 @@ export default function SharedLayout() {
                       </li>
                       <li
                         className={`cursor-pointer pb-2 bg-[#222222]
-                                                      hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                                    hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
                         onClick={() => {
                           loginAs({
                             usr: '3sila',
@@ -237,7 +237,8 @@ export default function SharedLayout() {
                       </li>
                       <li
                         className={`cursor-pointer pb-2 bg-[#222222]
-                                                        hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                                  hover:bg-[#2a2a2a] text-gray-200
+                                  p-2 px-3`}
                         onClick={() => {
                           loginAs({
                             usr: 'm9ila',
@@ -250,7 +251,7 @@ export default function SharedLayout() {
                       </li>
                       <li
                         className={`cursor-pointer pb-2 bg-[#222222]
-                                                        hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                                  hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
                         onClick={() => {
                           loginAs({
                             usr: '3disa',
@@ -265,8 +266,8 @@ export default function SharedLayout() {
                   </ul>
                   <li
                     className={`cursor-pointer pb-2 bg-[#222222] hover:bg-[#282828]
-                                                border-[1px] border-[#353525] border-t-0
-                                                text-gray-200 p-2 px-3`}
+                                border-[1px] border-[#353525] border-t-0
+                                text-gray-200 p-2 px-3`}
                     onClick={async () => {
                       const response = await create('restart');
                       console.log(response);
@@ -305,9 +306,9 @@ export default function SharedLayout() {
                   >
                     <p
                       className='cursor-pointer
-                                                  text-gray-200pb-1 border-b-[3px]
-                                                  border-b-transparent 
-                                                  hover:border-b-primary'
+                                text-gray-200pb-1 border-b-[3px]
+                                border-b-transparent 
+                                hover:border-b-primary'
                     >
                       Logout
                     </p>
@@ -324,8 +325,8 @@ export default function SharedLayout() {
                         >
                           <figure
                             className='border-primary border-[1px]
-                                                    w-[40px] h-[40px] rounded-[50%]
-                                                       overflow-hidden'
+                               w-[40px] h-[40px] rounded-[50%]
+                               overflow-hidden'
                           >
                             <img
                               style={{
@@ -353,7 +354,7 @@ export default function SharedLayout() {
       (whoami?.status == 200 ||
         location.pathname.includes('login') ||
         location.pathname.includes('signup')) ? (
-        <main>
+        <main className='pt-[50px] min-h-[100vh] flex flex-col justify-center'>
           <Outlet
             context={{
               whoami: whoami.msg?.username,

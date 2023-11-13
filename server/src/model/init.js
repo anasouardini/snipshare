@@ -2,10 +2,13 @@ const poolPromise = require('./db');
 const { v4: uuid } = require('uuid');
 require('dotenv').config();
 const vars = require('../vars.js');
+const state = {
+  initializing: false,
+};
 
 const queries = {
   cleardb: `DROP TABLE IF EXISTS mods, users, snippets, categories,
-                            languages, coworkersRules, notifications;`,
+  languages, coworkersRules, notifications;`,
 
   createUsers: `CREATE TABLE users (
         id varchar(100) PRIMARY KEY,
@@ -20,6 +23,7 @@ const queries = {
         id varchar(100) PRIMARY KEY,
         user varchar(100) UNIQUE NOT NULL,
         passwd varchar(100) NOT NULL,
+        avatar varchar(200),
         createDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
     );`,
 
@@ -333,16 +337,33 @@ const queries = {
 };
 
 const restart = async () => {
-  console.log('l336 init.js: ');
+  if (state.initializing) {
+    return { state };
+  }
+  state.initializing = true;
+
+  // console.log('336 init.js: ');
   let response = await poolPromise(queries.cleardb);
   response = await poolPromise(queries.createMods);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+  }
 
   response = await poolPromise(queries.insertMods);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+  }
 
   response = await poolPromise(queries.createUsers);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+  }
 
   // order matters
   const usersIds = [uuid(), uuid(), uuid(), uuid()];
@@ -357,32 +378,66 @@ const restart = async () => {
     usersIds[3],
     `${avatarsPath}3sila.jpeg`,
   ]);
-  console.log(response);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
 
   response = await poolPromise(queries.createLanguages);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
   response = await poolPromise(queries.createCategories);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
   response = await poolPromise(queries.insertLanguages, [
     'cpp',
     'lua',
     'javascript',
     'python',
   ]);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
   response = await poolPromise(queries.insertCategories, [
     'performance',
     'genericAbstraction',
     'reactSnippet',
     'testing',
   ]);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
   response = await poolPromise(queries.createSnippets);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
 
   response = await poolPromise(queries.createNotifications);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
 
   // order matters
   /*   for each snippet, there is an author and an owner.
@@ -415,10 +470,20 @@ const restart = async () => {
       .fill('')
       .map(() => usersIds[3]),
   ]);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
 
   response = await poolPromise(queries.createCoworkers);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+    return false;
+  }
 
   response = await poolPromise(queries.insertNotifications, [
     uuid(),
@@ -436,10 +501,14 @@ const restart = async () => {
     uuid(),
     usersIds[3],
   ]);
-  // console.log(response);
-  if (!response) return false;
+  if (response.err) {
+    console.log(response);
+    state.initializing = false;
+    return { err: true, state };
+  }
 
-  return true;
+  state.initializing = false;
+  return { err: false, state };
 };
 
 module.exports = {

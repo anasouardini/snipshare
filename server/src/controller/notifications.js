@@ -32,11 +32,9 @@ const markAllRead = async (req, res) => {
   const response = await Notifications.markAllRead({ user: req.user.username });
   // console.log('l15 controller/notifications: ', response);
   if (!response || !response?.[0]) {
-    return res
-      .status(500)
-      .json({
-        msg: 'something bad happended while marking notifications as read',
-      });
+    return res.status(500).json({
+      msg: 'something bad happended while marking notifications as read',
+    });
   }
 
   return res.json({ msg: 'successfully marked all notifications as read' });

@@ -14,6 +14,6 @@ const poolPromise = (query, params) =>
     .promise()
     .query(query, params)
     .then(res => res)
-    .catch(err => err);
+    .catch(err => ({err}));
 
 module.exports = poolPromise;

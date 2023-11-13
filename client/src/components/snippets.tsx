@@ -8,7 +8,6 @@ import { commonSnippetFields, getSnippets } from '../tools/snipStore';
 import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery } from 'react-query';
 import debouncer from '../tools/debouncer';
-import autoAnimate from '@formkit/auto-animate';
 import Categories from '../components/form/fields/categories';
 import Language from '../components/form/fields/language';
 
@@ -16,10 +15,6 @@ export default function Snippets() {
   const navigate = useNavigate();
 
   const parentRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    // don't attach to the dom if the reference in null
-    parentRef.current && autoAnimate(parentRef.current);
-  }, [parentRef.current]);
 
   const { whoami } = useOutletContext();
 
@@ -190,7 +185,7 @@ export default function Snippets() {
     return undefined;
   };
 
-  // proving a debouncer cb for categories compnent
+  // providing a debouncer cb for categories component
   const debounceCB = () => {
     debouncer.run(
       'snippetsFilter',
@@ -205,12 +200,13 @@ export default function Snippets() {
     <section
       aria-label='code snippets'
       ref={parentRef}
-      className='flex flex-col items-center justify-stretch px-3 gap-7 pt-10 mx-auto'
+      className='flex flex-col items-center
+                justify-stretch px-3 gap-7 pt-10 mx-auto'
     >
       <div
         aria-label='controls'
         className='w-full max-w-[600px] flex justify-between
-                                  items-center flex-wrap my-5 gap-3'
+                  items-center flex-wrap my-5 gap-3'
       >
         {whoami == userParam ||
         snippets.data.pages?.[0]?.genericAccess?.create ||
@@ -218,7 +214,7 @@ export default function Snippets() {
           <button
             onClick={handleCreate}
             className={`border-[1px] border-primary px-2 py-2
-                                text-[1rem] text-primary rounded-md`}
+                        text-[1rem] text-primary rounded-md`}
           >
             Add Snippet
           </button>
@@ -243,7 +239,7 @@ export default function Snippets() {
             onChange={handleSearch}
             placeholder='find your sippet'
             className='w-full max-w-[280px] px-3 py-2
-                                border-[1px] border-primary rounded-md'
+                      border-[1px] border-primary rounded-md'
           />
         </label>
       </div>

@@ -16,15 +16,6 @@ const app = express();
 require('dotenv').config();
 const PORT = process.env.PORT || 2001;
 
-// midleware
-app.use(helmet());
-app.use(
-  cors({
-    origin: [vars.clientAddress],
-    credentials: true,
-  }),
-);
-
 app.use((req, res, next) => {
   if (vars.serverAddress && vars.clientAddress) {
     next();
@@ -40,9 +31,24 @@ app.use((req, res, next) => {
     req.headers.host?.includes('localhost:') ||
     req.headers.host?.includes('127.0.0.1:')
   ) {
-    vars.clientAddress = `${req.headers.host.split(':')[0]}:3000`;
+    vars.clientAddress = `http://${req.headers.host.split(':')[0]}:3000`;
   }
 });
+// app.use((req, res, next) => {
+//   console.log(vars.clientAddress);
+//   next();
+// });
+
+// midleware
+app.use(helmet());
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      cb(false, [vars.clientAddress]);
+    },
+    credentials: true,
+  }),
+);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -83,8 +89,10 @@ app.use((err, erq, res) => {
   res.status(500).json({ err: 'something went bad' });
 });
 
-// fire up
-if (process.env.PRODUCTION) {
+// FIRE UP THE SERVER
+//Note: Unlike JS in the browser, Node considers 0 to be true
+if (process.env.PRODUCTION == 1) {
+  console.log('production env: reading ssl cert');
   https
     .createServer(
       {

@@ -22,7 +22,6 @@ function App() {
 
   return (
     <QueryClientProvider client={client}>
-      <div className='h-[calc(100vh-70px)] font-roboto'>
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<SharedLayout />}>
@@ -35,7 +34,6 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
-      </div>
     </QueryClientProvider>
   );
 }

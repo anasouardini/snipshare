@@ -9,11 +9,9 @@ const readAll = async (req, res) => {
     return res.json({ msg: languagesArr });
   }
 
-  return res
-    .status(500)
-    .json({
-      msg: 'something bad happened while getting the snippet languages',
-    });
+  return res.status(500).json({
+    msg: 'something bad happened while getting the snippet languages',
+  });
 };
 
 module.exports = { readAll };

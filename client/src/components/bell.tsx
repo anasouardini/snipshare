@@ -1,4 +1,4 @@
-import vars from '../vars.ts';
+import vars from '../vars';
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
 import { FaBell } from 'react-icons/fa';
