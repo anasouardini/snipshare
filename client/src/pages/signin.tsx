@@ -53,10 +53,10 @@ export default function Signin() {
     <div className={classes.parent}>
       <style>
         {`
-                    label + label{
-                        margin-top: 20px
-                    }
-                `}
+          label + label{
+          margin-top: 20px
+        }
+        `}
       </style>
       <h1 className={classes.title}>SignIn</h1>
 
