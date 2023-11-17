@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "format": "prettier . --write",
-    "dev": "nodemon ./src"
+    "dev": "echo 'starting mysql (sudo)'; sudo systemctl start mysql && nodemon ./src"
   },
   "keywords": [],
   "author": "",
