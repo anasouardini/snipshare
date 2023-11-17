@@ -104,7 +104,7 @@ export default function Profile() {
 
   //todo: art,
   return (
-    <div className='mt-[7rem] w-full '>
+    <div className='w-full '>
       {/* todo: profile related info */}
       <section
         aria-label='profile info (editable)'
@@ -240,7 +240,7 @@ export default function Profile() {
         </div>
       </section>
 
-      <hr className='w-1/5 mx-auto mt-11 border-none bg-[#eee] h-[1px]' />
+      <hr className='w-1/5 mx-auto my-11 border-none bg-[#eee] h-[1px]' />
 
       <Snippets />
     </div>

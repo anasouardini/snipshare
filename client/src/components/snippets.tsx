@@ -201,7 +201,7 @@ export default function Snippets() {
       aria-label='code snippets'
       ref={parentRef}
       className='flex flex-col items-center
-                justify-stretch px-3 gap-7 pt-10 mx-auto'
+                justify-stretch px-3 gap-7 mx-auto'
     >
       <div
         aria-label='controls'
