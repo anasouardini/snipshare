@@ -126,7 +126,8 @@ export default function SharedLayout() {
          <NavMenu hideMenu={hideMenu} notify={notify} navRef={navRef} whoami={whoami}/>
         </div>
       </header>
-      {/* {props.children} */}
+
+      {/* {children} */}
       {whoami &&
       (whoami?.status == 200 ||
         location.pathname.includes('login') ||
@@ -150,6 +151,8 @@ export default function SharedLayout() {
       <div className='fixed top-[50px] right-[50%] translate-x-[50%] flex-row'>
         {listNotifications(notifyState)}
       </div>
+
+
       <footer
         className={`mt-auto w-full flex flex-wrap gap-3 
         justify-center items-center py-4 font-bold`}

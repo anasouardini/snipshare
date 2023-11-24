@@ -37,7 +37,7 @@ const ExceptionsPopUp = (props, ref) => {
           old: { [props.coworkerUsername]: { ...props.coworker } },
         };
       }
-      // if the old coworker is already edited, don't overwrite the new previous rules
+      // if the old coworker is already edited, don't overwrite the previous rules
       else if (!ref.current[props.oldOrNew]?.old?.[props.coworkerUsername]) {
         ref.current[props.oldOrNew].old[props.coworkerUsername] =
           props.coworker;

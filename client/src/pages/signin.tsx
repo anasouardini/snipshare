@@ -2,6 +2,12 @@ import React, { useRef } from 'react';
 import { create, read } from '../tools/bridge';
 import { useNavigate } from 'react-router';
 import OauthButton from './shared/oauthButton';
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
 
 export default function Signin() {
   const navigate = useNavigate();
@@ -62,7 +68,16 @@ export default function Signin() {
 
       <form className={classes.form}>
         <label className={classes.label}>
-          <input
+          <motion.input
+            initial={{
+              x: -20,
+              opacity: 0,
+            }}
+            animate={{
+              x: 0,
+              opacity: 1,
+            }}
+            transition={{ duration: 0.5 }}
             placeholder='Username'
             className={`${classes.input} ${classes.textInput}`}
             ref={refs.username}
@@ -71,7 +86,16 @@ export default function Signin() {
           />
         </label>
         <label className={classes.label}>
-          <input
+          <motion.input
+            initial={{
+              x: 20,
+              opacity: 0,
+            }}
+            animate={{
+              x: 0,
+              opacity: 1,
+            }}
+            transition={{ duration: 0.5 }}
             placeholder='Password'
             className={`${classes.input} ${classes.textInput}`}
             ref={refs.password}
@@ -81,7 +105,7 @@ export default function Signin() {
         </label>
 
         <label className={classes.label}>
-          <button className={classes.submit} onClick={handleSubmit}>
+          <button className={`${classes.submit}`} onClick={handleSubmit}>
             Log In
           </button>
         </label>

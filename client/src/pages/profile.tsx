@@ -4,6 +4,12 @@ import { useParams } from 'react-router-dom';
 import { update, updateFile, read } from '../tools/bridge';
 import { useOutletContext } from 'react-router-dom';
 import { FaPen } from 'react-icons/fa';
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
 
 export default function Profile() {
   const { reload } = useOutletContext();
@@ -106,7 +112,10 @@ export default function Profile() {
   return (
     <div className='w-full '>
       {/* todo: profile related info */}
-      <section
+      <motion.section
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.3 }}
         aria-label='profile info (editable)'
         className='mb-10 w-[90%] max-w-[600px] mx-auto'
       >
@@ -238,7 +247,7 @@ export default function Profile() {
             <FaPen aria-hidden='true' className='text-[1.1rem]' />
           </button>
         </div>
-      </section>
+      </motion.section>
 
       <hr className='w-1/5 mx-auto my-11 border-none bg-[#eee] h-[1px]' />
 

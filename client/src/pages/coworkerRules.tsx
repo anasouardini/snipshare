@@ -228,8 +228,6 @@ export default function AddRules() {
                 >
                   <div className='tooltiptext'>Delete rule</div>
                   <FaMinusSquare />
-                  {/* <FaMinusCircle />
-                                    <FaRegMinusSquare /> */}
                 </button>
               </div>
             </div>
@@ -288,7 +286,7 @@ export default function AddRules() {
           </button>
         </div>
       </div>
-      <div className='mt-[4rem]'>
+      <div className='mt-[2rem]'>
         <ul>{listCoworkers()}</ul>
       </div>
       {popUpState.showExceptions ? (

@@ -10,7 +10,7 @@ import AddRules from './pages/coworkerRules';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const NotFountPage = () => (
-  <section className={'h-[100vh] flex justify-center items-center'}>
+  <section className={'h-[100vh] h-[100dvh] flex justify-center items-center'}>
     <p className={'text-2xl text-primary'}>Nothing To See Here (404)</p>
   </section>
 );

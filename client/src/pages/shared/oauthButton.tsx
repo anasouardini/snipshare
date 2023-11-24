@@ -31,7 +31,7 @@ export default function OauthButton() {
 
   return (
     <button
-      className='w-[200px] border-2 border-primary mt-4 p-2 rounded-md'
+      className='w-[200px] border-2 border-primary mt-4 p-2 rounded-md  hover:bg-[rgb(50,70,50)]/40 transition-background duration-300 ease-in-out'
       onClick={handleOAuth}
     >
       Login With Google

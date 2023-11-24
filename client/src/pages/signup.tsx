@@ -4,6 +4,12 @@ import { create } from '../tools/bridge';
 // import {useNavigate} from 'react-router';
 import OauthButton from './shared/oauthButton';
 import notify from '../components/notify';
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -63,7 +69,16 @@ export default function SignUp() {
 
       <form className={classes.form}>
         <label className={classes.label}>
-          <input
+          <motion.input
+            initial={{
+              x: -20,
+              opacity: 0,
+            }}
+            animate={{
+              x: 0,
+              opacity: 1,
+            }}
+            transition={{ duration: 0.5 }}
             placeholder='Username'
             className={`${classes.input} ${classes.textInput}`}
             ref={refs.username}
@@ -72,7 +87,16 @@ export default function SignUp() {
           />
         </label>
         <label className={classes.label}>
-          <input
+          <motion.input
+            initial={{
+              x: 20,
+              opacity: 0,
+            }}
+            animate={{
+              x: 0,
+              opacity: 1,
+            }}
+            transition={{ duration: 0.5 }}
             placeholder='Password'
             className={`${classes.input} ${classes.textInput}`}
             ref={refs.password}

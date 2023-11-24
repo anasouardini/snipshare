@@ -23,6 +23,8 @@
   - local storage
 - mobile gestures
 - analytics?
+  - number of snippets for each language
+  - filter by category/tag
 
 ### Practices
 

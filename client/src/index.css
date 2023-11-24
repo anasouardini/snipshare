@@ -31,7 +31,7 @@ body {
 input,
 textarea {
   background: transparent;
-  @apply border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-1 bg-[#181818];
+  @apply border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-[1px] bg-[#181818];
 }
 
 input[type='checkbox'] {

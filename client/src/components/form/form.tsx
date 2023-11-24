@@ -2,6 +2,12 @@ import React, { useRef, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { create, update } from '../../tools/bridge';
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
 
 // FIELDS
 import IsPrivate from './fields/isPrivate';
@@ -68,6 +74,17 @@ type formPropsT = {
 
 const Form = (props: formPropsT) => {
   const { notify } = useOutletContext();
+  const [animationState, setFormState] = React.useState({ showForm: true });
+  React.useEffect(() => {
+    // unmount form
+    if (!animationState.showForm) {
+      // console.log('unmounting the form')
+      // setState in handleClose() is async so I need to make this wait for the animation to finish
+      setTimeout(() => {
+        props.hidePopUp();
+      }, 300);
+    }
+  }, [animationState.showForm]);
 
   const refs = {
     title: useRef<HTMLInputElement>(null),
@@ -211,8 +228,13 @@ const Form = (props: formPropsT) => {
     //     e.stopPropagation();
     // }
 
-    // unmount form
-    props.hidePopUp();
+    // unmount the sub-form so that framer motion can animate it before removing it from the DOM.
+    // console.log('animating away')
+    setFormState(state => {
+      const stateClone = structuredClone(state);
+      stateClone.showForm = false;
+      return stateClone;
+    });
   };
 
   type filedsKeysT =
@@ -351,30 +373,41 @@ const Form = (props: formPropsT) => {
         className={`fixed content-[""] top-0 left-0
                         w-full h-full`}
       ></div>
-      <form
-        className='flex flex-col gap-6 p-6 pt-8
+      <AnimatePresence>
+        {animationState.showForm ? (
+          <motion.form
+            key={'silly yet important property'}
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -100 }}
+            transition={{duration: .3}}
+            className='flex flex-col gap-6 p-6 pt-8
                           bg-[#181818] z-30 drop-shadow-2xl relative
                           w-[600px] sm>:w-full'
-      >
-        <div
-          aria-label='close form'
-          onClick={handleClose}
-          className='absolute content-["X"] top-2 right-2
+          >
+            <div
+              aria-label='close form'
+              onClick={handleClose}
+              className='absolute content-["X"] top-2 right-2
                             text-xl cursor-pointer '
-        >
-          X
-        </div>
-        {listInputs()}
+            >
+              X
+            </div>
+            {listInputs()}
 
-        <button
-          ref={refs.formButton}
-          className='w-[100px] bg-lime-700 leading-8
+            <button
+              ref={refs.formButton}
+              className='w-[100px] bg-lime-700 leading-8
                                rounded-md  text-white mx-auto z-10'
-          onClick={handleSubmit}
-        >
-          {props.action == 'edit' ? 'Edit' : 'Create'}
-        </button>
-      </form>
+              onClick={handleSubmit}
+            >
+              {props.action == 'edit' ? 'Edit' : 'Create'}
+            </button>
+          </motion.form>
+        ) : (
+          <></>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

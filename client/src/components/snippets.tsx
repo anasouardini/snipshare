@@ -1,4 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
 import Snippet from '../components/snippet';
 // import {useNavigate, useMatch} from 'react-location';
 import { useParams, useOutletContext } from 'react-router-dom';
@@ -150,13 +156,24 @@ export default function Snippets() {
       access: { read: Boolean; update: Boolean; delete: Boolean };
     };
     return snippets.data?.pages.map((page: { snippets: snippetType[] }) => {
-      return page.snippets.map(snippet => {
+      return page.snippets.map((snippet, index) => {
+        const animationObj = { initialX: 30 };
+        if (index % 2) {
+          animationObj.initialX = -30;
+        }
         return (
-          <Snippet
-            key={snippet.id}
-            snippet={snippet}
-            update={refetchSnippetsCB}
-          />
+          <motion.div
+            className={`bg-[#292929] rounded-md w-full max-w-[600px]`}
+            initial={{ x: animationObj.initialX }}
+            animate={{ x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Snippet
+              key={snippet.id}
+              snippet={snippet}
+              update={refetchSnippetsCB}
+            />
+          </motion.div>
         );
       });
     });
@@ -203,7 +220,10 @@ export default function Snippets() {
       className='flex flex-col items-center
                 justify-stretch px-3 gap-7 mx-auto'
     >
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
         aria-label='controls'
         className='w-full max-w-[600px] flex justify-between
                   items-center flex-wrap my-5 gap-3'
@@ -242,7 +262,7 @@ export default function Snippets() {
                       border-[1px] border-primary rounded-md'
           />
         </label>
-      </div>
+      </motion.div>
       {listSnippets()}
 
       {/* todo: suspense this with lazy loading */}
