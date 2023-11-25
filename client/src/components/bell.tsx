@@ -86,10 +86,64 @@ export default function Bell(props: { notify: notifyFuncT }) {
     }
   };
 
+  const [bellIconAnimationScope, bellIconAnimate] = useAnimate();
+  const handleHoverAnimation = async () => {
+    const animationConstants = {
+      swingDuration: 0.03,
+      swingDistance: 1,
+      swingangle: 5,
+      iterationsCount: 3,
+    };
+    const animationObj = {
+      left: [
+        { rotate: animationConstants.swingangle },
+        { x: -animationConstants.swingDistance },
+      ],
+      right: [
+        { rotate: -animationConstants.swingangle },
+        { x: animationConstants.swingDistance },
+      ],
+      reset: { rotate: 0, x: 0 },
+    };
+    // left swing
+    for (let i = 0; i < animationConstants.iterationsCount; i++) {
+      for (let x = 0; x < animationObj.left.length; x++) {
+        const action = animationObj.left[x];
+        await bellIconAnimate(
+          bellIconAnimationScope.current,
+          animationObj.left[x],
+          {
+            duration: animationConstants.swingDuration,
+          },
+        );
+      }
+      // right swing
+      for (let x = 0; x < animationObj.right.length; x++) {
+        const action = animationObj.right[x];
+        await bellIconAnimate(
+          bellIconAnimationScope.current,
+          animationObj.right[x],
+          {
+            duration: animationConstants.swingDuration,
+            delay: animationConstants.swingDuration,
+          },
+        );
+      }
+    }
+    // reset animation
+    await bellIconAnimate(bellIconAnimationScope.current, animationObj.reset, {
+      duration: animationConstants.swingDuration,
+      delay: animationConstants.swingDuration,
+    });
+  };
   return (
     <>
       <div
-        ref={unreadNotificationsRef}
+        ref={el => {
+          unreadNotificationsRef.current = el;
+          bellIconAnimationScope.current = el;
+        }}
+        onMouseEnter={handleHoverAnimation}
         className={`hover:cursor-pointer
                         before:hidden before:bg-primary
                         before:w-[7px] before:h-[7px] before:absolute
@@ -101,11 +155,11 @@ export default function Bell(props: { notify: notifyFuncT }) {
       <AnimatePresence>
         {state.notifications.show ? (
           <motion.section
-              key={'silly yet important property'}
-              initial={{ opacity: 0}}
-              animate={{ opacity: 1}}
-              exit={{ opacity: 0}}
-              transition={{ duration: 0.3 }}
+            key={'silly yet important property'}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             onClick={toggleNotification}
             className={`fixed z-20 top-[40px]
                            bottom-0 flex left-0 justify-end

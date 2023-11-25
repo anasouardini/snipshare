@@ -2,15 +2,15 @@
 
 ### Tools
 
-- state management:
-  - Redux/toolkit
-  - jotai
-- Forms: Formik + yup
+- [ ] state management:
+  - [ ] Redux/toolkit
+  - [ ] jotai
+- [ ] Forms: Formik + yup
   - 100% sanitization and pretty error/warning popups with smooth animations
-- Framer-motion
-  - smooth animations in each transition
-- react-tooltips
-- prettier (standard configuration)
+- [x] Framer-motion
+  - [x] smooth animations in each transition
+- [ ] react-tooltips
+- [X] prettier (standard configuration)
 
 ### Features
 
