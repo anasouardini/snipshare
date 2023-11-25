@@ -21,6 +21,8 @@ import {
   usePresence,
 } from 'framer-motion';
 
+import { Tooltip } from 'react-tooltip';
+
 export default function AddRules() {
   const navigate = useNavigate();
 
@@ -167,7 +169,7 @@ export default function AddRules() {
       'border-[1px] border-[#323232] p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
     buttons: 'flex gap-5',
     // button: 'border-[8px] border-primary px-2 py-1 hover:scale-150',
-    iconButton: `text-2xl text-primary tooltip
+    iconButton: `text-2xl text-primary inline-block relative
                 hover:scale-110 transition-scale duration-200`,
     li: `mb-3 px-3 py-2 border-[1px] border-[#323232] rounded-md hover:bg-[#262626]`,
   };
@@ -206,6 +208,8 @@ export default function AddRules() {
 
               <div className={classes.buttons}>
                 <button
+                  data-tooltip-id='updateRule'
+                  data-tooltip-content='Update Rule'
                   className={`${classes.iconButton} ${
                     changedCoworkers.current.has(coworkerUsername)
                       ? 'text-orange-400'
@@ -216,10 +220,15 @@ export default function AddRules() {
                     updateCoworker(coworkerUsername);
                   }}
                 >
-                  <div className='tooltiptext'>Update rule</div>
+                  <Tooltip
+                    style={{ fontSize: '1rem', padding: '2px 15px' }}
+                    id='updateRule'
+                  />
                   <FaRetweet />
                 </button>
                 <button
+                  data-tooltip-id='exceptions'
+                  data-tooltip-content='Exceptions'
                   className={classes.iconButton}
                   onClick={(e) => {
                     e.preventDefault();
@@ -230,19 +239,27 @@ export default function AddRules() {
                     );
                   }}
                 >
-                  <div className='tooltiptext'>Exceptions</div>
+                  <Tooltip
+                    id='exceptions'
+                    style={{ fontSize: '1rem', padding: '2px 15px' }}
+                  />
                   <FaFolderPlus />
                   {/* <FaPuzzlePiece />
                                     <FaHistory /> */}
                 </button>
                 <button
+                  data-tooltip-id='deleteRule'
+                  data-tooltip-content='Delete Rule'
                   className={classes.iconButton}
                   onClick={(e) => {
                     eventDefaults(e);
                     deleteCoworker(coworkerUsername);
                   }}
                 >
-                  <div className='tooltiptext'>Delete rule</div>
+                  <Tooltip
+                    id='deleteRule'
+                    style={{ fontSize: '1rem', padding: '2px 15px' }}
+                  />
                   <FaMinusSquare />
                 </button>
               </div>
@@ -296,6 +313,8 @@ export default function AddRules() {
         <AccessControl ref={genericAccessRefs.current.new} type='generic' />
         <div className={classes.buttons}>
           <button
+            data-tooltip-id='addException'
+            data-tooltip-content='Add Exception'
             className={classes.iconButton}
             onClick={(e) => {
               e.preventDefault();
@@ -305,13 +324,23 @@ export default function AddRules() {
               showExceptionsPopUp({}, 'new', coworkerUsername);
             }}
           >
-            <div className='tooltiptext'>Exceptions</div>
             <FaFolderPlus />
           </button>
-          <button className={classes.iconButton} onClick={addNewCoworker}>
-            <div className='tooltiptext'>Add Coworker</div>
+          <Tooltip
+            id='addException'
+          />
+
+          <button
+            data-tooltip-id='addCoworker'
+            data-tooltip-content='Add Coworker'
+            className={classes.iconButton}
+            onClick={addNewCoworker}
+          >
             <FaPlusSquare />
           </button>
+          <Tooltip
+            id='addCoworker'
+          />
         </div>
       </motion.div>
       <div className='mt-[2rem]'>

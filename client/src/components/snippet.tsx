@@ -6,6 +6,7 @@ import { read, remove } from '../tools/bridge';
 import Form from './form/form';
 import { FaLock, FaLockOpen } from 'react-icons/fa';
 import CodeSnippet from './form/fields/snippet';
+import { Tooltip } from 'react-tooltip';
 
 type propsT = {
   snippet: {
@@ -101,7 +102,9 @@ function Snippet(props: propsT) {
   // console.log(snipInfoState.snippet);
   const classes = {
     buttons: 'flex justify-around mt-[20px]',
-    button: 'w-[100px] py-[4px] rounded-md',
+    button: `w-[100px] py-[4px] rounded-md
+            hover:scale-105 transition-scale
+            duration-200 ease-in-out`,
     btnEdit: `${
       snipInfoState.snippet.access?.update
         ? 'bg-lime-700 font-bold'
@@ -175,9 +178,23 @@ function Snippet(props: propsT) {
             {/* is Private */}
             <p>
               {snipInfoState.snippet.isPrivate ? (
-                <FaLock className='text-orange-500' />
+                <>
+                  <FaLock
+                    data-tooltip-id='private'
+                    data-tooltip-content='Private'
+                    className='text-orange-500'
+                  />
+                  <Tooltip id='private' />
+                </>
               ) : (
-                <FaLockOpen className='text-primary' />
+                <>
+                  <FaLockOpen
+                    data-tooltip-id='public'
+                    data-tooltip-content='Public'
+                    className='text-primary'
+                  />
+                  <Tooltip id='public' />
+                </>
               )}
             </p>
           </div>

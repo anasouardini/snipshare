@@ -14,6 +14,7 @@ import {
   useAnimate,
   usePresence,
 } from 'framer-motion';
+import { Tooltip } from 'react-tooltip';
 
 type notifyMsgObjT = { type: string; msg: string };
 type notifyFuncT = (msg: notifyMsgObjT) => undefined;
@@ -42,7 +43,6 @@ export default function Bell(props: { notify: notifyFuncT }) {
     });
     const messageHandler = (e: MessageEvent) => {
       // console.log('sse data: ', e.data);
-      // todo:
       notifications.refetch();
       unreadNotificationsRef.current?.classList.remove('before:hidden');
       props.notify({ type: 'info', msg: e.data });
@@ -59,7 +59,6 @@ export default function Bell(props: { notify: notifyFuncT }) {
   }, []);
 
   const toggleNotification = async (e: MouseEvent) => {
-    // todo: fix the bug
     e.stopPropagation();
 
     unreadNotificationsRef.current?.classList.add('before:hidden');
@@ -91,7 +90,7 @@ export default function Bell(props: { notify: notifyFuncT }) {
       swingDuration: 0.03,
       swingDistance: 1,
       swingangle: 5,
-      iterationsCount: 3,
+      iterationsCount: 2,
     };
     const animationObj = {
       left: [
@@ -149,7 +148,8 @@ export default function Bell(props: { notify: notifyFuncT }) {
                       `}
         onClick={toggleNotification}
       >
-        <FaBell className='' />
+        <FaBell />
+        {/* <Tooltip id='edit' /> */}
       </div>
       <AnimatePresence>
         {state.notifications.show ? (

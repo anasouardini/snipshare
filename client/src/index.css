@@ -52,7 +52,7 @@ input[type='checkbox'] {
   @apply border-b-[3px] border-b-primary;
 }
 
-.tooltip {
+/* .tooltip {
   position: relative;
   display: inline-block;
 }
@@ -64,7 +64,7 @@ input[type='checkbox'] {
 .tooltip:hover .tooltiptext,
 .tooltip:focus .tooltiptext {
   visibility: visible;
-}
+} */
 
 .chopLongText {
   overflow: hidden;
