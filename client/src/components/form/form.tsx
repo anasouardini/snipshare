@@ -364,23 +364,28 @@ const Form = (props: formPropsT) => {
   };
 
   return (
-    <div
-      className={`backdrop-blur-sm z-10 fixed top-0 left-0
+    <AnimatePresence>
+      {animationState.showForm ? (
+        <motion.div
+          key={'silly yet important property'}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className={`backdrop-blur-sm z-10 fixed top-0 left-0
                         w-full h-full flex items-center justify-center`}
-    >
-      <div
-        onClick={handleClose}
-        className={`fixed content-[""] top-0 left-0
+        >
+          <div
+            onClick={handleClose}
+            className={`fixed content-[""] top-0 left-0
                         w-full h-full`}
-      ></div>
-      <AnimatePresence>
-        {animationState.showForm ? (
+          ></div>
           <motion.form
             key={'silly yet important property'}
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -100 }}
-            transition={{duration: .3}}
+            transition={{ duration: 0.3 }}
             className='flex flex-col gap-6 p-6 pt-8
                           bg-[#181818] z-30 drop-shadow-2xl relative
                           w-[600px] sm>:w-full'
@@ -389,7 +394,9 @@ const Form = (props: formPropsT) => {
               aria-label='close form'
               onClick={handleClose}
               className='absolute content-["X"] top-2 right-2
-                            text-xl cursor-pointer '
+                            text-xl cursor-pointer
+                            hover:text-primary
+                            transition-color duration-200'
             >
               X
             </div>
@@ -404,11 +411,11 @@ const Form = (props: formPropsT) => {
               {props.action == 'edit' ? 'Edit' : 'Create'}
             </button>
           </motion.form>
-        ) : (
-          <></>
-        )}
-      </AnimatePresence>
-    </div>
+        </motion.div>
+      ) : (
+        <></>
+      )}
+    </AnimatePresence>
   );
 };
 export default Form;

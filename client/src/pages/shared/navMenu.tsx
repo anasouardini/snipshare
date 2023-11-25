@@ -252,7 +252,7 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }:NavMenuProps) => {
               }}
             >
               <button
-                className='cursor-pointer pb-[.5rem]
+                className='cursor-pointer py-[.5rem]
                         text-gray-200pb-1 border-b-[3px]
                         border-b-transparent 
                         hover:border-b-primary
@@ -275,9 +275,9 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }:NavMenuProps) => {
                     <figure
                       className='border-primary border-2
                                w-[40px] h-[40px]
-                               hover:scale-[1.07]
+                               hover:scale-[1.09]
                                transition-scale
-                               duration-[.7]
+                               duration-[0.3s]
                                ease-in-out
                                rounded-[50%]
                                overflow-hidden'

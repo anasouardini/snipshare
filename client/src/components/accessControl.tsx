@@ -24,7 +24,8 @@ const AccessControl = (props, ref) => {
   const classes = {
     parent: 'flex gap-2 flex-wrap',
     checkbox: 'ml-1',
-    checkboxLabel: 'ml-3',
+    checkboxLabel: `ml-3 hover:scale-105
+                    transition-scale duration-200`,
   };
   const styles = {
     tag: {

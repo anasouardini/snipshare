@@ -14,6 +14,13 @@ import {
   FaPlusSquare,
 } from 'react-icons/fa';
 
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
+
 export default function AddRules() {
   const navigate = useNavigate();
 
@@ -159,21 +166,30 @@ export default function AddRules() {
     inputs:
       'border-[1px] border-[#323232] p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
     buttons: 'flex gap-5',
-    button: 'border-[1px] border-primary px-2 py-1',
-    iconButton: 'text-2xl text-primary tooltip',
-    li: 'mb-3 px-3 py-2 border-[1px] border-[#323232] rounded-md hover:bg-[#262626]',
+    // button: 'border-[8px] border-primary px-2 py-1 hover:scale-150',
+    iconButton: `text-2xl text-primary tooltip
+                hover:scale-110 transition-scale duration-200`,
+    li: `mb-3 px-3 py-2 border-[1px] border-[#323232] rounded-md hover:bg-[#262626]`,
   };
 
-  const listCoworkers = () =>
-    coworkersRules.data.generic ? (
+  const listCoworkers = () => {
+    let coworkersCounter = 0.4;
+    return coworkersRules.data.generic ? (
       Object.keys(coworkersRules.data.generic).map(coworkerUsername => {
         //* a copy of the state keeps the doctor away
         // console.log(coworkersRules.data.generic[coworkerUsername]);
         genericAccessRefs.current.old[coworkerUsername] = {
           ...coworkersRules.data.generic[coworkerUsername],
         };
+        coworkersCounter++;
         return (
-          <li key={coworkerUsername} className={classes.li}>
+          <motion.li
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.2 * coworkersCounter, duration: 0.3 }}
+            key={coworkerUsername}
+            className={classes.li}
+          >
             <div className='flex justify-between items-center flex-wrap gap-10'>
               <div>
                 <img src='' alt='' />
@@ -231,16 +247,23 @@ export default function AddRules() {
                 </button>
               </div>
             </div>
-          </li>
+          </motion.li>
         );
       })
     ) : (
       <></>
     );
+  };
 
   return coworkersRules.status == 'success' ? (
     <div className='container pt-[7rem]'>
-      <section aria-label='instructions' className='text-gray-300 mb-11'>
+      <motion.section
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+        aria-label='instructions'
+        className='text-gray-300 mb-11'
+      >
         <li>The tags in the middle are for generic access to the account.</li>
         <li>
           The <FaFolderPlus className='inline mx-2 text-primary text-xl' />{' '}
@@ -255,8 +278,13 @@ export default function AddRules() {
           The <FaPlusSquare className='inline mx-2 text-primary text-xl' />{' '}
           button is for adding a new coworker.
         </li>
-      </section>
-      <div className={classes.inputs}>
+      </motion.section>
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className={classes.inputs}
+      >
         <input
           className='border-[1px] border-primary rounded-md p-1 px-3 w-[150px]'
           type='text'
@@ -285,7 +313,7 @@ export default function AddRules() {
             <FaPlusSquare />
           </button>
         </div>
-      </div>
+      </motion.div>
       <div className='mt-[2rem]'>
         <ul>{listCoworkers()}</ul>
       </div>

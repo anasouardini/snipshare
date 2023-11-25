@@ -156,7 +156,11 @@ export default function Snippets() {
       access: { read: Boolean; update: Boolean; delete: Boolean };
     };
     return snippets.data?.pages.map((page: { snippets: snippetType[] }) => {
+      let snippetsDurationCounter = 0.0;
+      let snippetsDelayCounter = 0;
       return page.snippets.map((snippet, index) => {
+        snippetsDurationCounter += 0.1;
+        snippetsDelayCounter++;
         const animationObj = { initialX: 30 };
         if (index % 2) {
           animationObj.initialX = -30;
@@ -164,9 +168,12 @@ export default function Snippets() {
         return (
           <motion.div
             className={`bg-[#292929] rounded-md w-full max-w-[600px]`}
-            initial={{ x: animationObj.initialX }}
-            animate={{ x: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ x: animationObj.initialX, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{
+              delay: 0.2 * snippetsDelayCounter,
+              duration: 0.3 + snippetsDurationCounter,
+            }}
           >
             <Snippet
               key={snippet.id}

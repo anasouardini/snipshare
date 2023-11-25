@@ -8,6 +8,13 @@ import {
   markNotificationRead,
 } from '../tools/snipStore';
 
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
+
 type notifyMsgObjT = { type: string; msg: string };
 type notifyFuncT = (msg: notifyMsgObjT) => undefined;
 
@@ -91,30 +98,42 @@ export default function Bell(props: { notify: notifyFuncT }) {
       >
         <FaBell className='' />
       </div>
-      {state.notifications.show ? (
-        <section
-          onClick={toggleNotification}
-          className={`fixed z-20 top-[40px]
+      <AnimatePresence>
+        {state.notifications.show ? (
+          <motion.section
+              key={'silly yet important property'}
+              initial={{ opacity: 0}}
+              animate={{ opacity: 1}}
+              exit={{ opacity: 0}}
+              transition={{ duration: 0.3 }}
+            onClick={toggleNotification}
+            className={`fixed z-20 top-[40px]
                            bottom-0 flex left-0 justify-end
                            backdrop-blur-sm w-full
                           `}
-        >
-          <aside
-            className={`scrollbar overflow-auto w-[350px] backdrop-blur-sm
-                             bg-[#242424]/[.5] px-3 py-4
-                              flex-col gap-3`}
           >
-            <ul
-              className={`list-disc marker:text-primary
-                                    marker:text-xl pl-5`}
+            <motion.aside
+              key={'silly yet important property'}
+              initial={{ opacity: 0, x: 500 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 500 }}
+              transition={{ duration: 0.3 }}
+              className={`scrollbar overflow-auto w-[350px] backdrop-blur-sm
+            bg-[#242424]/[.5] px-3 py-4
+            flex-col gap-3`}
             >
-              {notifications.status ? listNotifications() : <></>}
-            </ul>
-          </aside>
-        </section>
-      ) : (
-        <></>
-      )}
+              <ul
+                className={`list-disc marker:text-primary
+                                    marker:text-xl pl-5`}
+              >
+                {notifications.status ? listNotifications() : <></>}
+              </ul>
+            </motion.aside>
+          </motion.section>
+        ) : (
+          <></>
+        )}
+      </AnimatePresence>
     </>
   );
 }

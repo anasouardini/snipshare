@@ -6,6 +6,13 @@ import { useQuery } from 'react-query';
 import { getSnippets } from '../tools/snipStore';
 import debouncer from '../tools/debouncer';
 
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
+
 // execpetions: authorization sub-rules
 const ExceptionsPopUp = (props, ref) => {
   const { notify, whoami } = useOutletContext();
@@ -14,6 +21,19 @@ const ExceptionsPopUp = (props, ref) => {
   const forceRerender = () => {
     setForceRenderState(old => !old);
   };
+
+  // form animation stuff
+  const [animationState, setFormState] = React.useState({ showForm: true });
+  React.useEffect(() => {
+    // unmount form
+    if (!animationState.showForm) {
+      // console.log('unmounting the form')
+      // setState in handleClose() is async so I need to make this wait for the animation to finish
+      setTimeout(() => {
+        props.hidePopUp();
+      }, 300);
+    }
+  }, [animationState.showForm]);
 
   // DRYing a little
   const coworkerExceptionsRef = useRef({});
@@ -128,7 +148,11 @@ const ExceptionsPopUp = (props, ref) => {
 
     // unmount pop-up
     // forceRerender();
-    props.hidePopUp();
+    setFormState(state => {
+      const stateClone = structuredClone(state);
+      stateClone.showForm = false;
+      return stateClone;
+    });
   };
 
   // console.log(ref.current);
@@ -137,7 +161,8 @@ const ExceptionsPopUp = (props, ref) => {
     inputs: 'flex justify-between items-center mb-[2rem] flex-wrap gap-5',
     ruleItem: 'flex justify-between items-center gap-5 flex-wrap',
     buttons: 'flex gap-5',
-    iconButton: 'text-2xl text-primary tooltip',
+    iconButton: `text-2xl text-primary tooltip
+            hover:scale-105 transition-scale duration-200`,
     li: 'mb-2 px-3 py-2 border-2 border-[#323232] rounded-md hover:bg-[#262626]',
   };
 
@@ -232,62 +257,84 @@ const ExceptionsPopUp = (props, ref) => {
   };
 
   return (
-    <div
-      className={`backdrop-blur-sm z-10 fixed top-0 left-0
+    <AnimatePresence>
+      {animationState.showForm ? (
+        <motion.div
+          key={'silly yet important property'}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className={`backdrop-blur-sm z-10 fixed top-0 left-0
                       w-full h-full flex items-center justify-center`}
-    >
-      <div
-        onClick={handleClose}
-        className={`fixed content-[""] top-0 left-0
-                            w-full h-full`}
-      ></div>
-      <form
-        className='flex flex-col w-[600px] gap-6 p-6 pt-8
-                        bg-[#181818] z-30 drop-shadow-2xl relative'
-      >
-        <span
-          onClick={handleClose}
-          className='text-primary absolute content-["X"] top-2
-                              right-2 text-xl cursor-pointer'
         >
-          X
-        </span>
+          <div
+            onClick={handleClose}
+            className={`fixed content-[""] top-0 left-0
+                            w-full h-full`}
+          ></div>
+          <motion.form
+            key={'silly yet important property'}
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -100 }}
+            transition={{ duration: 0.3 }}
+            className='flex flex-col w-[600px] gap-6 p-6 pt-8
+                        bg-[#181818] z-30 drop-shadow-2xl relative'
+          >
+            <span
+              onClick={handleClose}
+              className='text-white absolute content-["X"] top-2
+                              right-2 text-xl cursor-pointer
+                              hover:text-primary
+                            transition-color duration-200'
+            >
+              X
+            </span>
 
-        <div>
-          <h1 className='mb-[4rem] text-2xl text-center'>
-            Managing {props.coworkerUsername}&apos;s Rules
-          </h1>
-          <div className={classes.inputs}>
-            {ref.current[props.oldOrNew].new && snippetsStatus == 'success' ? (
-              <>
-                {snippetsDataList()}
-                <AccessControl
-                  ref={ref.current[props.oldOrNew].new.exceptionAccess}
-                  type='exceptions'
-                />
-              </>
-            ) : (
-              <></>
-            )}
+            <div>
+              <h1 className='mb-[4rem] text-2xl text-center'>
+                Managing {props.coworkerUsername}&apos;s Rules
+              </h1>
+              <div className={classes.inputs}>
+                {ref.current[props.oldOrNew].new &&
+                snippetsStatus == 'success' ? (
+                  <>
+                    {snippetsDataList()}
+                    <AccessControl
+                      ref={ref.current[props.oldOrNew].new.exceptionAccess}
+                      type='exceptions'
+                    />
+                  </>
+                ) : (
+                  <></>
+                )}
 
-            <button className={classes.iconButton} onClick={addNewException}>
-              <FaPlusSquare className='' />
-              <div className='tooltiptext'>Add Exception</div>
-            </button>
-          </div>
-          <div>
-            <ul>{listExceptions()}</ul>
-          </div>
-        </div>
+                <button
+                  className={classes.iconButton}
+                  onClick={addNewException}
+                >
+                  <FaPlusSquare className='' />
+                  <div className='tooltiptext'>Add Exception</div>
+                </button>
+              </div>
+              <div>
+                <ul>{listExceptions()}</ul>
+              </div>
+            </div>
 
-        {/* <button
+            {/* <button
                     className="w-[100px] bg-primary leading-8 rounded-md text-white mx-auto"
                     onClick={handleClose}
                 >
                     Save
                 </button> */}
-      </form>
-    </div>
+          </motion.form>
+        </motion.div>
+      ) : (
+        <></>
+      )}
+    </AnimatePresence>
   );
 };
 
