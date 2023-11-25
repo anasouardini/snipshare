@@ -1,4 +1,4 @@
-const parseParams = obj =>
+const parseParams = (obj) =>
   Object.keys(obj)
     .reduce((acc, k) => {
       if (obj[k]) {

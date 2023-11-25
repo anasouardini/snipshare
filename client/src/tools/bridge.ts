@@ -23,9 +23,9 @@ const server = {
 
 export const create = (route: string, body: BodyInit) =>
   fetch(server.url + route, server.options('post', body))
-    .then(async res => {
+    .then(async (res) => {
       return {
-        ...(await res.json().then(res => res)),
+        ...(await res.json().then((res) => res)),
         status: res.status,
       };
     })
@@ -40,52 +40,52 @@ export const create = (route: string, body: BodyInit) =>
 
 export const read = (route: string) =>
   fetch(server.url + route, server.options('get'))
-    .then(async res => {
+    .then(async (res) => {
       return {
         ...(await res
           .json()
-          .then(res => res)
+          .then((res) => res)
           .catch(() => false)),
         status: res.status,
       };
     })
-    .catch(err => err);
+    .catch((err) => err);
 
 export const updateFile = (route: string, body: BodyInit) =>
   fetch(server.url + route, { method: 'put', credentials: 'include', body })
-    .then(async res => {
+    .then(async (res) => {
       return {
         ...(await res
           .json()
-          .then(res => res)
+          .then((res) => res)
           .catch(() => false)),
         status: res.status,
       };
     })
-    .catch(err => false);
+    .catch((err) => false);
 
 export const update = (route: string, body?: BodyInit) =>
   fetch(server.url + route, server.options('put', body))
-    .then(async res => {
+    .then(async (res) => {
       return {
         ...(await res
           .json()
-          .then(res => res)
+          .then((res) => res)
           .catch(() => false)),
         status: res.status,
       };
     })
-    .catch(err => false);
+    .catch((err) => false);
 
 export const remove = (route: string, body?: BodyInit) =>
   fetch(server.url + route, server.options('delete', body))
-    .then(async res => {
+    .then(async (res) => {
       return {
         ...(await res
           .json()
-          .then(res => res)
+          .then((res) => res)
           .catch(() => false)),
         status: res.status,
       };
     })
-    .catch(err => false);
+    .catch((err) => false);

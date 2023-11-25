@@ -7,7 +7,9 @@ const restart = async (req, res) => {
     if (response.state.initializing) {
       return res.json({ msg: 'be patient, the DB is being re-initialized' });
     }
-    return res.json({ msg: 'the database has been re-initialized succesfully' });
+    return res.json({
+      msg: 'the database has been re-initialized succesfully',
+    });
   }
 
   res.status(500).json({ msg: 'could not re initialize the db' });

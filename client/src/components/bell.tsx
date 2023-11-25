@@ -71,7 +71,6 @@ export default function Bell(props: { notify: notifyFuncT }) {
     // async function(updates notifications state)
     await markNotificationRead();
   };
-
   const listNotifications = () => {
     if (notifications.status == 'success') {
       return notifications.data.map(
@@ -139,7 +138,7 @@ export default function Bell(props: { notify: notifyFuncT }) {
   return (
     <>
       <div
-        ref={el => {
+        ref={(el) => {
           unreadNotificationsRef.current = el;
           bellIconAnimationScope.current = el;
         }}

@@ -53,7 +53,7 @@ const CodeSnippet = (
       {/* <h3>Snippet</h3> */}
       <div
         className='relative'
-        ref={el => {
+        ref={(el) => {
           if (ref) {
             ref.current.parent = el;
           }

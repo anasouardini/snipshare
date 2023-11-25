@@ -1,6 +1,6 @@
 const poolPromise = require('./db');
 
-const readAllRules = props => {
+const readAllRules = (props) => {
   // to check if user who is viewing all the snippets
   // in the home page is only seying snippets from accounts
   // which have the user as a coworker

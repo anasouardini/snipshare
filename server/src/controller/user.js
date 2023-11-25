@@ -5,7 +5,7 @@ const vars = require('./../vars.js');
 const readAll = async (req, res) => {
   const response = await User.readAll();
 
-  res.json({ msg: response[0].map(item => item.user) });
+  res.json({ msg: response[0].map((item) => item.user) });
 };
 
 const readSingle = async (req, res) => {

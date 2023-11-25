@@ -4,7 +4,7 @@ const readAll = async (req, res) => {
   const categoriesResponse = await Categories.getAllCategories();
 
   if (categoriesResponse) {
-    const categoriesArr = categoriesResponse[0].map(obj => obj.name);
+    const categoriesArr = categoriesResponse[0].map((obj) => obj.name);
     // console.log(categoriesArr)
     return res.json({ msg: categoriesArr });
   }

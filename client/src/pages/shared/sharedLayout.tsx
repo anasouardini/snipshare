@@ -53,7 +53,7 @@ export default function SharedLayout() {
   }
 
   const listNotifications = () => {
-    return Object.keys(notifyState).map(notiKey => (
+    return Object.keys(notifyState).map((notiKey) => (
       <Notify
         key={notiKey}
         type={notifyState[notiKey].type}
@@ -64,27 +64,26 @@ export default function SharedLayout() {
 
   // passed as react-router-context to the outlet
   // and as a prop to the SSE component
-  const notify = notication => {
+  const notify = (notication) => {
     const randomKey = uuid();
 
     setTimeout(() => {
-      setNotifyState(notificationsList => {
+      setNotifyState((notificationsList) => {
         delete notificationsList[randomKey];
         return { ...notificationsList };
       });
     }, 3000);
 
-    setNotifyState(notificationsList => {
+    setNotifyState((notificationsList) => {
       notificationsList[randomKey] = notication;
       return { ...notificationsList }; // changing the memeory refrence for react
     });
     // console.log('timedout', notifyState);
   };
 
-
   const menuOverlayRef = React.useRef();
   const navRef = React.useRef();
-  const showMenu = e => {
+  const showMenu = (e) => {
     e.stopPropagation();
     //* this is a huge mess but i wanted to experiment with tailwind some more
     menuOverlayRef.current.className = `navigationOverlay sm>:fixed sm>:top-0
@@ -96,7 +95,7 @@ export default function SharedLayout() {
     navRef.current.children[0].className = `sm<:flex sm<:items-center sm<:gap-3
       flex sm>:flex-col sm>:gap-5 px-4`;
   };
-  const hideMenu = e => {
+  const hideMenu = (e) => {
     const isOverlayVisible =
       e.currentTarget.classList.contains('navigationOverlay');
     //console.log(e.currentTarget.tagName)
@@ -123,7 +122,12 @@ export default function SharedLayout() {
           >
             <FaBars />
           </button>
-         <NavMenu hideMenu={hideMenu} notify={notify} navRef={navRef} whoami={whoami}/>
+          <NavMenu
+            hideMenu={hideMenu}
+            notify={notify}
+            navRef={navRef}
+            whoami={whoami}
+          />
         </div>
       </header>
 
@@ -151,7 +155,6 @@ export default function SharedLayout() {
       <div className='fixed top-[50px] right-[50%] translate-x-[50%] flex-row'>
         {listNotifications(notifyState)}
       </div>
-
 
       <footer
         className={`mt-auto w-full flex flex-wrap gap-3 

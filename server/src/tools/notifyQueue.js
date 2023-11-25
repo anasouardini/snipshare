@@ -9,7 +9,7 @@ const queueAdd = (user, sseMsg) => {
 };
 
 setInterval(() => {
-  Object.keys(queue).forEach(user => {
+  Object.keys(queue).forEach((user) => {
     if (streams?.[user]) {
       streams[user].write(queue[user]);
       delete queue[user];

@@ -58,12 +58,12 @@ export default function AddRules() {
   }
   // console.log('query coworkers', coworkersRules.data);
 
-  const eventDefaults = e => {
+  const eventDefaults = (e) => {
     e.stopPropagation();
     e.preventDefault();
   };
 
-  const deleteCoworker = async coworkerUsername => {
+  const deleteCoworker = async (coworkerUsername) => {
     //wait fot the changes before getting the new data
     const response = await remove(`coworkerRules`, {
       props: { coworker: coworkerUsername },
@@ -74,7 +74,7 @@ export default function AddRules() {
     }
   };
 
-  const addNewCoworker = async e => {
+  const addNewCoworker = async (e) => {
     eventDefaults(e);
     const generic = Object.keys(genericAccessRefs.current.new).reduce(
       (acc, accessKey) => {
@@ -116,7 +116,7 @@ export default function AddRules() {
     }
   };
 
-  const updateCoworker = async coworkerUsername => {
+  const updateCoworker = async (coworkerUsername) => {
     const generic = Object.keys(
       genericAccessRefs.current.old[coworkerUsername],
     ).reduce((acc, accessKey) => {
@@ -152,9 +152,9 @@ export default function AddRules() {
     });
   };
 
-  const markChangedCoworker = coworkerUsername => {
+  const markChangedCoworker = (coworkerUsername) => {
     changedCoworkers.current.add(coworkerUsername);
-    setForceRenderState(old => !old);
+    setForceRenderState((old) => !old);
   };
 
   const hidePopUp = () => {
@@ -175,7 +175,7 @@ export default function AddRules() {
   const listCoworkers = () => {
     let coworkersCounter = 0.4;
     return coworkersRules.data.generic ? (
-      Object.keys(coworkersRules.data.generic).map(coworkerUsername => {
+      Object.keys(coworkersRules.data.generic).map((coworkerUsername) => {
         //* a copy of the state keeps the doctor away
         // console.log(coworkersRules.data.generic[coworkerUsername]);
         genericAccessRefs.current.old[coworkerUsername] = {
@@ -199,7 +199,7 @@ export default function AddRules() {
                 ref={genericAccessRefs.current.old[coworkerUsername]}
                 coworkerAccess={coworkersRules.data.generic[coworkerUsername]}
                 type='generic'
-                markChangedCoworker={e => {
+                markChangedCoworker={(e) => {
                   markChangedCoworker(coworkerUsername);
                 }}
               />
@@ -211,7 +211,7 @@ export default function AddRules() {
                       ? 'text-orange-400'
                       : ''
                   }`}
-                  onClick={e => {
+                  onClick={(e) => {
                     eventDefaults(e);
                     updateCoworker(coworkerUsername);
                   }}
@@ -221,7 +221,7 @@ export default function AddRules() {
                 </button>
                 <button
                   className={classes.iconButton}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.preventDefault();
                     showExceptionsPopUp(
                       coworkersRules.data.exceptions[coworkerUsername],
@@ -237,7 +237,7 @@ export default function AddRules() {
                 </button>
                 <button
                   className={classes.iconButton}
-                  onClick={e => {
+                  onClick={(e) => {
                     eventDefaults(e);
                     deleteCoworker(coworkerUsername);
                   }}
@@ -289,7 +289,7 @@ export default function AddRules() {
           className='border-[1px] border-primary rounded-md p-1 px-3 w-[150px]'
           type='text'
           placeholder='new Coworker'
-          ref={el => {
+          ref={(el) => {
             exceptionAccessRefs.current.new.coworkerUsername = el;
           }}
         />
@@ -297,7 +297,7 @@ export default function AddRules() {
         <div className={classes.buttons}>
           <button
             className={classes.iconButton}
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault();
               const coworkerUsername =
                 exceptionAccessRefs.current.new.coworkerUsername.value ??

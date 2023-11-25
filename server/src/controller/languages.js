@@ -4,7 +4,7 @@ const readAll = async (req, res) => {
   const languagesResponse = await Languages.getAllLanguages();
 
   if (languagesResponse) {
-    const languagesArr = languagesResponse[0].map(obj => obj.name);
+    const languagesArr = languagesResponse[0].map((obj) => obj.name);
     // console.log(languagesArr)
     return res.json({ msg: languagesArr });
   }

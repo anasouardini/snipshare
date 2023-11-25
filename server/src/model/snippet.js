@@ -64,7 +64,7 @@ const deleteSnippet = (user, snipID) =>
     [user, snipID],
   );
 
-const createSnippet = props => {
+const createSnippet = (props) => {
   return poolPromise(
     `INSERT INTO
         snippets (id, user, isPrivate, title, descr, snippet, language, categories, author)

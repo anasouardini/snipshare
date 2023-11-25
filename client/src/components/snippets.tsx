@@ -57,7 +57,7 @@ export default function Snippets() {
         perPage: 3,
       }),
     {
-      getNextPageParam: lastPage => lastPage.nextPage,
+      getNextPageParam: (lastPage) => lastPage.nextPage,
     },
   );
   // if(snippets.status == 'success'){console.log(snippets.data)}

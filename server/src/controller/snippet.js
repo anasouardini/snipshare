@@ -302,7 +302,7 @@ const readUserAll = async (req, res) => {
   // console.log(req.snippets);
   // filter snippets according to rules
   const filteredSnippets = [];
-  req.snippets.forEach(snippetObj => {
+  req.snippets.forEach((snippetObj) => {
     if (snippetObj.user == req.user.username) {
       appendSnippetToResponse(req, filteredSnippets, snippetObj, {
         read: true,
@@ -368,7 +368,7 @@ const readAll = async (req, res) => {
 
   // filter snippets according to rules
   const filteredSnippets = [];
-  req.snippets.forEach(snippetObj => {
+  req.snippets.forEach((snippetObj) => {
     if (user == snippetObj.user || isUserMod) {
       appendSnippetToResponse(req, filteredSnippets, snippetObj, {
         read: true,

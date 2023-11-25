@@ -51,7 +51,7 @@ export default function SignUp() {
     submit: 'w-full border-b-2 border-b-primary mt-4 pb-2',
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     createUser();
   };

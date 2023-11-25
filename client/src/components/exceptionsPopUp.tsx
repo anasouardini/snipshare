@@ -19,7 +19,7 @@ const ExceptionsPopUp = (props, ref) => {
 
   const [_, setForceRenderState] = useState(true);
   const forceRerender = () => {
-    setForceRenderState(old => !old);
+    setForceRenderState((old) => !old);
   };
 
   // form animation stuff
@@ -78,12 +78,12 @@ const ExceptionsPopUp = (props, ref) => {
     // };
   }, []);
 
-  const eventDefaults = e => {
+  const eventDefaults = (e) => {
     e.stopPropagation();
     e.preventDefault();
   };
 
-  const addNewException = e => {
+  const addNewException = (e) => {
     eventDefaults(e);
 
     const parentRef = ref.current[props.oldOrNew];
@@ -114,12 +114,12 @@ const ExceptionsPopUp = (props, ref) => {
   };
 
   // console.log(ref.current[props.oldOrNew].old);
-  const handleClose = e => {
+  const handleClose = (e) => {
     eventDefaults(e);
 
-    Object.keys(coworkerExceptionsRef.current).forEach(exceptionID => {
+    Object.keys(coworkerExceptionsRef.current).forEach((exceptionID) => {
       Object.keys(coworkerExceptionsRef.current[exceptionID]).forEach(
-        access => {
+        (access) => {
           coworkerExceptionsRef.current[exceptionID][access] =
             coworkerExceptionsRef.current[exceptionID][access].checked;
         },
@@ -148,7 +148,7 @@ const ExceptionsPopUp = (props, ref) => {
 
     // unmount pop-up
     // forceRerender();
-    setFormState(state => {
+    setFormState((state) => {
       const stateClone = structuredClone(state);
       stateClone.showForm = false;
       return stateClone;
@@ -168,7 +168,7 @@ const ExceptionsPopUp = (props, ref) => {
 
   const listExceptions = () =>
     ref.current[props.oldOrNew].old ? (
-      Object.keys(coworkerExceptionsRef.current).map(exceptionID => {
+      Object.keys(coworkerExceptionsRef.current).map((exceptionID) => {
         return (
           <li key={exceptionID} className={classes.li}>
             <div className={classes.ruleItem}>
@@ -184,7 +184,7 @@ const ExceptionsPopUp = (props, ref) => {
 
               <button
                 className={classes.iconButton}
-                onClick={e => {
+                onClick={(e) => {
                   eventDefaults(e);
                   delete coworkerExceptionsRef.current[exceptionID];
                   props.markChangedCoworker(props.coworkerUsername);
@@ -239,12 +239,12 @@ const ExceptionsPopUp = (props, ref) => {
           onChange={handleSnippetSearch}
           list='snippets'
           type='text'
-          ref={el => {
+          ref={(el) => {
             ref.current[props.oldOrNew].new.exceptionID = el;
           }}
         />
         <datalist id='snippets'>
-          {snippetsData.snippets.map(snippet => {
+          {snippetsData.snippets.map((snippet) => {
             return (
               <option key={snippet.id} value={snippet.id}>
                 {snippet.title}

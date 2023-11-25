@@ -50,7 +50,7 @@ function Snippet(props: propsT) {
   });
 
   const updateFields = () => {
-    formFieldsState.current.fields.forEach(field => {
+    formFieldsState.current.fields.forEach((field) => {
       if (field.attr.type == 'checkbox') {
         field.attr.defaultChecked = snipInfoState.snippet[field.attr.key];
       } else {
@@ -73,10 +73,10 @@ function Snippet(props: propsT) {
   }
   // ditsh this: useEffect(() => {}, []);
 
-  const handleEdit = e => {
+  const handleEdit = (e) => {
     e.stopPropagation();
     if (snipInfoState.snippet.access?.update) {
-      formFieldsState.current.fields.forEach(field => {
+      formFieldsState.current.fields.forEach((field) => {
         if (field.attr.type == 'snippet') {
           field.attr.readOnly = false;
         }
@@ -85,7 +85,7 @@ function Snippet(props: propsT) {
     }
   };
 
-  const handleDelete = async e => {
+  const handleDelete = async (e) => {
     e.stopPropagation();
     // console.log('sdfkljsdfj');
 
@@ -194,7 +194,7 @@ function Snippet(props: propsT) {
           <details className='mb-4'>
             <summary className='mb-2 cursor-pointer w-max'>Categories:</summary>
             <ul className='mr-3 flex flex-wrap'>
-              {snipInfoState.snippet.categories.split(' ').map(category => (
+              {snipInfoState.snippet.categories.split(' ').map((category) => (
                 <li
                   key={category}
                   className='inline ml-2 border-[1px]
@@ -214,7 +214,7 @@ function Snippet(props: propsT) {
           {/* Snippet */}
           <CodeSnippet
             {...formFieldsState.current.fields.filter(
-              field => field.type == 'CodeSnippet',
+              (field) => field.type == 'CodeSnippet',
             )[0].attr}
             readOnly={true}
           />

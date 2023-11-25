@@ -15,7 +15,7 @@ interface NavMenuProps {
   navRef: {};
   whoami: { status: number };
 }
-const NavMenu = ({ hideMenu, navRef, whoami, notify }:NavMenuProps) => {
+const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
   const classes = {
     navLink: `transition-border duration-300 ease-in-out cursor-pointer pb-2 border-b-[3px] border-b-transparent 
     hover:border-b-primary text-gray-200`,
@@ -79,15 +79,15 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }:NavMenuProps) => {
         {/* and use 'exit' (framer-motion elm property) to animate on UNMOUNT */}
         <ul
           ref={hacksSubMenuScope}
-          onMouseOver={e => {
-            setMenuState(state => {
+          onMouseOver={(e) => {
+            setMenuState((state) => {
               const stateClone = structuredClone(state);
               stateClone.hacks.show = true;
               return stateClone;
             });
           }}
-          onMouseOut={e => {
-            setMenuState(state => {
+          onMouseOut={(e) => {
+            setMenuState((state) => {
               const stateClone = structuredClone(state);
               stateClone.hacks.show = false;
               return stateClone;
@@ -114,15 +114,15 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }:NavMenuProps) => {
                 className={`z-30 absolute top-[20px] right-0 pt-4`}
               >
                 <ul
-                  onMouseOver={e => {
-                    setMenuState(state => {
+                  onMouseOver={(e) => {
+                    setMenuState((state) => {
                       const stateClone = structuredClone(state);
                       stateClone.loginas.show = true;
                       return stateClone;
                     });
                   }}
-                  onMouseOut={e => {
-                    setMenuState(state => {
+                  onMouseOut={(e) => {
+                    setMenuState((state) => {
                       const stateClone = structuredClone(state);
                       stateClone.loginas.show = false;
                       return stateClone;

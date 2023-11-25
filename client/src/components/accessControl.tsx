@@ -43,7 +43,7 @@ const AccessControl = (props, ref) => {
     },
   };
 
-  const onLabelClick = e => {
+  const onLabelClick = (e) => {
     const checked = Number(e.currentTarget.children[0].checked);
     // console.log(checked);
     e.currentTarget.children[0].checked = !e.currentTarget.children[0].checked;
@@ -52,7 +52,7 @@ const AccessControl = (props, ref) => {
 
     markChangedCoworker();
   };
-  const handleKeyPress = e => {
+  const handleKeyPress = (e) => {
     if (e.code == 'Space' || e.code == 'Enter') {
       onLabelClick(e);
     }
@@ -82,7 +82,7 @@ const AccessControl = (props, ref) => {
                 style={styles.tag.checkbox}
                 className={classes.checkbox}
                 type='checkbox'
-                ref={el => {
+                ref={(el) => {
                   ref.create = el;
                 }}
                 name='create'
@@ -110,7 +110,7 @@ const AccessControl = (props, ref) => {
               style={styles.tag.checkbox}
               className={classes.checkbox}
               type='checkbox'
-              ref={el => {
+              ref={(el) => {
                 ref.read = el;
               }}
               name='read'
@@ -135,7 +135,7 @@ const AccessControl = (props, ref) => {
               style={styles.tag.checkbox}
               className={classes.checkbox}
               type='checkbox'
-              ref={el => {
+              ref={(el) => {
                 ref.update = el;
               }}
               name='update'
@@ -160,7 +160,7 @@ const AccessControl = (props, ref) => {
               style={styles.tag.checkbox}
               className={classes.checkbox}
               type='checkbox'
-              ref={el => {
+              ref={(el) => {
                 ref.delete = el;
               }}
               name='delete'

@@ -11,7 +11,7 @@ const listen = (req, res) => {
   res.setHeader('Cache-Control', 'no-cache');
 
   notifyQueue.streams[username] = {
-    write: payload => {
+    write: (payload) => {
       res.write(`
               event: ${payload.event}\nid:${payload.id}\ndata: ${payload.data}\r\n\r\n
             `);

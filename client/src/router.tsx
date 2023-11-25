@@ -22,18 +22,18 @@ function App() {
 
   return (
     <QueryClientProvider client={client}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<SharedLayout />}>
-              <Route index element={<Home />} />
-              <Route path='/login' element={<Signin />} />
-              <Route path='/signup' element={<SignUp />} />
-              <Route path='/addRules' element={<AddRules />} />
-              <Route path='/user/:user' element={<Profile />} />
-              <Route path='*' element={<NotFountPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<SharedLayout />}>
+            <Route index element={<Home />} />
+            <Route path='/login' element={<Signin />} />
+            <Route path='/signup' element={<SignUp />} />
+            <Route path='/addRules' element={<AddRules />} />
+            <Route path='/user/:user' element={<Profile />} />
+            <Route path='*' element={<NotFountPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }

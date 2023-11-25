@@ -106,7 +106,7 @@ const Form = (props: formPropsT) => {
     const removeInvalidStyle = (el: HTMLElement | HTMLInputElement | null) => {
       //removes error styling if exists
       const invalidInputStyle = `border-2 border-red-400 before:block`;
-      invalidInputStyle.split(' ').forEach(styleClass => {
+      invalidInputStyle.split(' ').forEach((styleClass) => {
         el?.classList.remove(styleClass);
       });
       el?.parentNode?.querySelector('.error')?.classList.add('hidden');
@@ -120,7 +120,7 @@ const Form = (props: formPropsT) => {
       el?.classList.remove('border-green-400');
 
       const invalidInputStyle = `border-2 border-red-400`;
-      invalidInputStyle.split(' ').forEach(styleClass => {
+      invalidInputStyle.split(' ').forEach((styleClass) => {
         el?.classList.add(styleClass);
       });
 
@@ -230,7 +230,7 @@ const Form = (props: formPropsT) => {
 
     // unmount the sub-form so that framer motion can animate it before removing it from the DOM.
     // console.log('animating away')
-    setFormState(state => {
+    setFormState((state) => {
       const stateClone = structuredClone(state);
       stateClone.showForm = false;
       return stateClone;
@@ -249,7 +249,7 @@ const Form = (props: formPropsT) => {
     const body: { props: fieldPropsT } = { props: {} };
 
     // console.log(props.fields);
-    props.fields.forEach(field => {
+    props.fields.forEach((field) => {
       const fieldKey = field.attr.key;
       // keept the != undefined, because js is weird
       if (refs?.[fieldKey] != undefined) {
@@ -293,7 +293,7 @@ const Form = (props: formPropsT) => {
     props.refetch();
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.stopPropagation();
     e.preventDefault();
     if (refs.error.current) return;
@@ -314,7 +314,7 @@ const Form = (props: formPropsT) => {
   const listInputs = () => {
     // console.log(fields);
     // TODO: clear this spagetty of conditions, DRY it a little
-    return props.fields.map(input => {
+    return props.fields.map((input) => {
       const Component = getFieldsMap(input.type);
       if (input.attr.key == 'descr') {
         let descrHeight = 2 * 35;

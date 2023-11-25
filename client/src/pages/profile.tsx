@@ -96,7 +96,7 @@ export default function Profile() {
     }
   };
 
-  const fileChange = async e => {
+  const fileChange = async (e) => {
     const file = e.target.files[0];
 
     const formData = new FormData();
@@ -122,7 +122,7 @@ export default function Profile() {
         {/* avatar */}
         <div aria-label='profile avatar' className={`mb-5`}>
           <style
-            ref={el => {
+            ref={(el) => {
               refs.buttonHoverStyle = el;
             }}
           >{`.profile-img:has(label):focus > label.invisible{visibility: visible}
@@ -134,7 +134,7 @@ export default function Profile() {
                             h-[90px] border-primary border-[1px] rounded-[50%] mb-5 overflow-hidden`}
           >
             <img
-              ref={el => {
+              ref={(el) => {
                 refs.view.img = el;
               }}
               crossOrigin='anonymous'
@@ -160,7 +160,7 @@ export default function Profile() {
               name='avatar'
               type='file'
               id='uploadBtn'
-              onChange={e => {
+              onChange={(e) => {
                 fileChange(e);
               }}
               accept='.jpg, .jpeg, .png'
@@ -171,20 +171,20 @@ export default function Profile() {
         {/* username */}
         <p aria-label='profile username' className='mb-5 text-xl'>
           <input
-            onKeyPress={e => {
+            onKeyPress={(e) => {
               viewMode(e, 'username');
             }}
-            onBlur={e => {
+            onBlur={(e) => {
               viewMode(e, 'username');
             }}
-            ref={el => {
+            ref={(el) => {
               refs.inputs.username = el;
             }}
             className='hidden w-[200px]'
             defaultValue={profileInfoRef.username}
           />
           <span
-            ref={el => {
+            ref={(el) => {
               refs.view.username = el;
             }}
           >
@@ -192,10 +192,10 @@ export default function Profile() {
           </span>
           <button
             aria-label='edit'
-            ref={el => {
+            ref={(el) => {
               refs.buttons.username = el;
             }}
-            onClick={e => {
+            onClick={(e) => {
               editMode(e, 'username');
             }}
             className='inline ml-6 text-primary'
@@ -207,7 +207,7 @@ export default function Profile() {
         {/* description */}
         <div aria-label='profile description' className='relative'>
           <details
-            ref={el => {
+            ref={(el) => {
               refs.view.description = el;
             }}
           >
@@ -216,30 +216,30 @@ export default function Profile() {
             </summary>
             <p
               className='mt-2 text-[#969696]'
-              ref={el => {
+              ref={(el) => {
                 refs.view.descriptionText = el;
               }}
             ></p>
           </details>
           <textarea
-            onKeyPress={e => {
+            onKeyPress={(e) => {
               viewMode(e, 'description');
             }}
-            onBlur={e => {
+            onBlur={(e) => {
               viewMode(e, 'description');
             }}
             className='hidden w-full'
-            ref={el => {
+            ref={(el) => {
               refs.inputs.description = el;
             }}
             // defaultValue={description}
           ></textarea>
           <button
             aria-label='edit'
-            ref={el => {
+            ref={(el) => {
               refs.buttons.description = el;
             }}
-            onClick={e => {
+            onClick={(e) => {
               editMode(e, 'description');
             }}
             className='absolute top-0 left-[167px] inline ml-6 text-primary'

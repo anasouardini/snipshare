@@ -64,9 +64,9 @@ const Categories = (
     //clean input categories from spaces
     const inputList = inputValue
       .split(separator)
-      .map(inputCategory => inputCategory.trim());
+      .map((inputCategory) => inputCategory.trim());
 
-    const isOutOfRange = inputList.some(iputCategory => {
+    const isOutOfRange = inputList.some((iputCategory) => {
       // if one of them is not in the list, input is out of range
       if (!categories.includes(iputCategory.trim())) return true;
     });
@@ -109,7 +109,7 @@ const Categories = (
           defaultValue={props?.defaultValue}
           ref={ref}
           list='categories'
-          onChange={e => {
+          onChange={(e) => {
             handleMultiSelectInputChange(e);
           }}
           className={`${props.filtering ? '' : 'relative z-20'}
@@ -118,7 +118,7 @@ const Categories = (
         />
       </label>
       <datalist id='categories'>
-        {dataListOptionsState.map(opt => {
+        {dataListOptionsState.map((opt) => {
           return <option key={opt} value={opt}></option>;
         })}
       </datalist>

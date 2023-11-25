@@ -83,8 +83,8 @@ const signinOAuth = async (req, res) => {
       .post(process.env.AUTH_GOOGLE_TOKEN_ENDPOINT, accessTokenRequest, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
-      .then(res => res.data)
-      .catch(error => ({ error: error.response.data.error }));
+      .then((res) => res.data)
+      .catch((error) => ({ error: error.response.data.error }));
 
     if (response?.error) {
       return res.redirect(`${vars.clientAddress}/login?error=oauth2 error`);
