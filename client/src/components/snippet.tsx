@@ -107,13 +107,13 @@ function Snippet(props: propsT) {
             duration-200 ease-in-out`,
     btnEdit: `${
       snipInfoState.snippet.access?.update
-        ? 'bg-lime-700 font-bold'
-        : 'bg-gray-400 text-[#222] font-bold cursor-not-allowed'
+        ? 'bg-lime-700 font-bold text-gray-200'
+        : 'bg-gray-400 text-black font-bold cursor-not-allowed'
     }`,
     btnDelete: `${
       snipInfoState.snippet.access?.delete
-        ? 'bg-red-700 font-bold'
-        : 'bg-gray-400 font-bold text-[#222] cursor-not-allowed'
+        ? 'bg-red-700 font-bold text-gray-200'
+        : 'bg-gray-400 font-bold text-black cursor-not-allowed'
     }`,
   };
 
@@ -140,7 +140,7 @@ function Snippet(props: propsT) {
     <>
       <div
         data-key={snipInfoState.snippet.id}
-        className={`bg-[#292929] rounded-md w-full max-w-[600px]`}
+        className={`bg-bg3 rounded-md w-full max-w-[600px]`}
       >
         <div className={`snippet flex flex-col max-w-[600px]  p-6`}>
           {/* Owner and Author and Privacy*/}
@@ -162,7 +162,7 @@ function Snippet(props: propsT) {
               <p>
                 <span>{snipInfoState.snippet.user}</span>
                 <br />
-                <span className='text-[#939393] text-sm'>
+                <span className='text-text2 text-sm'>
                   @{snipInfoState.snippet.user}
                 </span>
               </p>
@@ -199,14 +199,14 @@ function Snippet(props: propsT) {
             </p>
           </div>
           {/* Title */}
-          <h2 className='text-xl text-gray-300 mb-4'>
+          <h2 className='text-xl text-text mb-4'>
             {snipInfoState.snippet.title}
           </h2>
 
           {/* Description */}
           <details className='mb-4'>
             <summary className='mb-2 cursor-pointer w-max'>Description</summary>
-            <p className='text-[#939393]'>{snipInfoState.snippet.descr}</p>
+            <p className='text-text2'>{snipInfoState.snippet.descr}</p>
           </details>
           <details className='mb-4'>
             <summary className='mb-2 cursor-pointer w-max'>Categories:</summary>
@@ -222,7 +222,7 @@ function Snippet(props: propsT) {
               ))}
             </ul>
           </details>
-          <h3 className='text-md text-gray-300 mb-3'>
+          <h3 className='text-md text-text mb-3'>
             Snippet:
             <p className='inline ml-2 border-[1px] border-primary rounded-xl p-1 px-2'>
               {snipInfoState.snippet.language}

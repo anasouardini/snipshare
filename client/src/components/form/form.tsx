@@ -336,7 +336,7 @@ const Form = (props: formPropsT) => {
                 width: '100%',
               }}
             />
-            <div className='error text-red-500 p-1 hidden'></div>
+            <div className='error text-error p-1 hidden'></div>
           </label>
         );
       }
@@ -357,7 +357,7 @@ const Form = (props: formPropsT) => {
             key={input.attr.key}
             style={{ width: '100%' }}
           />
-          <div className='error text-red-500 p-1 hidden'></div>
+          <div className='error text-error p-1 hidden'></div>
         </label>
       );
     });
@@ -387,7 +387,7 @@ const Form = (props: formPropsT) => {
             exit={{ opacity: 0, y: -100 }}
             transition={{ duration: 0.3 }}
             className='flex flex-col gap-6 p-6 pt-8
-                          bg-[#181818] z-30 drop-shadow-2xl relative
+                          bg-bg z-30 drop-shadow-2xl relative
                           w-[600px] sm>:w-full'
           >
             <div
@@ -405,7 +405,7 @@ const Form = (props: formPropsT) => {
             <button
               ref={refs.formButton}
               className='w-[100px] bg-lime-700 leading-8
-                               rounded-md  text-white mx-auto z-10'
+                               rounded-md  text-gray-300 mx-auto z-10'
               onClick={handleSubmit}
             >
               {props.action == 'edit' ? 'Edit' : 'Create'}

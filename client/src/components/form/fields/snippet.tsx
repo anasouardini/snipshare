@@ -60,7 +60,7 @@ const CodeSnippet = (
         }}
       >
         <MonacoEditor {...monacoEditorAttr} />
-        <div className='error text-red-500 p-1 hidden'></div>
+        <div className='error text-error p-1 hidden'></div>
       </div>
     </>
   );

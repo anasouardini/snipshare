@@ -88,9 +88,9 @@ export default function SharedLayout() {
     //* this is a huge mess but i wanted to experiment with tailwind some more
     menuOverlayRef.current.className = `navigationOverlay sm>:fixed sm>:top-0
       sm>:left-0 sm>:right-0 sm>:bottom-0
-      sm>:z-20 sm>:flex sm>:justify-center sm>:items-center sm>:bg-dark/75`;
+      sm>:z-20 sm>:flex sm>:justify-center sm>:items-center sm>:bg-bg/75`;
     navRef.current.className = `sm<:px-[5%] sm<:py-2
-      sm>:flex-row sm>:bg-dark
+      sm>:flex-row sm>:bg-bg
       sm>:border-2 sm>:border-primary sm>:p-4 rounded-md `;
     navRef.current.children[0].className = `sm<:flex sm<:items-center sm<:gap-3
       flex sm>:flex-col sm>:gap-5 px-4`;
@@ -105,7 +105,7 @@ export default function SharedLayout() {
     menuOverlayRef.current.className = `sm>:inherit`;
     navRef.current.className = `sm>:hidden sm<:px-[5%] sm<:py-2
       sm<:fixed sm<:top-0 sm<:right-0
-      sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-dark`;
+      sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-bg`;
     navRef.current.children[0].className = `sm<:flex 
       sm<:items-center
       sm<:gap-3
@@ -152,7 +152,9 @@ export default function SharedLayout() {
       )}
 
       {/* notifications */}
-      <div className='fixed top-[50px] right-[50%] translate-x-[50%] flex-row'>
+      <div
+        className={`fixed top-[50px] right-[50%] translate-x-[50%] flex-row`}
+      >
         {listNotifications(notifyState)}
       </div>
 

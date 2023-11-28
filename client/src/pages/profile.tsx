@@ -147,9 +147,9 @@ export default function Profile() {
               tabIndex='0'
               htmlFor='uploadBtn'
               className={`invisible focus:visible cursor-pointer
-                                        z-10 bg-dark/60 shadow-2xl
-                                      text-primary text-[.9rem] py-[3px] px-2
-                                        border-primary border-2`}
+              z-10 bg-bg/60 shadow-2xl
+              text-primary text-[.9rem] py-[3px] px-2
+                border-primary border-2`}
             >
               Change
             </label>

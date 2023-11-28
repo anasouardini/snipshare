@@ -2,9 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-root {
-  --primary: red;
+:root {
+  --primary: rgb(101, 163, 13);
+  --error-color: rgb(224, 110, 110);
+
+  --bg-color: #111;
+  --bg-color-2: #181818;
+  --bg-color-3: #1a1a1a;
+  --bg-color-4: #1b1b1b;
+  --text-color: #fff;
+  --text-color-2: #999;
+  --link-color: #007bff;
+  --link-color-hover: #747bff;
+  --btn-bg-color: #3a3a3a;
+  --btn-border-color-hover: #324275;
+  --btn-outline-color-focus: #a9a1a1;
 }
+
+body[data-theme='light'] {
+  --bg-color: #fff;
+  --bg-color-2: #f9f9f9;
+  --bg-color-3: #eee;
+  --bg-color-4: #d9d9d9;
+  --text-color: #213547;
+  --text-color-2: #192835;
+  --link-color: #007bff;
+  --link-color-hover: #747bff;
+  --btn-bg-color: #f9f9f9;
+  --btn-border-color-hover: #5872ca;
+  --btn-outline-color-focus: #221f1f;
+}
+
+body {
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  min-width: 350px;
+}
+
 body::scrollbar,
 .scrollbar::scrollbar {
   width: 10px;
@@ -18,20 +52,15 @@ body::-webkit-scrollbar,
 
 body::-webkit-scrollbar-thumb,
 .scrollbar::-webkit-scrollbar-thumb {
-  border-left: 2px solid black;
+  border-left: 2px solid rgb(00 100 0);
   border-radius: 5px;
   background-color: rgb(00 130 0);
-}
-
-body {
-  background: #181818;
-  color: whitesmoke;
 }
 
 input,
 textarea {
   background: transparent;
-  @apply border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-[1px] bg-[#181818];
+  @apply border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-[1px] bg-bg;
 }
 
 input[type='checkbox'] {

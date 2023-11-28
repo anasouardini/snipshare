@@ -160,7 +160,7 @@ export default function Bell(props: { notify: notifyFuncT }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={toggleNotification}
-            className={`fixed z-20 top-[40px]
+            className={`fixed z-20 top-[50px]
                            bottom-0 flex left-0 justify-end
                            backdrop-blur-sm w-full
                           `}
@@ -172,7 +172,7 @@ export default function Bell(props: { notify: notifyFuncT }) {
               exit={{ opacity: 0, x: 500 }}
               transition={{ duration: 0.3 }}
               className={`scrollbar overflow-auto w-[350px] backdrop-blur-sm
-            bg-[#242424]/[.5] px-3 py-4
+            bg-bg px-3 py-4
             flex-col gap-3`}
             >
               <ul

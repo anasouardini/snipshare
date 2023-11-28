@@ -8,6 +8,10 @@ import {
 } from 'framer-motion';
 import { create, read } from '../../tools/bridge';
 import Bell from '../../components/bell';
+import { Camera, Moon, MoonIcon, Sun, SunDim, X, MenuIcon } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../state/store';
+import { actions } from '../../state/userPreferences/userPreferences';
 
 interface NavMenuProps {
   hideMenu: () => {};
@@ -16,9 +20,13 @@ interface NavMenuProps {
   whoami: { status: number };
 }
 const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
+  const userPreferences = useSelector((state: RootState) => state.theme);
+  const dispatch = useDispatch();
+  const changeTheme = () => dispatch(actions.toggleTheme());
+
   const classes = {
     navLink: `transition-border duration-300 ease-in-out cursor-pointer pb-2 border-b-[3px] border-b-transparent 
-    hover:border-b-primary text-gray-200`,
+    hover:border-b-primary text-text`,
   };
 
   const [menuState, setMenuState] = React.useState({
@@ -61,7 +69,7 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
       className={`sm>:hidden
               sm<:px-[5%] sm<:py-2
               fixed sm<:top-0 sm<:right-0
-              sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-dark`}
+              sm<:left-0 sm<:height-[35px] sm<:z-10 sm<:bg-bg`}
     >
       <ul className='sm<:flex sm<:items-center sm<:gap-3'>
         <li>
@@ -93,7 +101,7 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
               return stateClone;
             });
           }}
-          className={`relative cursor-pointer text-gray-200
+          className={`relative cursor-pointer text-text
                   border-2 rounded-md border-orange-500 px-2 py-1`}
         >
           Hacks
@@ -128,8 +136,8 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                       return stateClone;
                     });
                   }}
-                  className={`cursor-pointer pb-2 bg-[#222222] hover:bg-[#282828]
-                      border-[1px] border-[#353525] border-b-0 text-gray-200 p-2 px-3`}
+                  className={`cursor-pointer pb-2 bg-bg hover:bg-bg3
+                      border-[1px] border-bg2 border-b-0 text-text p-2 px-3`}
                 >
                   login as
                   <AnimatePresence>
@@ -149,8 +157,8 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                         bg-gray-200 border-[1px] border-[#353525]`}
                       >
                         <li
-                          className={`cursor-pointer pb-2 bg-[#222222]
-                         hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                          className={`cursor-pointer pb-2 bg-bg
+                         hover:bg-bg3 text-text p-2 px-3`}
                           onClick={() => {
                             loginAs({
                               usr: 'admin',
@@ -162,8 +170,8 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                           admin
                         </li>
                         <li
-                          className={`cursor-pointer pb-2 bg-[#222222]
-                          hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                          className={`cursor-pointer pb-2 bg-bg
+                          hover:bg-bg3 text-text p-2 px-3`}
                           onClick={() => {
                             loginAs({
                               usr: '3sila',
@@ -175,8 +183,8 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                           3sila
                         </li>
                         <li
-                          className={`cursor-pointer pb-2 bg-[#222222]
-                          hover:bg-[#2a2a2a] text-gray-200
+                          className={`cursor-pointer pb-2 bg-bg
+                          hover:bg-bg3 text-text
                           p-2 px-3`}
                           onClick={() => {
                             loginAs({
@@ -189,8 +197,8 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                           m9ila
                         </li>
                         <li
-                          className={`cursor-pointer pb-2 bg-[#222222]
-                                  hover:bg-[#2a2a2a] text-gray-200 p-2 px-3`}
+                          className={`cursor-pointer pb-2 bg-bg
+                                  hover:bg-bg3 text-text p-2 px-3`}
                           onClick={() => {
                             loginAs({
                               usr: '3disa',
@@ -208,9 +216,9 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                   </AnimatePresence>
                 </ul>
                 <li
-                  className={`cursor-pointer pb-2 bg-[#222222] hover:bg-[#282828]
-                      border-[1px] border-[#353525] border-t-0
-                      text-gray-200 p-2 px-3`}
+                  className={`cursor-pointer pb-2 bg-bg hover:bg-bg3
+                      border-[1px] border-bg2 border-t-0
+                      text-text p-2 px-3`}
                   onClick={async () => {
                     const response = await create('restart');
                     console.log(response);
@@ -241,8 +249,17 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
           </>
         ) : (
           <>
+            <li className='ml-auto'>
+              <button className={`themeButton`} onClick={changeTheme}>
+                {userPreferences.theme === 'dark' ? (
+                  <Moon size={18} />
+                ) : (
+                  <Sun size={18} />
+                )}
+              </button>
+            </li>
             <li
-              className='ml-auto sm>:ml-0'
+              className='sm>:ml-0'
               onClick={async () => {
                 const response = await create('logout');
                 notify({ type: 'info', msg: response.msg });

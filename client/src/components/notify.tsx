@@ -7,13 +7,13 @@ export default function Notify(props: {
   // console.log('props', props);
 
   const classes = {
-    container: 'p-3 mb-3 rounded-md text-white font-bold',
+    container: 'p-3 mb-3 rounded-md text-text font-bold',
   };
 
   const notificationType = {
-    info: 'bg-blue-400 text-black',
-    warning: 'bg-yellow-400 text-black',
-    error: 'bg-red-400 text-black',
+    info: 'bg-blue-400 text-text',
+    warning: 'bg-yellow-400 text-text',
+    error: 'bg-red-400 text-text',
   };
 
   useEffect(() => {

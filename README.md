@@ -13,24 +13,27 @@ https://user-images.githubusercontent.com/114059811/236328949-a0542a2d-51e8-46c7
 - Other users can search for snippets by name, language, or category.
 - Users can grant access to their account or specific snippets to other users.
 
-## Tools Used/Learned In This Project
+## Tools Used/Learned
 
 ### Common
+
 1. Vite (build tool)
-3. NeoVim (code editor/IDE)
-4. Learned how to save a bit of performance using techniques
-  like `debouncing` and `memoization`.
-5. Started using `Git` and `Github` in a better way.
-6. Learned how to implement notification system from scratch.
+2. NeoVim (code editor/IDE)
+3. Learned how to save a bit of performance using techniques
+   like `debouncing` and `memoization`.
+4. Started using `Git` and `Github` in a better way.
+5. Learned how to implement notification system from scratch.
 
 ### Front-End
 
 1. React-query
-3. React-Router
-4. React-icons
-5. React-auto-animate
-6. Tailwind
+2. React-Router
+3. React-icons and Lucide-react
+4. Framer-motion and React-auto-animate
+5. Redux-toolkit
+6. formik
 7. Monaco Editor (code editor library)
+8. Tailwind
 
 ### Back-End
 

@@ -6,6 +6,8 @@ import { useQuery } from 'react-query';
 import { getSnippets } from '../tools/snipStore';
 import debouncer from '../tools/debouncer';
 
+import { Tooltip } from 'react-tooltip';
+
 import {
   AnimatePresence,
   motion,
@@ -163,7 +165,7 @@ const ExceptionsPopUp = (props, ref) => {
     buttons: 'flex gap-5',
     iconButton: `text-2xl text-primary tooltip
             hover:scale-105 transition-scale duration-200`,
-    li: 'mb-2 px-3 py-2 border-2 border-[#323232] rounded-md hover:bg-[#262626]',
+    li: 'mb-2 px-3 py-2 border-2 border-bg2 rounded-md hover:bg-bg3',
   };
 
   const listExceptions = () =>
@@ -183,6 +185,8 @@ const ExceptionsPopUp = (props, ref) => {
               />
 
               <button
+                  data-tooltip-id='deleteException'
+                  data-tooltip-content='Delete Exception'
                 className={classes.iconButton}
                 onClick={(e) => {
                   eventDefaults(e);
@@ -191,9 +195,9 @@ const ExceptionsPopUp = (props, ref) => {
                   forceRerender();
                 }}
               >
-                <div className='tooltiptext'>Delete Exception</div>
                 <FaMinusSquare />
               </button>
+              <Tooltip id="deleteException"/>
             </div>
           </li>
         );
@@ -284,7 +288,7 @@ const ExceptionsPopUp = (props, ref) => {
           >
             <span
               onClick={handleClose}
-              className='text-white absolute content-["X"] top-2
+              className='text-text absolute content-["X"] top-2
                               right-2 text-xl cursor-pointer
                               hover:text-primary
                             transition-color duration-200'
@@ -311,12 +315,14 @@ const ExceptionsPopUp = (props, ref) => {
                 )}
 
                 <button
+                  data-tooltip-id='addException'
+                  data-tooltip-content='Add Exception'
                   className={classes.iconButton}
                   onClick={addNewException}
                 >
                   <FaPlusSquare className='' />
-                  <div className='tooltiptext'>Add Exception</div>
                 </button>
+                <Tooltip id="addException"/>
               </div>
               <div>
                 <ul>{listExceptions()}</ul>
@@ -324,7 +330,7 @@ const ExceptionsPopUp = (props, ref) => {
             </div>
 
             {/* <button
-                    className="w-[100px] bg-primary leading-8 rounded-md text-white mx-auto"
+                    className="w-[100px] bg-primary leading-8 rounded-md text-text mx-auto"
                     onClick={handleClose}
                 >
                     Save

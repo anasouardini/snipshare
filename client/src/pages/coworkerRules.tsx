@@ -166,12 +166,12 @@ export default function AddRules() {
 
   const classes = {
     inputs:
-      'border-[1px] border-[#323232] p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
+      'border-[1px] border-bg2 p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
     buttons: 'flex gap-5',
     // button: 'border-[8px] border-primary px-2 py-1 hover:scale-150',
     iconButton: `text-2xl text-primary inline-block relative
                 hover:scale-110 transition-scale duration-200`,
-    li: `mb-3 px-3 py-2 border-[1px] border-[#323232] rounded-md hover:bg-[#262626]`,
+    li: `mb-3 px-3 py-2 border-[1px] border-bg2 rounded-md hover:bg-bg`,
   };
 
   const listCoworkers = () => {
@@ -220,12 +220,12 @@ export default function AddRules() {
                     updateCoworker(coworkerUsername);
                   }}
                 >
-                  <Tooltip
-                    style={{ fontSize: '1rem', padding: '2px 15px' }}
-                    id='updateRule'
-                  />
                   <FaRetweet />
                 </button>
+                <Tooltip
+                  style={{ fontSize: '1rem', padding: '2px 15px' }}
+                  id='updateRule'
+                />
                 <button
                   data-tooltip-id='exceptions'
                   data-tooltip-content='Exceptions'
@@ -239,14 +239,14 @@ export default function AddRules() {
                     );
                   }}
                 >
-                  <Tooltip
-                    id='exceptions'
-                    style={{ fontSize: '1rem', padding: '2px 15px' }}
-                  />
                   <FaFolderPlus />
                   {/* <FaPuzzlePiece />
                                     <FaHistory /> */}
                 </button>
+                <Tooltip
+                  id='exceptions'
+                  style={{ fontSize: '1rem', padding: '2px 15px' }}
+                />
                 <button
                   data-tooltip-id='deleteRule'
                   data-tooltip-content='Delete Rule'
@@ -256,12 +256,12 @@ export default function AddRules() {
                     deleteCoworker(coworkerUsername);
                   }}
                 >
-                  <Tooltip
-                    id='deleteRule'
-                    style={{ fontSize: '1rem', padding: '2px 15px' }}
-                  />
                   <FaMinusSquare />
                 </button>
+                <Tooltip
+                  id='deleteRule'
+                  style={{ fontSize: '1rem', padding: '2px 15px' }}
+                />
               </div>
             </div>
           </motion.li>
@@ -279,7 +279,7 @@ export default function AddRules() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.2 }}
         aria-label='instructions'
-        className='text-gray-300 mb-11'
+        className='text-text2 mb-11'
       >
         <li>The tags in the middle are for generic access to the account.</li>
         <li>
@@ -326,9 +326,7 @@ export default function AddRules() {
           >
             <FaFolderPlus />
           </button>
-          <Tooltip
-            id='addException'
-          />
+          <Tooltip id='addException' />
 
           <button
             data-tooltip-id='addCoworker'
@@ -338,9 +336,7 @@ export default function AddRules() {
           >
             <FaPlusSquare />
           </button>
-          <Tooltip
-            id='addCoworker'
-          />
+          <Tooltip id='addCoworker' />
         </div>
       </motion.div>
       <div className='mt-[2rem]'>
