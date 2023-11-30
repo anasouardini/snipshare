@@ -6,6 +6,7 @@ const CodeSnippet = (
   ref: React.LegacyRef<{ parent: HTMLElement | null; snippet: any | null }>,
 ) => {
   // console.log(props);
+  const theme = window.document.body.dataset.theme;
   const lineHeight = 19;
   const linesNumber = useRef(5 * lineHeight);
   if (props?.defaultValue) {
@@ -33,7 +34,7 @@ const CodeSnippet = (
   const monacoEditorAttr = {
     height: linesNumber.current,
     defaultLanguage: 'javascript',
-    theme: 'vs-dark',
+    theme:`vs-${theme}`,
     value: props.defaultValue,
     validate: true,
     automaticLayout: true,

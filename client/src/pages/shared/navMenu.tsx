@@ -119,7 +119,8 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                   opacity: 0,
                 }}
                 id='hacksSubMenu'
-                className={`z-30 absolute top-[20px] right-0 pt-4`}
+                className={`z-30 absolute top-[8px] right-0 mt-4
+                            border-[1px] border-text`}
               >
                 <ul
                   onMouseOver={(e) => {
@@ -153,7 +154,7 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                           y: -10,
                           opacity: 0,
                         }}
-                        className={`absolute top-0 right-[100%]
+                        className={`absolute top-[-11px] right-[100%]
                         bg-gray-200 border-[1px] border-[#353525]`}
                       >
                         <li
@@ -234,9 +235,20 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
             )}
           </AnimatePresence>
         </ul>
+        <li className='ml-auto'>
+          <button className={`themeButton`} onClick={changeTheme}>
+            {userPreferences.theme === 'dark' ? (
+              <Moon size={18} />
+            ) : (
+              <Sun size={18} />
+            )}
+          </button>
+        </li>
         {whoami.status == 401 ? (
           <>
-            <li className='sm<:ml-auto'>
+            <li
+            className='/*sm<:ml-auto*/'
+            >
               <NavLink className={classes.navLink} to='/login' replace>
                 Login
               </NavLink>
@@ -249,15 +261,6 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
           </>
         ) : (
           <>
-            <li className='ml-auto'>
-              <button className={`themeButton`} onClick={changeTheme}>
-                {userPreferences.theme === 'dark' ? (
-                  <Moon size={18} />
-                ) : (
-                  <Sun size={18} />
-                )}
-              </button>
-            </li>
             <li
               className='sm>:ml-0'
               onClick={async () => {

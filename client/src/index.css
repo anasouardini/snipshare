@@ -10,8 +10,12 @@
   --bg-color-2: #181818;
   --bg-color-3: #1a1a1a;
   --bg-color-4: #1b1b1b;
+
   --text-color: #fff;
   --text-color-2: #999;
+  --text-color-3: #888888;
+  --text-color-4: #212020;
+
   --link-color: #007bff;
   --link-color-hover: #747bff;
   --btn-bg-color: #3a3a3a;
@@ -21,11 +25,16 @@
 
 body[data-theme='light'] {
   --bg-color: #fff;
-  --bg-color-2: #f9f9f9;
-  --bg-color-3: #eee;
-  --bg-color-4: #d9d9d9;
-  --text-color: #213547;
-  --text-color-2: #192835;
+
+  --bg-color-2: #e3e3e3;
+  --bg-color-3: #d2cbcb;
+  --bg-color-4: #bbb0b0;
+
+  --text-color: #303539;
+  --text-color-2: #2f3439;
+  --text-color-3: #14181a;
+  --text-color-4: #020202;
+
   --link-color: #007bff;
   --link-color-hover: #747bff;
   --btn-bg-color: #f9f9f9;

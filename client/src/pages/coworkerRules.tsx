@@ -166,12 +166,13 @@ export default function AddRules() {
 
   const classes = {
     inputs:
-      'border-[1px] border-bg2 p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
+      'border-[1px] border-text4 p-3 rounded-md flex justify-between gap-10 flex-wrap items-center mb-[2rem]',
     buttons: 'flex gap-5',
     // button: 'border-[8px] border-primary px-2 py-1 hover:scale-150',
     iconButton: `text-2xl text-primary inline-block relative
                 hover:scale-110 transition-scale duration-200`,
-    li: `mb-3 px-3 py-2 border-[1px] border-bg2 rounded-md hover:bg-bg`,
+    li: `mb-3 px-3 py-2 border-[1px] border-text4
+        rounded-md hover:bg-bg2`,
   };
 
   const listCoworkers = () => {

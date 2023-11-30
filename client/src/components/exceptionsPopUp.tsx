@@ -284,7 +284,7 @@ const ExceptionsPopUp = (props, ref) => {
             exit={{ opacity: 0, y: -100 }}
             transition={{ duration: 0.3 }}
             className='flex flex-col w-[600px] gap-6 p-6 pt-8
-                        bg-[#181818] z-30 drop-shadow-2xl relative'
+                        bg-bg z-30 drop-shadow-2xl relative'
           >
             <span
               onClick={handleClose}
