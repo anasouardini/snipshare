@@ -3,7 +3,7 @@
 ### Tools
 
 - [ ] state management:
-  - [ ] Redux/toolkit
+  - [x] Redux/toolkit
   - [ ] jotai
 - [ ] Forms: Formik + yup
   - 100% sanitization and pretty error/warning popups with smooth animations
@@ -14,14 +14,15 @@
 
 ### Features
 
-- [ ] theming
-- [ ] drag and drop (a page with list of snippets to re-order)
+- [x] theming
 - [ ] project tour (tool tips)
 - [ ] offline mode
-  - [ ] PWA?
+  - [x] PWA?
   - [ ] service workers
   - [ ] local storage
 - [ ] mobile gestures
+
+- [ ] drag and drop (a page with list of snippets to re-order)
 - [ ] analytics?
   - [ ] number of snippets for each language
   - [ ] filter by category/tag
@@ -30,7 +31,6 @@
 
 - [ ] better responsive design
 - [ ] better A11Y
-- [ ] progress indicator
 - [ ] loading spinners / skeleton screens
 - [ ] lazy load code snippets
 - [ ] internalization
