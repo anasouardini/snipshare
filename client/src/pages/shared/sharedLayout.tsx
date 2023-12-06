@@ -10,10 +10,18 @@ import { v4 as uuid } from 'uuid';
 import { FaBars } from 'react-icons/fa';
 import NavMenu from './navMenu';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { type RootState } from '../../state/store';
+import { actions } from '../../state/userInfo/userInfo';
+
 export default function SharedLayout() {
+  const dispatch = useDispatch();
+
   // const [_, setForceRenderState] = useState(false);
   const updateWhoamiState = async () => {
+    // todo: update user info slice
     const whoamiUsr = await read('whoami');
+    dispatch(actions.setUserInfo(whoamiUsr.msg));
     setWhoami(whoamiUsr);
   };
 
@@ -139,7 +147,7 @@ export default function SharedLayout() {
         <main className='grow-1 mt-auto pt-20'>
           <Outlet
             context={{
-              whoami: whoami.msg?.username,
+              // whoami: whoami.msg?.username,
               notify,
               avatar: whoami.msg?.avatar,
               description: whoami.msg?.description,

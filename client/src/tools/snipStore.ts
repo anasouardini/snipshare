@@ -116,8 +116,8 @@ const commonSnippetFields = [
     type: 'input',
     attr: {
       key: 'title',
-      placeholder: 'title',
       name: 'title',
+      placeholder: 'title',
       type: 'text',
     },
   },
@@ -125,8 +125,8 @@ const commonSnippetFields = [
     type: 'textarea',
     attr: {
       key: 'descr',
-      placeholder: 'description',
       name: 'descr',
+      placeholder: 'description',
       type: 'textarea',
     },
   },
@@ -134,6 +134,7 @@ const commonSnippetFields = [
     type: 'CodeSnippet',
     attr: {
       key: 'snippet',
+      name: 'snippet',
       type: 'snippet',
     },
   },
@@ -141,6 +142,7 @@ const commonSnippetFields = [
     type: 'IsPrivate', // used as the component name
     attr: {
       key: 'isPrivate', // used as a ref
+      name: 'isPrivate',
       type: 'checkbox', // determins how to handle value
     },
   },
@@ -148,6 +150,7 @@ const commonSnippetFields = [
     type: 'Categories',
     attr: {
       key: 'categories',
+      name: 'categories',
       type: 'categories',
     },
   },
@@ -155,6 +158,7 @@ const commonSnippetFields = [
     type: 'Language',
     attr: {
       key: 'language',
+      name: 'language',
       type: 'language',
     },
   },

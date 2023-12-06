@@ -3,10 +3,13 @@ import { useQuery } from 'react-query';
 import { forwardRef } from 'react';
 import { getLanguages } from '../../../tools/snipStore';
 
-const Language = (
-  props: { filter: () => undefined; defaultValue?: string },
-  ref: React.LegacyRef<HTMLInputElement>,
-) => {
+interface Props {
+  filter: () => undefined;
+  attr: {};
+  defaultValue?: string;
+  setFieldValue: (name: string, value: any) => void;
+}
+const Language = (props: Props, ref: React.LegacyRef<HTMLInputElement>) => {
   // console.log(props);
 
   const { data: languages, status: languagesStatus } = useQuery(
@@ -15,6 +18,8 @@ const Language = (
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('lagnguages changing...');
+    props.setFieldValue('language', e.target.value);
     if (props?.filter) {
       props.filter();
       // if (languages.includes(e.currentTarget.value)) {
@@ -22,26 +27,31 @@ const Language = (
       // }
     }
   };
+
+  const inputProps = {};
+  if (props.attr) {
+    Object.keys(props.attr).forEach((propKey) => {
+      if (propKey != 'value') {
+        inputProps[propKey] = props.attr[propKey];
+      }
+    });
+  }
   return (
     <>
-      <label>
-        <input
-          type='text'
-          placeholder='language'
-          defaultValue={props?.defaultValue}
-          onChange={
-            languagesStatus == 'success'
-              ? handleChange
-              : () => {
-                  console.log('error while gtting languages');
-                }
-          }
-          ref={ref}
-          list='languages'
-          className={`bg-transparent w-full max-w-[280px] px-3 py-2
-                            border-[1px] border-primary rounded-md`}
-        />
-      </label>
+      <input
+        {...inputProps}
+        onChange={
+          languagesStatus == 'success'
+            ? handleChange
+            : () => {
+                console.log('error while gtting languages');
+              }
+        }
+        ref={ref}
+        list='languages'
+        className={`bg-transparent w-full max-w-[280px] px-3 py-2
+                     border-[1px] border-primary rounded-md`}
+      />
       <datalist id='languages'>
         {languagesStatus == 'success' ? (
           languages.map((lang: string) => {

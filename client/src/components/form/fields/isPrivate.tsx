@@ -1,16 +1,30 @@
 import { forwardRef } from 'react';
 
-const IsPrivate = (props: { key: string; type: string }, ref) => {
-  // console.log(props);
+interface Props {
+  key: string;
+  type: string;
+  setFieldValue: (name: string, value: any) => void;
+  attr: {};
+}
+const IsPrivate = (props: Props, ref: React.LegacyRef<HTMLInputElement>) => {
+  const inputProps = {};
+  Object.keys(props.attr).forEach((propKey) => {
+    if (propKey != 'value') {
+      inputProps[propKey] = props.attr[propKey];
+    }
+  });
+
   return (
     <>
       <input
         ref={ref}
-        // onChange={() => {}}
-        {...props}
+        onChange={(e) => {
+          props.setFieldValue('isPrivate', e.target.checked);
+        }}
+        {...inputProps}
         style={{ display: 'inline' }}
       />
-      &nbsp; private
+      <span>private</span>
     </>
   );
 };

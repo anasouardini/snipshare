@@ -15,9 +15,15 @@ import {
   usePresence,
 } from 'framer-motion';
 
+import { type RootState } from '../state/store';
+import { useSelector } from 'react-redux';
+
 // execpetions: authorization sub-rules
 const ExceptionsPopUp = (props, ref) => {
-  const { notify, whoami } = useOutletContext();
+  const { notify } = useOutletContext();
+  const whoami = useSelector((state: RootState) => {
+    state.userInfo.data.username;
+  });
 
   const [_, setForceRenderState] = useState(true);
   const forceRerender = () => {
@@ -185,8 +191,8 @@ const ExceptionsPopUp = (props, ref) => {
               />
 
               <button
-                  data-tooltip-id='deleteException'
-                  data-tooltip-content='Delete Exception'
+                data-tooltip-id='deleteException'
+                data-tooltip-content='Delete Exception'
                 className={classes.iconButton}
                 onClick={(e) => {
                   eventDefaults(e);
@@ -197,7 +203,7 @@ const ExceptionsPopUp = (props, ref) => {
               >
                 <FaMinusSquare />
               </button>
-              <Tooltip id="deleteException"/>
+              <Tooltip id='deleteException' />
             </div>
           </li>
         );
@@ -322,7 +328,7 @@ const ExceptionsPopUp = (props, ref) => {
                 >
                   <FaPlusSquare className='' />
                 </button>
-                <Tooltip id="addException"/>
+                <Tooltip id='addException' />
               </div>
               <div>
                 <ul>{listExceptions()}</ul>

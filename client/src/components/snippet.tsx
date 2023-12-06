@@ -3,10 +3,11 @@ import { useOutletContext } from 'react-router-dom';
 
 import { commonSnippetFields, getUser } from '../tools/snipStore';
 import { read, remove } from '../tools/bridge';
-import Form from './form/form';
+import CustomForm from './form/form';
 import { FaLock, FaLockOpen } from 'react-icons/fa';
 import CodeSnippet from './form/fields/snippet';
 import { Tooltip } from 'react-tooltip';
+import * as yup from 'yup';
 
 type propsT = {
   snippet: {
@@ -31,6 +32,21 @@ function Snippet(props: propsT) {
   });
   // console.log(snipInfoState.snippet);
 
+  const validationSchema = yup.object().shape({
+    title: yup
+      .string()
+      .required('Title is required (1-100 characters)')
+      .max(100),
+    descr: yup
+      .string()
+      .required('Description is required (1-500 characters)')
+      .max(500),
+    isPrivate: yup.boolean(),
+    snippet: yup.string().required('Snippet is required'),
+    categories: yup.string().required(),
+    language: yup.string().required(),
+  });
+
   const [popUpState, setPopUpState] = useState({ showForm: false });
 
   // fetching avatar for the snippet
@@ -53,7 +69,10 @@ function Snippet(props: propsT) {
   const updateFields = () => {
     formFieldsState.current.fields.forEach((field) => {
       if (field.attr.type == 'checkbox') {
-        field.attr.defaultChecked = snipInfoState.snippet[field.attr.key];
+        field.attr.defaultChecked = Boolean(snipInfoState.snippet[field.attr.key]);
+        field.attr.defaultValue = Boolean(
+          snipInfoState.snippet[field.attr.key],
+        );
       } else {
         if (field.attr.type == 'snippet') {
           field.attr.readOnly = true;
@@ -149,8 +168,8 @@ function Snippet(props: propsT) {
             <div className='flex flex-row gap-3'>
               <figure
                 className='border-primary border-[1px]
-                                                    w-[50px] h-[50px] rounded-full
-                                                       overflow-hidden'
+                          w-[50px] h-[50px] rounded-full
+                          overflow-hidden'
               >
                 <img
                   ref={avatarRef}
@@ -230,9 +249,11 @@ function Snippet(props: propsT) {
           </h3>
           {/* Snippet */}
           <CodeSnippet
-            {...formFieldsState.current.fields.filter(
-              (field) => field.type == 'CodeSnippet',
-            )[0].attr}
+            attr={
+              formFieldsState.current.fields.filter(
+                (field) => field.type == 'CodeSnippet',
+              )[0].attr
+            }
             readOnly={true}
           />
 
@@ -254,8 +275,9 @@ function Snippet(props: propsT) {
         </div>
       </div>
       {popUpState.showForm ? (
-        <Form
+        <CustomForm
           action='edit'
+          validationSchema={validationSchema}
           fields={formFieldsState.current.fields}
           hidePopUp={hidePopUp}
           snipId={snipInfoState.snippet.id}

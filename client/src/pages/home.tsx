@@ -6,6 +6,9 @@ import Snippets from '../components/snippets';
 
 // import {commonSnippetFields, getSnippets, getUsers} from '../tools/snipStore';
 
+import { useSelector } from 'react-redux';
+import { type RootState } from '../state/store';
+
 export default function Home() {
   // const [popUpState, setPopUpState] = useState({
   //     showForm: false,
@@ -15,7 +18,7 @@ export default function Home() {
   // const navigate = useNavigate();
   // const {user: userParam} = useParams();
 
-  // const {whoami} = useOutletContext();
+  // const whoami = useSelector((state:RootState)=>{state.userInfo.data.username}});
   // if (whoami == '' || whoami == 'unauthorized') {
   //     console.log('redirecting');
   //     return navigate('/login', {replace: true});

@@ -22,11 +22,16 @@ import {
 } from 'framer-motion';
 
 import { Tooltip } from 'react-tooltip';
+import { useSelector } from 'react-redux';
+import { type RootState } from '../state/store';
 
 export default function AddRules() {
   const navigate = useNavigate();
 
-  const { whoami, notify } = useOutletContext();
+  const { notify } = useOutletContext();
+  const whoami = useSelector((state: RootState) => {
+    state.userInfo.data.username;
+  });
   // if (whoami == '' || whoami == 'unauthorized') {
   //     console.log('redirecting');
   //     return navigate('/login', {replace: true});

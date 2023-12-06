@@ -7,8 +7,8 @@ import {
 } from 'framer-motion';
 import Snippet from '../components/snippet';
 // import {useNavigate, useMatch} from 'react-location';
-import { useParams, useOutletContext } from 'react-router-dom';
-import Form from '../components/form/form';
+import { useParams } from 'react-router-dom';
+import CustomForm from '../components/form/form';
 
 import { commonSnippetFields, getSnippets } from '../tools/snipStore';
 import { useNavigate } from 'react-router-dom';
@@ -17,12 +17,15 @@ import debouncer from '../tools/debouncer';
 import Categories from '../components/form/fields/categories';
 import Language from '../components/form/fields/language';
 
+import { RootState } from '../state/store';
+import { useSelector } from 'react-redux';
+
 export default function Snippets() {
   const navigate = useNavigate();
 
   const parentRef = useRef<HTMLInputElement>(null);
-
-  const { whoami } = useOutletContext();
+  const whoami = useSelector((state: RootState) => state.userInfo.data.username);
+  // console.log(whoami)
 
   const { user: userParam } = useParams();
 
@@ -274,7 +277,7 @@ export default function Snippets() {
 
       {/* todo: suspense this with lazy loading */}
       {popUpState.showForm ? (
-        <Form
+        <CustomForm
           action='create'
           fields={formFieldsState.fields}
           hidePopUp={hidePopUp}

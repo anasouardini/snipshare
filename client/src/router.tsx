@@ -9,7 +9,7 @@ import Profile from './pages/profile';
 import AddRules from './pages/coworkerRules';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-const NotFountPage = () => (
+const NotFoundPage = () => (
   <section className={'h-[100vh] h-[100dvh] flex justify-center items-center'}>
     <p className={'text-2xl text-primary'}>Nothing To See Here (404)</p>
   </section>
@@ -30,7 +30,7 @@ function App() {
             <Route path='/signup' element={<SignUp />} />
             <Route path='/addRules' element={<AddRules />} />
             <Route path='/user/:user' element={<Profile />} />
-            <Route path='*' element={<NotFountPage />} />
+            <Route path='*' element={<NotFoundPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

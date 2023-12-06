@@ -10,7 +10,7 @@ import { create, read } from '../../tools/bridge';
 import Bell from '../../components/bell';
 import { Camera, Moon, MoonIcon, Sun, SunDim, X, MenuIcon } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../state/store';
+import { type RootState } from '../../state/store';
 import { actions } from '../../state/userPreferences/userPreferences';
 
 interface NavMenuProps {
@@ -20,7 +20,7 @@ interface NavMenuProps {
   whoami: { status: number };
 }
 const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
-  const userPreferences = useSelector((state: RootState) => state.theme);
+  const userPreferences = useSelector((state: RootState) => state.userPreferences);
   const dispatch = useDispatch();
   const changeTheme = () => dispatch(actions.toggleTheme());
 

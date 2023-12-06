@@ -8,6 +8,8 @@ const Categories = (
     filtering: boolean;
     debounceCB: () => undefined;
     defaultValue?: string;
+    setFieldValue: (name: string, value: any) => void;
+    attr: {};
   },
   ref: React.LegacyRef<HTMLInputElement>,
 ) => {
@@ -100,23 +102,29 @@ const Categories = (
   };
   // console.log(props);
 
+  const inputProps = {};
+  if (props.attr) {
+    Object.keys(props.attr).forEach((propKey) => {
+      if (propKey != 'value') {
+        inputProps[propKey] = props.attr[propKey];
+      }
+    });
+  }
   return (
     <>
-      <label>
-        <input
-          type='text'
-          placeholder='categories'
-          defaultValue={props?.defaultValue}
-          ref={ref}
-          list='categories'
-          onChange={(e) => {
-            handleMultiSelectInputChange(e);
-          }}
-          className={`${props.filtering ? '' : 'relative z-20'}
-                            bg-transparent w-full max-w-[280px] px-3 py-2
-                            border-[1px] border-primary rounded-md`}
-        />
-      </label>
+      <input
+        {...inputProps}
+        ref={ref}
+        list='categories'
+        onChange={(e) => {
+          console.log('categories changing...');
+          props.setFieldValue('categories', e.target.value);
+          handleMultiSelectInputChange(e);
+        }}
+        className={`${props.filtering ? '' : 'relative z-20'}
+                     bg-transparent w-full max-w-[280px] px-3 py-2
+                     border-[1px] border-primary rounded-md`}
+      />
       <datalist id='categories'>
         {dataListOptionsState.map((opt) => {
           return <option key={opt} value={opt}></option>;

@@ -1,31 +1,18 @@
+## short-term TODO
+- ?
+
 ## Refactoring: improving the front-end
 
 ### Tools
 
-- [ ] state management:
-  - [x] Redux/toolkit
-  - [ ] jotai
+- [x] Redux/toolkit
+  - [x] move global state to redux (logged in user info)
 - [ ] Forms: Formik + yup
   - 100% sanitization and pretty error/warning popups with smooth animations
 - [x] Framer-motion
   - [x] smooth animations in each transition
 - [x] react-tooltips
 - [x] prettier (standard configuration)
-
-### Features
-
-- [x] theming
-- [ ] project tour (tool tips)
-- [ ] offline mode
-  - [x] PWA?
-  - [ ] service workers
-  - [ ] local storage
-- [ ] mobile gestures
-
-- [ ] drag and drop (a page with list of snippets to re-order)
-- [ ] analytics?
-  - [ ] number of snippets for each language
-  - [ ] filter by category/tag
 
 ### Practices
 
@@ -34,6 +21,17 @@
 - [ ] loading spinners / skeleton screens
 - [ ] lazy load code snippets
 - [ ] internalization
+
+### Features
+
+- [x] theming
+- [ ] project tour (tool tips)
+- [x] PWA?
+
+- [ ] drag and drop (a page with list of snippets to re-order)
+- [ ] analytics?
+  - [ ] number of snippets for each language
+  - [ ] filter by category/tag
 
 ### Misc
 
