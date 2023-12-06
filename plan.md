@@ -1,4 +1,5 @@
 ## short-term TODO
+
 - ?
 
 ## Refactoring: improving the front-end
@@ -7,31 +8,31 @@
 
 - [x] Redux/toolkit
   - [x] move global state to redux (logged in user info)
-- [ ] Forms: Formik + yup
-  - 100% sanitization and pretty error/warning popups with smooth animations
+- [x] Forms: Formik + yup
+  - [ ] 100% sanitization and pretty error/warning popups with smooth animations
 - [x] Framer-motion
   - [x] smooth animations in each transition
 - [x] react-tooltips
 - [x] prettier (standard configuration)
 
-### Practices
-
-- [ ] better responsive design
-- [ ] better A11Y
-- [ ] loading spinners / skeleton screens
-- [ ] lazy load code snippets
-- [ ] internalization
-
-### Features
+### Practices/Features
 
 - [x] theming
-- [ ] project tour (tool tips)
 - [x] PWA?
 
+- [ ] better responsive design
+- [ ] loading spinners / skeleton screens
+- [ ] project tour (tool tips)
+
 - [ ] drag and drop (a page with list of snippets to re-order)
-- [ ] analytics?
+- [?] analytics
+
   - [ ] number of snippets for each language
   - [ ] filter by category/tag
+
+- [ ] better A11Y
+- [ ] lazy load code snippets
+- [?] internalization
 
 ### Misc
 
