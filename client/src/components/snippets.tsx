@@ -24,7 +24,9 @@ export default function Snippets() {
   const navigate = useNavigate();
 
   const parentRef = useRef<HTMLInputElement>(null);
-  const whoami = useSelector((state: RootState) => state.userInfo.data.username);
+  const whoami = useSelector(
+    (state: RootState) => state.userInfo.data.username,
+  );
   // console.log(whoami)
 
   const { user: userParam } = useParams();
@@ -170,6 +172,7 @@ export default function Snippets() {
         }
         return (
           <motion.div
+            key={snippet.id}
             className={`bg-[#292929] rounded-md w-full max-w-[600px]`}
             initial={{ x: animationObj.initialX, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}

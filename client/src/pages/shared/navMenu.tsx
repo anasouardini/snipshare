@@ -120,7 +120,7 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
                 }}
                 id='hacksSubMenu'
                 className={`z-30 absolute top-[8px] right-0 mt-4
-                            border-[1px] border-text`}
+                            border-[1px] border-[#353525]`}
               >
                 <ul
                   onMouseOver={(e) => {
