@@ -23,15 +23,13 @@
 - [ ] better responsive design
 - [ ] loading spinners / skeleton screens
 - [ ] project tour (tool tips)
+- [ ] better A11Y
 
 - [ ] drag and drop (a page with list of snippets to re-order)
 - [?] analytics
-
   - [ ] number of snippets for each language
   - [ ] filter by category/tag
 
-- [ ] better A11Y
-- [ ] lazy load code snippets
 - [?] internalization
 
 ### Misc
