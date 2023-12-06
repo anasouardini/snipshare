@@ -20,6 +20,24 @@ import { useSelector } from 'react-redux';
 
 // execpetions: authorization sub-rules
 const ExceptionsPopUp = (props, ref) => {
+  // unmount on Esc
+  React.useEffect(() => {
+    const eventCB = (e) => {
+      if (e.which == 27) {
+        setFormState((state) => {
+          const stateClone = structuredClone(state);
+          stateClone.showForm = false;
+          return stateClone;
+        });
+      }
+    };
+    window.document.body.addEventListener('keydown', eventCB);
+
+    return () => {
+      removeEventListener('keydown', eventCB);
+    };
+  }, []);
+
   const { notify } = useOutletContext();
   const whoami = useSelector((state: RootState) => {
     state.userInfo.data.username;

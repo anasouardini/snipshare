@@ -89,6 +89,24 @@ const CustomForm = (props: formPropsT) => {
     }
   }, [animationState.showForm]);
 
+  // unmount on Esc
+  React.useEffect(()=>{
+    const eventCB = (e)=>{
+      if(e.which == 27){
+        setFormState((state)=>{
+          const stateClone = structuredClone(state);
+          stateClone.showForm = false;
+          return stateClone;
+        });
+      }
+    }
+    window.document.body.addEventListener('keydown', eventCB);
+
+    return ()=>{
+      removeEventListener('keydown', eventCB);
+    }
+  }, []);
+
   const refs = {
     title: useRef<HTMLInputElement>(null),
     descr: useRef<HTMLInputElement>(null),

@@ -25,6 +25,20 @@ export default function Bell(props: { notify: notifyFuncT }) {
 
   const notifications = useQuery('notificationsBell', () => getNotifications());
 
+  // unmount on Esc
+  React.useEffect(() => {
+    const eventCB = (e) => {
+      if (e.which == 27 && state.notifications.show) {
+        toggleNotification(e);
+      }
+    };
+    window.document.body.addEventListener('keydown', eventCB);
+
+    return () => {
+      removeEventListener('keydown', eventCB);
+    };
+  }, [state.notifications.show]);
+
   useEffect(() => {
     (async () => {
       const response = await checkNotifications();
@@ -61,6 +75,7 @@ export default function Bell(props: { notify: notifyFuncT }) {
   const toggleNotification = async (e: MouseEvent) => {
     e.stopPropagation();
 
+    // remove the green bubble from the bell icon when notifications are open and/or closed.
     unreadNotificationsRef.current?.classList.add('before:hidden');
 
     const stateCpy = structuredClone(state);
@@ -70,6 +85,7 @@ export default function Bell(props: { notify: notifyFuncT }) {
     // async function(updates notifications state)
     await markNotificationRead();
   };
+
   const listNotifications = () => {
     if (notifications.status == 'success') {
       return notifications.data.map(
