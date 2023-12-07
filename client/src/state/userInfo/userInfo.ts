@@ -12,7 +12,6 @@ const initialState: { data: User; loaded: boolean } = {
   data: { username: 'dummy', avatar: 'dummy', description: 'dummy' },
 };
 
-// todo: fetch user info
 const whoamiUsr = await read('whoami');
 initialState.data = whoamiUsr.msg;
 

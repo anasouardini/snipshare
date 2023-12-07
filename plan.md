@@ -9,7 +9,7 @@
 - [x] Redux/toolkit
   - [x] move global state to redux (logged in user info)
 - [x] Forms: Formik + yup
-  - [ ] 100% sanitization and pretty error/warning popups with smooth animations
+  - [ ] 100% sanitization and pretty error
 - [x] Framer-motion
   - [x] smooth animations in each transition
 - [x] react-tooltips
@@ -22,7 +22,6 @@
 
 - [ ] better responsive design
 - [ ] loading spinners / skeleton screens
-- [ ] project tour (tool tips)
 - [ ] better A11Y
 
 - [ ] drag and drop (a page with list of snippets to re-order)
