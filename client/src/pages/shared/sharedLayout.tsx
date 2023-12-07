@@ -19,7 +19,7 @@ export default function SharedLayout() {
 
   // const [_, setForceRenderState] = useState(false);
   const updateWhoamiState = async () => {
-    // todo: update user info slice
+    // update user info slice
     const whoamiUsr = await read('whoami');
     dispatch(actions.setUserInfo(whoamiUsr.msg));
     setWhoami(whoamiUsr);

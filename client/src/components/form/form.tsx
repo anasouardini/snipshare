@@ -332,7 +332,6 @@ const CustomForm = (props: formPropsT) => {
   const listInputs = (touched, errors, setFieldValue, setFieldTouched) => {
     // console.log({ errors, touched });
     // console.log(fields);
-    // TODO: clear this spagetty of conditions, DRY it a little
     return props.fields.map((input) => {
       const Component = getFieldsMap(input.type);
       let inputType: 'normal' | 'custom' =

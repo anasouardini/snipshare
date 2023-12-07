@@ -83,8 +83,6 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
             Coworkers
           </NavLink>
         </li>
-        {/* TODO: extract hacks menu to its separate component */}
-        {/* and use 'exit' (framer-motion elm property) to animate on UNMOUNT */}
         <ul
           ref={hacksSubMenuScope}
           onMouseOver={(e) => {

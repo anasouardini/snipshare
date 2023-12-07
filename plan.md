@@ -9,7 +9,7 @@
 - [x] Redux/toolkit
   - [x] move global state to redux (logged in user info)
 - [x] Forms: Formik + yup
-  - [ ] 100% sanitization and pretty error
+  - [X] 100% sanitization and pretty error
 - [x] Framer-motion
   - [x] smooth animations in each transition
 - [x] react-tooltips

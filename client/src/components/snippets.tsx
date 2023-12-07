@@ -294,7 +294,6 @@ export default function Snippets() {
       </motion.div>
       {listSnippets()}
 
-      {/* todo: suspense this with lazy loading */}
       {popUpState.showForm ? (
         <CustomForm
           action='create'

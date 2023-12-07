@@ -14,7 +14,6 @@ import {
 export default function Profile() {
   const { reload } = useOutletContext();
 
-  // TODO: show profile based on the link instead of who's logged in
   const params = useParams();
   const profileInfoRef: {
     username: string | undefined;
@@ -66,7 +65,6 @@ export default function Profile() {
     refs['inputs'][inputName].focus();
   };
 
-  //todo: this does not cover the upload event
   const viewMode = async (e, inputName) => {
     if ((e.type == 'keypress' && e.key == 'Enter') || e.type == 'blur') {
       refs['buttons'][inputName].classList.remove('hidden');
@@ -108,10 +106,9 @@ export default function Profile() {
     }
   };
 
-  //todo: art,
   return (
     <div className='w-full '>
-      {/* todo: profile related info */}
+      {/* profile related info */}
       <motion.section
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

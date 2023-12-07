@@ -21,7 +21,7 @@ const Categories = (
     () => getCategories(),
   );
   const [dataListOptionsState, setDataListOptionsState] = React.useState([]);
-  // aweful way to do it
+
   const categoriesReadyRef = React.useRef(false);
   if (categoriesStatus == 'success' && !categoriesReadyRef.current) {
     setDataListOptionsState(categories);
