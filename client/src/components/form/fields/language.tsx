@@ -8,6 +8,7 @@ interface Props {
   attr: {};
   defaultValue?: string;
   setFieldValue: (name: string, value: any) => void;
+  setFieldTouched: (name: string) => void;
 }
 const Language = (props: Props, ref: React.LegacyRef<HTMLInputElement>) => {
   // console.log(props);
@@ -18,7 +19,7 @@ const Language = (props: Props, ref: React.LegacyRef<HTMLInputElement>) => {
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('lagnguages changing...');
+    // console.log('lagnguages changing...');
     props.setFieldValue('language', e.target.value);
     if (props?.filter) {
       props.filter();
@@ -40,6 +41,7 @@ const Language = (props: Props, ref: React.LegacyRef<HTMLInputElement>) => {
     <>
       <input
         {...inputProps}
+        placeholder='Language'
         onChange={
           languagesStatus == 'success'
             ? handleChange
@@ -47,6 +49,9 @@ const Language = (props: Props, ref: React.LegacyRef<HTMLInputElement>) => {
                 console.log('error while gtting languages');
               }
         }
+        onBlur={(e) => {
+          props.setFieldTouched(props.attr.name);
+        }}
         ref={ref}
         list='languages'
         className={`bg-transparent w-full max-w-[280px] px-3 py-2

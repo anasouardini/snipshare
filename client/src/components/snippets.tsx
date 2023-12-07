@@ -19,8 +19,24 @@ import Language from '../components/form/fields/language';
 
 import { RootState } from '../state/store';
 import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 
 export default function Snippets() {
+  const validationSchema = yup.object().shape({
+    title: yup
+      .string()
+      .required('Title is required (1-100 characters)')
+      .max(100),
+    descr: yup
+      .string()
+      .required('Description is required (1-500 characters)')
+      .max(500),
+    isPrivate: yup.boolean(),
+    snippet: yup.string().required('Snippet is required'),
+    categories: yup.string().required(),
+    language: yup.string().required(),
+  });
+
   const navigate = useNavigate();
 
   const parentRef = useRef<HTMLInputElement>(null);
@@ -270,7 +286,7 @@ export default function Snippets() {
             type='text'
             ref={searchInputRef}
             onChange={handleSearch}
-            placeholder='find your sippet'
+            placeholder='Snippet Name'
             className='w-full max-w-[280px] px-3 py-2
                       border-[1px] border-primary rounded-md'
           />
@@ -282,6 +298,7 @@ export default function Snippets() {
       {popUpState.showForm ? (
         <CustomForm
           action='create'
+          validationSchema={validationSchema}
           fields={formFieldsState.fields}
           hidePopUp={hidePopUp}
           owner={userParam ? userParam : whoami}

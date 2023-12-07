@@ -9,6 +9,7 @@ const Categories = (
     debounceCB: () => undefined;
     defaultValue?: string;
     setFieldValue: (name: string, value: any) => void;
+    setFieldTouched: (name: string) => void;
     attr: {};
   },
   ref: React.LegacyRef<HTMLInputElement>,
@@ -113,13 +114,17 @@ const Categories = (
   return (
     <>
       <input
+        placeholder='Categories (comma separated)'
         {...inputProps}
         ref={ref}
         list='categories'
         onChange={(e) => {
-          console.log('categories changing...');
+          // console.log('categories changing...');
           props.setFieldValue('categories', e.target.value);
           handleMultiSelectInputChange(e);
+        }}
+        onBlur={(e) => {
+          props.setFieldTouched(props.attr.name);
         }}
         className={`${props.filtering ? '' : 'relative z-20'}
                      bg-transparent w-full max-w-[280px] px-3 py-2

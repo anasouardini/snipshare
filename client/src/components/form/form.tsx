@@ -329,7 +329,7 @@ const CustomForm = (props: formPropsT) => {
 
   // console.log(Object.values(props.fields)[2].attr);
   // listing form fields
-  const listInputs = (touched, errors, setFieldValue) => {
+  const listInputs = (touched, errors, setFieldValue, setFieldTouched) => {
     // console.log({ errors, touched });
     // console.log(fields);
     // TODO: clear this spagetty of conditions, DRY it a little
@@ -375,10 +375,13 @@ const CustomForm = (props: formPropsT) => {
             />
             <div
               className={`text-error ${
-                errors[input.attr.name] ? 'opacity-1' : 'opacity-0'
+                touched[input.attr.name] && errors[input.attr.name]
+                  ? 'opacity-1'
+                  : 'opacity-0'
               } p-1 transition-opacity duration-200 ease-in-out`}
             >
-              {errors[input.attr.name] ?? 'placeholder'}
+              {(touched[input.attr.name] && errors[input.attr.name]) ??
+                'placeholder'}
             </div>
           </label>
         );
@@ -410,6 +413,7 @@ const CustomForm = (props: formPropsT) => {
                   <Component
                     {...conditionalProps}
                     setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
                     attr={{
                       ...input.attr,
                       value,
@@ -425,10 +429,13 @@ const CustomForm = (props: formPropsT) => {
           )}
           <div
             className={`text-error ${
-              errors[input.attr.name] ? 'opacity-1' : 'opacity-0'
+              touched[input.attr.name] && errors[input.attr.name]
+                ? 'opacity-1'
+                : 'opacity-0'
             } p-1 transition-opacity duration-200 ease-in-out`}
           >
-            {errors[input.attr.name] ?? 'placeholder'}
+            {(touched[input.attr.name] && errors[input.attr.name]) ||
+              'placeholder'}
           </div>
         </label>
       );
@@ -486,7 +493,13 @@ const CustomForm = (props: formPropsT) => {
               }, {})}
               validationSchema={props.validationSchema}
             >
-              {({ touched, errors, isSubmitting, setFieldValue }) => (
+              {({
+                touched,
+                errors,
+                isSubmitting,
+                setFieldValue,
+                setFieldTouched,
+              }) => (
                 <Form className='flex flex-col gap-2 '>
                   <div
                     aria-label='close form'
@@ -498,7 +511,7 @@ const CustomForm = (props: formPropsT) => {
                   >
                     X
                   </div>
-                  {listInputs(touched, errors, setFieldValue)}
+                  {listInputs(touched, errors, setFieldValue, setFieldTouched)}
                   <button
                     disabled={isSubmitting}
                     type='submit'
