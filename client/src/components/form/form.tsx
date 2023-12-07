@@ -90,21 +90,21 @@ const CustomForm = (props: formPropsT) => {
   }, [animationState.showForm]);
 
   // unmount on Esc
-  React.useEffect(()=>{
-    const eventCB = (e)=>{
-      if(e.which == 27){
-        setFormState((state)=>{
+  React.useEffect(() => {
+    const eventCB = (e) => {
+      if (e.which == 27) {
+        setFormState((state) => {
           const stateClone = structuredClone(state);
           stateClone.showForm = false;
           return stateClone;
         });
       }
-    }
+    };
     window.document.body.addEventListener('keydown', eventCB);
 
-    return ()=>{
+    return () => {
       removeEventListener('keydown', eventCB);
-    }
+    };
   }, []);
 
   const refs = {
@@ -292,8 +292,8 @@ const CustomForm = (props: formPropsT) => {
   //   return body;
   // };
 
-  const handleEdit = async (values:{}) => {
-    const requestBody = {props:values}
+  const handleEdit = async (values: {}) => {
+    const requestBody = { props: values };
     // console.log('handle create', {requestBody, values});
 
     const response = await update(props.snipUser + '/' + props.snipId, {
@@ -305,8 +305,8 @@ const CustomForm = (props: formPropsT) => {
     props.updateEditedSnippet();
   };
 
-  const handleCreate = async (values:{}) => {
-    const requestBody = {props:values}
+  const handleCreate = async (values: {}) => {
+    const requestBody = { props: values };
     // console.log('handle create', {requestBody, values});
 
     // console.log(props.owner);
@@ -316,7 +316,6 @@ const CustomForm = (props: formPropsT) => {
   };
 
   const handleSubmit = async (values) => {
-
     handleClose(); // set state for unmounting the form
 
     if (props.action == 'edit') {
@@ -374,7 +373,13 @@ const CustomForm = (props: formPropsT) => {
                 width: '100%',
               }}
             />
-            <div className='error text-error p-1 hidden'></div>
+            <div
+              className={`text-error ${
+                errors[input.attr.name] ? 'opacity-1' : 'opacity-0'
+              } p-1 transition-opacity duration-200 ease-in-out`}
+            >
+              {errors[input.attr.name] ?? 'placeholder'}
+            </div>
           </label>
         );
       }
@@ -386,7 +391,9 @@ const CustomForm = (props: formPropsT) => {
             input.attr.className ??
             '' +
               ' z-30 relative' +
-              (input.attr.name == 'isPrivate' ? ' self-start flex flex-row gap-3 items-center' : '') +
+              (input.attr.name == 'isPrivate'
+                ? ' self-start flex flex-row gap-3 items-center'
+                : '') +
               (touched[input.attr.name] && errors[input.attr.name]
                 ? ' invalid'
                 : '')
@@ -416,7 +423,13 @@ const CustomForm = (props: formPropsT) => {
           ) : (
             <Field name={input.attr.name} type={input.attr.type} />
           )}
-          <div className='error text-error p-1 hidden'></div>
+          <div
+            className={`text-error ${
+              errors[input.attr.name] ? 'opacity-1' : 'opacity-0'
+            } p-1 transition-opacity duration-200 ease-in-out`}
+          >
+            {errors[input.attr.name] ?? 'placeholder'}
+          </div>
         </label>
       );
     });
@@ -474,7 +487,7 @@ const CustomForm = (props: formPropsT) => {
               validationSchema={props.validationSchema}
             >
               {({ touched, errors, isSubmitting, setFieldValue }) => (
-                <Form className='flex flex-col gap-6 '>
+                <Form className='flex flex-col gap-2 '>
                   <div
                     aria-label='close form'
                     onClick={handleClose}
