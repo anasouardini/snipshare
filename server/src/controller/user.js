@@ -9,9 +9,13 @@ const readAll = async (req, res) => {
 };
 
 const readSingle = async (req, res) => {
-  const response = await User.getUser(req.params.user);
+  const response = (await User.getUser(req.params.user))[0][0];
+  response.username = response.user;
+  delete response.user;
+  response.description = response.descr;
+  delete response.descr;
 
-  res.json({ msg: response[0][0] });
+  res.json({ msg: response });
 };
 
 const editUser = async (req, res) => {

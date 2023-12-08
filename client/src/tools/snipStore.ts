@@ -1,3 +1,4 @@
+import tools from '../tools/tools';
 import { read, update } from './bridge';
 import toUrlEncoded from './toUrlEncoded';
 
@@ -18,6 +19,9 @@ const getSnippets = async ({
   pageParam: number;
   perPage: number;
 }) => {
+  // simulating a request delay
+  await tools.sleep(2000);
+
   const urlParams = toUrlEncoded({
     title,
     language,
@@ -47,6 +51,7 @@ const getUsers = async () => {
 };
 
 const getUser = async (user: string) => {
+  await tools.sleep(2000);
   const response = await read(`user/${user}`);
 
   // console.log(response);
@@ -57,6 +62,7 @@ const getUser = async (user: string) => {
 };
 
 const readCoworkerRules = async () => {
+  await tools.sleep(2000);
   const response = await read(`coworkerRules`);
 
   if (response.status == 200) {

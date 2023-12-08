@@ -16,15 +16,15 @@ export default function Notify(props: {
     error: 'bg-red-400 text-text',
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // hiding notification form the DOM before the parent unmounts it
-    }, 2000);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     // hiding notification form the DOM before the parent unmounts it
+  //   }, 2000);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, []);
 
   return (
     <div

@@ -20,8 +20,13 @@ import Language from '../components/form/fields/language';
 import { RootState } from '../state/store';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
+import Skeleton from './skeleton';
 
 export default function Snippets() {
+  const config = {
+    itemsPerPage: 3,
+  };
+
   const validationSchema = yup.object().shape({
     title: yup
       .string()
@@ -75,7 +80,7 @@ export default function Snippets() {
         categories: snippetsFilterState.categories,
         language: snippetsFilterState.language,
         pageParam,
-        perPage: 3,
+        perPage: config.itemsPerPage,
       }),
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
@@ -163,6 +168,31 @@ export default function Snippets() {
 
   const refetchSnippetsCB = useCallback(snippets.refetch, []);
   const listSnippets = () => {
+    if (snippets.status != 'success') {
+      return Array(config.itemsPerPage)
+        .fill(1)
+        .map((_, index) => {
+          return (
+            <Skeleton
+              key={index}
+              className='bg-bg2 rounded-md w-full max-w-[600px] h-auto p-6'
+            >
+              <Skeleton type='avatar' className='bg-bg4 mb-5' />
+              <Skeleton type='title' className='bg-bg4 mb-5' />
+              <Skeleton className='bg-bg4 width-full' />
+            </Skeleton>
+          );
+        });
+    }
+
+    if (!snippets.data?.pages.length) {
+      return (
+        <p className='w-full max-w-[600px]'>
+          There are no Snippets, click on "Add Snippet" to create one.
+        </p>
+      );
+    }
+
     // console.log(snippets.status);
     type snippetType = {
       id: string;
@@ -242,7 +272,7 @@ export default function Snippets() {
     return undefined;
   };
 
-  return snippets.status == 'success' ? (
+  return (
     <section
       aria-label='code snippets'
       ref={parentRef}
@@ -255,15 +285,16 @@ export default function Snippets() {
         transition={{ duration: 0.3 }}
         aria-label='controls'
         className='w-full max-w-[600px] flex justify-between
-                  items-center flex-wrap my-5 gap-3'
+                    items-center flex-wrap my-5 gap-3'
       >
-        {whoami == userParam ||
-        snippets.data.pages?.[0]?.genericAccess?.create ||
-        !userParam ? (
+        {snippets.status == 'success' &&
+        (whoami == userParam ||
+          snippets.data.pages?.[0]?.genericAccess?.create ||
+          !userParam) ? (
           <button
             onClick={handleCreate}
             className={`border-[1px] border-primary px-2 py-2
-                        text-[1rem] text-primary rounded-md`}
+                          text-[1rem] text-primary rounded-md`}
           >
             Add Snippet
           </button>
@@ -288,12 +319,11 @@ export default function Snippets() {
             onChange={handleSearch}
             placeholder='Snippet Name'
             className='w-full max-w-[280px] px-3 py-2
-                      border-[1px] border-primary rounded-md'
+                        border-[1px] border-primary rounded-md'
           />
         </label>
       </motion.div>
       {listSnippets()}
-
       {popUpState.showForm ? (
         <CustomForm
           action='create'
@@ -307,7 +337,5 @@ export default function Snippets() {
         <></>
       )}
     </section>
-  ) : (
-    <></>
   );
 }

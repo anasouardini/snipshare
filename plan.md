@@ -17,11 +17,12 @@
 
 ### Practices/Features
 
+- [ ] fix notification UI
 - [x] theming
 - [x] PWA?
 
 - [ ] better responsive design
-- [ ] loading spinners / skeleton screens
+- [X] skeleton screens
 - [ ] better A11Y
 
 - [ ] drag and drop (a page with list of snippets to re-order)

@@ -24,6 +24,7 @@ import {
 import { Tooltip } from 'react-tooltip';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../state/store';
+import Skeleton from '../components/skeleton';
 
 export default function AddRules() {
   const navigate = useNavigate();
@@ -56,6 +57,10 @@ export default function AddRules() {
   });
   // console.log(exceptionAccessRefs.current);
 
+  //* appended "2" to the id so that I can show-case the loading skeleton
+  const userInfo = useQuery('userInfo2', () => {
+    return getUser(params.user);
+  });
   const coworkersRules = useQuery('coworkers', () => {
     return readCoworkerRules();
   });
@@ -181,6 +186,59 @@ export default function AddRules() {
   };
 
   const listCoworkers = () => {
+    if (coworkersRules.status != 'success') {
+      return Array(3)
+        .fill(1)
+        .map((_, index) => {
+          return (
+            <Skeleton
+              key={index}
+              className={`${classes.li} bg-bg2 h-auto flex items-center`}
+            >
+              <Skeleton
+                type='title'
+                style={{
+                  width: '100px',
+                  backgroundColor: 'var(--bg-color-4)',
+                }}
+              />
+              <div className='ml-auto flex'>
+                <Skeleton type='button' className='bg-bg4 mx-4' />
+                <Skeleton type='button' className='bg-bg4 mx-4' />
+                <Skeleton type='button' className='bg-bg4 mx-4' />
+              </div>
+              <Skeleton
+                type='button'
+                className='ml-auto'
+                style={{
+                  width: '30px',
+                  height: '30px',
+                  backgroundColor: 'var(--bg-color-4)',
+                }}
+              />
+              <Skeleton
+                type='button'
+                className='ml-4'
+                style={{
+                  width: '30px',
+                  height: '30px',
+                  backgroundColor: 'var(--bg-color-4)',
+                }}
+              />
+            </Skeleton>
+          );
+        });
+    }
+
+    if (!Object.keys(coworkersRules.data.generic).length) {
+      return (
+        <p className='text-center pt-5'>
+          You have no coworkers yet, click on "add coworker" to create one.
+        </p>
+      );
+    }
+
+    // console.log({ coworkersRules });
     let coworkersCounter = 0.4;
     return coworkersRules.data.generic ? (
       Object.keys(coworkersRules.data.generic).map((coworkerUsername) => {
@@ -200,7 +258,6 @@ export default function AddRules() {
           >
             <div className='flex justify-between items-center flex-wrap gap-10'>
               <div>
-                <img src='' alt='' />
                 <span>{coworkerUsername}</span>
               </div>
               <AccessControl
@@ -278,7 +335,7 @@ export default function AddRules() {
     );
   };
 
-  return coworkersRules.status == 'success' ? (
+  return (
     <div className='container pt-[7rem]'>
       <motion.section
         initial={{ y: -50, opacity: 0 }}
@@ -361,7 +418,5 @@ export default function AddRules() {
         <></>
       )}
     </div>
-  ) : (
-    <></>
   );
 }

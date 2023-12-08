@@ -8,6 +8,8 @@ import { FaLock, FaLockOpen } from 'react-icons/fa';
 import CodeSnippet from './form/fields/snippet';
 import { Tooltip } from 'react-tooltip';
 import * as yup from 'yup';
+import { useQuery } from 'react-query';
+import Skeleton from './skeleton';
 
 type propsT = {
   snippet: {
@@ -50,17 +52,22 @@ function Snippet(props: propsT) {
   const [popUpState, setPopUpState] = useState({ showForm: false });
 
   // fetching avatar for the snippet
-  const avatarRef = useRef(null);
-  const fetchAvatar = async () => {
-    const userInfo = await getUser(snipInfoState.snippet.user);
-    // console.log(userInfo.avatar)
-    if (avatarRef.current) {
-      avatarRef.current.src = userInfo.avatar;
-    }
-  };
-  useEffect(() => {
-    fetchAvatar();
-  }, []);
+  // const avatarRef = useRef(null);
+  // const fetchAvatar = async () => {
+  //   const userInfo = await getUser(snipInfoState.snippet.user);
+  //   // console.log(userInfo.avatar)
+  //   if (avatarRef.current) {
+  //     avatarRef.current.src = userInfo.avatar;
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchAvatar();
+  // }, []);
+
+  //* different query key just to show-case the skeleton
+  const userInfo = useQuery('userInfo2', () => {
+    return getUser(snipInfoState.snippet.user);
+  });
 
   const formFieldsState = useRef({
     fields: Object.values(structuredClone({ commonSnippetFields }))[0],
@@ -69,7 +76,9 @@ function Snippet(props: propsT) {
   const updateFields = () => {
     formFieldsState.current.fields.forEach((field) => {
       if (field.attr.type == 'checkbox') {
-        field.attr.defaultChecked = Boolean(snipInfoState.snippet[field.attr.key]);
+        field.attr.defaultChecked = Boolean(
+          snipInfoState.snippet[field.attr.key],
+        );
         field.attr.defaultValue = Boolean(
           snipInfoState.snippet[field.attr.key],
         );
@@ -166,18 +175,21 @@ function Snippet(props: propsT) {
           <div className='flex justify-between mb-4 gap-3'>
             {/* Owner */}
             <div className='flex flex-row gap-3'>
-              <figure
-                className='border-primary border-[1px]
+              {userInfo.status == 'success' ? (
+                <figure
+                  className='border-primary border-[1px]
                           w-[50px] h-[50px] rounded-full
                           overflow-hidden'
-              >
-                <img
-                  ref={avatarRef}
-                  className='w-full h-full'
-                  crossOrigin='anonymous | use-credentials'
-                  src=''
-                ></img>
-              </figure>
+                >
+                  <img
+                    className='w-full h-full'
+                    crossOrigin='anonymous | use-credentials'
+                    src={userInfo.data.avatar}
+                  />
+                </figure>
+              ) : (
+                <Skeleton type='avatar' />
+              )}
               <p>
                 <span>{snipInfoState.snippet.user}</span>
                 <br />
