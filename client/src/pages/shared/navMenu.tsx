@@ -64,7 +64,7 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
 
   return (
     <nav
-      onClick={hideMenu}
+      onClick={(e)=>e.stopPropagation()}
       ref={navRef}
       className={`sm>:hidden
               sm<:px-[5%] sm<:py-2
