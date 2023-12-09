@@ -15,15 +15,18 @@
 - [x] react-tooltips
 - [x] prettier (standard configuration)
 
-### Practices/Features
+### improvements
 
 - [ ] enhance notification pop-ups UI
   - [ ] add icons
   - [ ] use theme-matching colors
+- [ ] enhance nav menu in mobile layout
+
+### Practices/Features
+
 - [x] theming
 - [x] PWA?
 
-- [ ] better responsive design
 - [x] skeleton screens
 - [ ] better A11Y
 
