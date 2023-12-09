@@ -72,7 +72,6 @@ export default function Profile() {
 
   const viewMode = async (e, inputName) => {
     if ((e.type == 'keypress' && e.key == 'Enter') || e.type == 'blur') {
-
       refs['buttons'][inputName].classList.remove('hidden');
       refs['view'][inputName].classList.remove('hidden');
 
@@ -223,9 +222,7 @@ export default function Profile() {
                 refs.view.description = el;
               }}
             >
-              <summary>
-                Profile description
-              </summary>
+              <summary>Profile description</summary>
               <p
                 className='mt-2 text-[#969696]'
                 ref={(el) => {
