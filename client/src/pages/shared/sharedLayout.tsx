@@ -166,11 +166,11 @@ export default function SharedLayout() {
         {listNotifications(notifyState)}
       </div>
 
-      <footer
-        className={`mt-auto w-full flex flex-wrap gap-3 
+      <footer className='mt-10 mb-5 '>
+        <div
+          className={`mt-auto w-full flex flex-wrap gap-3 
         justify-center items-center py-4 font-bold`}
-      >
-        <div className='mt-7'>
+        >
           <span className='text-primary'> Made by: </span>
           <a href='https://anasouardini.online'>Anas Ouardini</a>
           <span className='text-primary'> | </span>
