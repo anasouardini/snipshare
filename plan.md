@@ -9,7 +9,7 @@
 - [x] Redux/toolkit
   - [x] move global state to redux (logged in user info)
 - [x] Forms: Formik + yup
-  - [X] 100% sanitization and pretty error
+  - [x] 100% sanitization and pretty error
 - [x] Framer-motion
   - [x] smooth animations in each transition
 - [x] react-tooltips
@@ -17,19 +17,20 @@
 
 ### Practices/Features
 
-- [ ] fix notification UI
+- [ ] enhance notification pop-ups UI
+  - [ ] add icons
+  - [ ] use theme-matching colors
 - [x] theming
 - [x] PWA?
 
 - [ ] better responsive design
-- [X] skeleton screens
+- [x] skeleton screens
 - [ ] better A11Y
 
 - [ ] drag and drop (a page with list of snippets to re-order)
 - [?] analytics
   - [ ] number of snippets for each language
   - [ ] filter by category/tag
-
 - [?] internalization
 
 ### Misc

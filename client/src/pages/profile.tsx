@@ -187,7 +187,7 @@ export default function Profile() {
               ref={(el) => {
                 refs.inputs.username = el;
               }}
-              value={userInfo.data.username}
+              // value={userInfo.data.username}
               className='hidden w-[200px]'
               defaultValue={userInfo.data.username}
             />
@@ -223,7 +223,7 @@ export default function Profile() {
                 refs.view.description = el;
               }}
             >
-              <summary className='cursor-pointer w-max'>
+              <summary>
                 Profile description
               </summary>
               <p
@@ -246,10 +246,8 @@ export default function Profile() {
               ref={(el) => {
                 refs.inputs.description = el;
               }}
-              // defaultValue={description}
-            >
-              {userInfo.data.description}
-            </textarea>
+              defaultValue={userInfo.data.description}
+            />
             <button
               aria-label='edit'
               ref={(el) => {
