@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router';
 import ExceptionsPopUp from '../components/exceptionsPopUp';
 import AccessControl from '../components/accessControl';
@@ -30,6 +30,12 @@ export default function AddRules() {
   const navigate = useNavigate();
 
   const { notify } = useOutletContext();
+  React.useEffect(() => {
+    notify({ type: 'warning', msg: 'notification test' });
+    notify({ type: 'error', msg: 'notification test' });
+    notify({ type: 'info', msg: 'notification test' });
+  }, []);
+
   const whoami = useSelector((state: RootState) => {
     state.userInfo.data.username;
   });

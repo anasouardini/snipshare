@@ -17,9 +17,7 @@
 
 ### improvements
 
-- [ ] enhance notification pop-ups UI
-  - [ ] add icons
-  - [ ] use theme-matching colors
+- [X] enhance notification pop-ups UI
 - [ ] enhance nav menu in mobile layout
 
 ### Practices/Features
@@ -29,12 +27,6 @@
 
 - [x] skeleton screens
 - [ ] better A11Y
-
-- [ ] drag and drop (a page with list of snippets to re-order)
-- [?] analytics
-  - [ ] number of snippets for each language
-  - [ ] filter by category/tag
-- [?] internalization
 
 ### Misc
 
@@ -52,7 +44,6 @@
   - [ ] 3rd party libs used (purpose and functionality)
   - [ ] decision tree (document each decision made)
   - [ ] how to run tests and a little description (what the tests focus on, etc)
-  - [ ] how to deploy (docker would help a lot)
   - [ ] ask for feedback
   - [ ] walk through CI/CD step by step
   - [ ] a diagram of components

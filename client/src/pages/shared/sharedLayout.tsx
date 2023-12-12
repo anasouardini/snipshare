@@ -14,6 +14,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type RootState } from '../../state/store';
 import { actions } from '../../state/userInfo/userInfo';
 
+import {
+  AnimatePresence,
+  motion,
+  useAnimate,
+  usePresence,
+} from 'framer-motion';
+
 export default function SharedLayout() {
   const dispatch = useDispatch();
 
@@ -61,8 +68,9 @@ export default function SharedLayout() {
   }
 
   const listNotifications = () => {
-    return Object.keys(notifyState).map((notiKey) => (
+    return Object.keys(notifyState).map((notiKey, index) => (
       <Notify
+        order={index}
         key={notiKey}
         type={notifyState[notiKey].type}
         msg={notifyState[notiKey].msg}
@@ -160,15 +168,16 @@ export default function SharedLayout() {
       )}
 
       {/* notifications */}
-      <div
-        className={`fixed top-[50px] right-[50%] translate-x-[50%] flex-row`}
+      <motion.div
+        className={`fixed top-[70px] right-[50%]
+                translate-x-[50%] flex-row gap-3 z-90`}
       >
-        {listNotifications(notifyState)}
-      </div>
+        <AnimatePresence>{listNotifications(notifyState)}</AnimatePresence>
+      </motion.div>
 
-      <footer className='mt-10 mb-5 '>
+      <footer className='mt-auto mb-5 '>
         <div
-          className={`mt-auto w-full flex flex-wrap gap-3 
+          className={`mt-10 w-full flex flex-wrap gap-3 
         justify-center items-center py-4 font-bold`}
         >
           <span className='text-primary'> Made by: </span>
