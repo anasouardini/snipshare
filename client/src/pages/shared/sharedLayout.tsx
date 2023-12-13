@@ -109,7 +109,10 @@ export default function SharedLayout() {
       sm>:flex-row sm>:bg-bg
       sm>:border-2 sm>:border-primary sm>:p-4 rounded-md `;
     navRef.current.children[0].className = `sm<:flex sm<:items-center sm<:gap-3
-      flex sm>:flex-col sm>:gap-5 px-4`;
+      flex sm>:flex-col sm>:gap-5 px-4 py-5`;
+    Array.from(navRef.current.children[0].children).forEach((el) => {
+      el.classList.add('w-full');
+    });
   };
   const hideMenu = (e) => {
     const isOverlayVisible =
@@ -126,6 +129,9 @@ export default function SharedLayout() {
       sm<:items-center
       sm<:gap-3
       flex sm>:flex-col sm>:gap-5 px-4`;
+    Array.from(navRef.current.children[0].children).forEach((el) => {
+      el.classList.add('w-auto');
+    });
   };
 
   return (

@@ -43,7 +43,7 @@ export default function Signin() {
   };
 
   const classes = {
-    parent: 'border-3 w-[500px] mx-auto',
+    parent: 'border-3 mx-auto',
     title: `text-center text-3xl mb-[50px] relative
                 before:content-[""] before:absolute before:top-[105%] 
                 before:w-10 before:h-1 before:bg-primary`,

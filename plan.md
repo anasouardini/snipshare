@@ -18,7 +18,7 @@
 ### improvements
 
 - [X] enhance notification pop-ups UI
-- [ ] enhance nav menu in mobile layout
+- [X] enhance nav menu in mobile layout
 
 ### Practices/Features
 
@@ -26,7 +26,7 @@
 - [x] PWA?
 
 - [x] skeleton screens
-- [ ] better A11Y
+- [X] better A11Y
 
 ### Misc
 
