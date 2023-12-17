@@ -65,7 +65,7 @@ function Snippet(props: propsT) {
   // }, []);
 
   //* different query key just to show-case the skeleton
-  const userInfo = useQuery('userInfo2', () => {
+  const userInfo = useQuery(`snippet-${snipInfoState.snippet.user}`, () => {
     return getUser(snipInfoState.snippet.user);
   });
 
