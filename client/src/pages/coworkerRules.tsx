@@ -30,11 +30,11 @@ export default function AddRules() {
   const navigate = useNavigate();
 
   const { notify } = useOutletContext();
-  React.useEffect(() => {
-    notify({ type: 'warning', msg: 'notification test' });
-    notify({ type: 'error', msg: 'notification test' });
-    notify({ type: 'info', msg: 'notification test' });
-  }, []);
+  // React.useEffect(() => {
+  //   notify({ type: 'warning', msg: 'notification test' });
+  //   notify({ type: 'error', msg: 'notification test' });
+  //   notify({ type: 'info', msg: 'notification test' });
+  // }, []);
 
   const whoami = useSelector((state: RootState) => {
     state.userInfo.data.username;
