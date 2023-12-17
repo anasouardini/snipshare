@@ -12,9 +12,6 @@ const initialState: { data: User; loaded: boolean } = {
   data: { username: 'dummy', avatar: 'dummy', description: 'dummy' },
 };
 
-const whoamiUsr = await read('whoami');
-initialState.data = whoamiUsr.msg;
-
 const UserPreferences = createSlice({
   name: 'user info',
   initialState,
@@ -25,6 +22,11 @@ const UserPreferences = createSlice({
     },
   },
 });
+
+(async () => {
+  const whoamiUsr = await read('whoami');
+  UserPreferences.actions.setUserInfo({ payload: whoamiUsr.msg });
+})();
 
 export const actions = { ...UserPreferences.actions };
 export default UserPreferences.reducer;
