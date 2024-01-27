@@ -11,6 +11,6 @@ const can2 = {
 
 describe('the La Croix cans on my desk', () => {
   test('have all the same properties', () => {
-    expect(3 >= 2).toEqual(true);
+    expect(3 >= 2).toEqual(false);
   });
 });
