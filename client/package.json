@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "testingTools": "pnpm i -D jest ts-jest @types/jest @testing-library/dom @testing-library/jest-dom @testing-library/react @testing-library/user-event vitest husky"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.4.6",
