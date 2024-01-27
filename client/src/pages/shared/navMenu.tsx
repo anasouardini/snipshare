@@ -20,7 +20,9 @@ interface NavMenuProps {
   whoami: { status: number };
 }
 const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
-  const userPreferences = useSelector((state: RootState) => state.userPreferences);
+  const userPreferences = useSelector(
+    (state: RootState) => state.userPreferences,
+  );
   const dispatch = useDispatch();
   const changeTheme = () => dispatch(actions.toggleTheme());
 
@@ -64,7 +66,7 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
 
   return (
     <nav
-      onClick={(e)=>e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
       ref={navRef}
       className={`sm>:hidden
               sm<:px-[5%] sm<:py-2
@@ -244,9 +246,7 @@ const NavMenu = ({ hideMenu, navRef, whoami, notify }: NavMenuProps) => {
         </li>
         {whoami.status == 401 ? (
           <>
-            <li
-            className='/*sm<:ml-auto*/'
-            >
+            <li className='/*sm<:ml-auto*/'>
               <NavLink className={classes.navLink} to='/login' replace>
                 Login
               </NavLink>

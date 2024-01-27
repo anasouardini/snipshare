@@ -12,6 +12,8 @@ track.md
 # Node artifact files
 node_modules/
 dist/
+dist-ssr
+coverage
 
 # Compiled Java class files
 *.class

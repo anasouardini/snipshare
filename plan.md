@@ -50,4 +50,5 @@
 - [ ] a diagram of components
 - [ ] directory structure
 - [ ] list API end-points with their purpose
-  - [ ] FAQ: anything anyone asks you, that's not in the doc, should get inserted here.
+  - [ ] FAQ: anything anyone asks you, that's not in the doc, should get
+        inserted here.

@@ -1,4 +1,4 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect } from 'vitest';
 
 const can1 = {
   flavor: 'grapefruit',

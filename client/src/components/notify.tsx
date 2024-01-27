@@ -51,7 +51,7 @@ export default function Notify(props: Props) {
       initial={{ opacity: 0, x: 90 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 90 }}
-      transition={{ duration: 0.3, delay: props.order * .1 }}
+      transition={{ duration: 0.3, delay: props.order * 0.1 }}
       aria-label='notification'
       className={`${classes.container} ${notificationTypeStyle[props.type]}`}
     >

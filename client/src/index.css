@@ -67,8 +67,8 @@ body::-webkit-scrollbar-thumb,
 }
 
 label.invalid input,
-label.invalid textarea{
-  @apply border-b-2 border-b-red-500
+label.invalid textarea {
+  @apply border-b-2 border-b-red-500;
 }
 
 input,
@@ -77,8 +77,8 @@ textarea {
   @apply border-b-2 border-b-primary p-1 outline-lime-300 focus:outline-[1px] bg-bg;
 }
 
-form label input{
-  width: 100%
+form label input {
+  width: 100%;
 }
 
 input[type='checkbox'] {

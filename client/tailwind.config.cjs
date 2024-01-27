@@ -18,7 +18,7 @@ module.exports = {
         linkHover: 'var(--text-color-hover)',
         btnBg: 'var(--btn-bg-color)',
         btnBorderHover: 'var(--btn-border-color-hover)',
-        btnOutlineFocus: 'var(--btn-outline-color-focus)'
+        btnOutlineFocus: 'var(--btn-outline-color-focus)',
       },
       boxShadow: { '2xl': '0 0px 20px 30px rgb(0 0 0 / .4)' },
     },
