@@ -30,7 +30,7 @@
 - [ ] pre-commit hooks (husky)
 - [ ] docker compose for easy installation
 - [ ] add installation/setup commands to README.md
-- [ ] CI/CD
+- [ ] Github workflows
 
 ### doc
 
