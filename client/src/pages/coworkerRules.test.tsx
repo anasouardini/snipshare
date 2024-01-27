@@ -1,5 +1,5 @@
 const can1 = {
-  flavor: 'grapefruit',
+  flavor: 'grapefruit[edited]',
   ounces: 12,
 };
 const can2 = {
