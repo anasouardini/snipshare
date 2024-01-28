@@ -1,0 +1,17 @@
+FROM node:21 as build
+WORKDIR /client
+
+RUN npm i -g pnpm && pnpm i -g pnpm
+
+COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./pnpm-lock.yaml .
+RUN pnpm i
+
+COPY . .
+
+RUN pnpm build
+
+FROM nginx
+
+COPY --from=build ./client/dist /usr/share/nginx/html
