@@ -22,10 +22,13 @@ jobs:
           node-version: '21.0'
 
       - name: Install dependencies
-        run: npm install
+        run: npm --prefix ./client install
+        run: npm --prefix ./server install
 
       - name: Run unit tests
-        run: npm run testOnce
+        run: npm --prefix ./client run testOnce
+        run: npm --prefix ./server run testOnce
 
       - name: Run formatting checks
-        run: npm run formatCheck
+        run: npm --prefix ./client run formatCheck
+        run: npm --prefix ./server run formatCheck
