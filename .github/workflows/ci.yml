@@ -21,9 +21,6 @@ jobs:
         with:
           node-version: '21.1'
 
-      - name: Install pnpm
-        run: pnpm setup
-
       - name: Install dependencies
         run: pnpm ci
 
