@@ -19,16 +19,19 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '21.0'
+          node-version: "21.0"
 
-      - name: Install dependencies
+      - name: Install client dependencies
         run: npm --prefix ./client install
+      - name: Install server dependencies
         run: npm --prefix ./server install
 
-      - name: Run unit tests
+      - name: Run client unit tests
         run: npm --prefix ./client run testOnce
+      - name: Run server unit tests
         run: npm --prefix ./server run testOnce
 
-      - name: Run formatting checks
+      - name: Run client formatting checks
         run: npm --prefix ./client run formatCheck
+      - name: Run server formatting checks
         run: npm --prefix ./server run formatCheck
