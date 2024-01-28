@@ -25,7 +25,7 @@ jobs:
         run: npm install
 
       - name: Run unit tests
-        run: npm testOnce
+        run: npm run testOnce
 
       - name: Run formatting checks
-        run: npm formatCheck
+        run: npm run formatCheck
