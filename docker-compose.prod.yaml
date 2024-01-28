@@ -1,0 +1,29 @@
+version: "3.1"
+services:
+  client:
+    image: "snipshare-client-prod-image"
+    container_name: "snipshare-client-prod-container"
+    build:
+      dockerfile: dockerfile.prod
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./client:/client
+      - node_modules:/client/node_modules
+    ports:
+      - 8080:80
+
+  server:
+    image: "snipshare-server-prod-image"
+    container_name: "snipshare-server-prod-container"
+    build:
+      dockerfile: dockerfile.prod
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./server:/server
+      - node_modules:/server/node_modules
+    ports:
+      - 3000:3000
+
+volumes: node_modules

@@ -1,0 +1,29 @@
+version: "3.1"
+services:
+  client:
+    image: "snipshare-client-dev-image"
+    container_name: "snipshare-client-dev-container"
+    build:
+      dockerfile: dockerfile.dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./client:/client
+      - node_modules:/client/node_modules
+    ports:
+      - 8080:80
+
+  server:
+    image: "snipshare-server-dev-image"
+    container_name: "snipshare-server-dev-container"
+    build:
+      dockerfile: dockerfile.dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./server:/server
+      - node_modules:/server/node_modules
+    ports:
+      - 3000:3000
+
+volumes: node_modules
