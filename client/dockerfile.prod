@@ -1,16 +1,15 @@
-FROM node:21 as build
+FROM node:21.1 as build
 WORKDIR /client
-
-RUN npm i -g pnpm && pnpm i -g pnpm
 
 COPY ./package.json .
 COPY ./package-lock.json .
 COPY ./pnpm-lock.yaml .
-RUN pnpm i
+RUN npm i -g npm
+RUN npm i
 
 COPY . .
 
-RUN pnpm build
+RUN npm run build
 
 FROM nginx
 

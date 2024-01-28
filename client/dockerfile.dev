@@ -1,7 +1,9 @@
-FROM node:debian
+FROM node:21.1
 WORKDIR /client
 
 COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./pnpm-lock.yaml .
 RUN npm i
 
 COPY . .

@@ -1,8 +1,8 @@
-version: "3.1"
+version: "3.8"
 services:
   db:
     image: mysql:latest
-    container_name: "snipshare-client-prod-container"
+    container_name: "snipshare-db"
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
@@ -11,21 +11,24 @@ services:
       - MYSQL_DATABASE=snipshare
       # - MYSQL_ALLOW_EMPTY_PASSWORD=true
     volumes:
-      - ./db-volume:./var/lib/mysql
+      - ./db-volume:/var/lib/mysql
     ports:
       - "3306:3306"
+      # - "33060:33060"
     networks:
       - snipshare-network
 
   server:
-    depends_on: db
+    depends_on:
+      - db
     build:
       context: ./server
     networks:
       - snipshare-network
 
   client:
-    depends_on: server
+    depends_on:
+      - server
     build:
       context: ./client
     networks:
