@@ -22,7 +22,7 @@ jobs:
           node-version: '21.1'
 
       - name: Install pnpm
-        run: npm i -g pnpm && pnpm i -g pnpm
+        run: pnpm setup
 
       - name: Install dependencies
         run: pnpm ci
