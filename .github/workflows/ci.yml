@@ -21,16 +21,11 @@ jobs:
         with:
           node-version: '21.0'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8.10
-
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Run unit tests
-        run: pnpm testOnce
+        run: npm testOnce
 
       - name: Run formatting checks
-        run: pnpm formatCheck
+        run: npm formatCheck
