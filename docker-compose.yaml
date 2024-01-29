@@ -21,18 +21,41 @@ services:
   server:
     depends_on:
       - db
+    image: "snipshare-server-prod"
+    container_name: "snipshare-server-prod"
     build:
       context: ./server
+      dockerfile: dockerfile.prod
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./server:/server
+      - node_modules:/server/node_modules
+    ports:
+      - "2000:2000"
     networks:
       - snipshare-network
 
   client:
     depends_on:
       - server
+    image: "snipshare-client-prod"
+    container_name: "snipshare-client-prod"
     build:
       context: ./client
+      dockerfile: dockerfile.prod
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./client:/client
+      - node_modules:/client/node_modules
+    ports:
+      - "3000:80"
     networks:
       - snipshare-network
 
 networks:
   snipshare-network:
+
+volumes:
+  node_modules:
